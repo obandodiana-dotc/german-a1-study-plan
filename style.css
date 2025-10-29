@@ -1,37 +1,37 @@
 :root {
-  --pink-500: #ec4899;
-  --pink-200: #fbcfe8;
-  --pink-50: #fdf2f8;
-  --purple-500: #a855f7; 
-  --grad-from: #f472b6; 
-  --grad-to: #a855f7; 
+  --pink-500: #ec4899;
+  --pink-200: #fbcfe8;
+  --pink-50: #fdf2f8;
+  --purple-500: #a855f7; 
+  --grad-from: #f472b6; 
+  --grad-to: #a855f7; 
 }
-body { 
-    font-family: 'Inter', sans-serif; 
-    background: #f1f5f9; /* Fondo de la página */
+body { 
+    font-family: 'Inter', sans-serif; 
+    background: #f1f5f9; /* Fondo de la página */
 }
 .font-display { font-family: 'Dancing Script', cursive; }
 
 /* --- LAYOUT GRID: Contenido (2) | Sidebar (1) --- */
 .main-content-grid {
-    display: grid;
-    gap: 1.5rem; 
-    grid-template-columns: 1fr; /* Columna única en móvil */
+    display: grid;
+    gap: 1.5rem; 
+    grid-template-columns: 1fr; /* Columna única en móvil */
 }
 @media (min-width: 1024px) {
-    .main-content-grid {
-        /* Asignación de columnas: 2 partes para contenido principal, 1 para sidebar */
-        grid-template-columns: 2fr 1fr; 
-    }
+    .main-content-grid {
+        /* Asignación de columnas: 2 partes para contenido principal, 1 para sidebar */
+        grid-template-columns: 2fr 1fr; 
+    }
 }
 @media (min-width: 1024px) {
-    #sidebar {
-        /* Barra lateral fija: se mantiene visible al hacer scroll */
-        position: sticky; 
-        top: 80px; /* Separación del encabezado fijo (que mide 4rem/64px + margen) */
-        height: calc(100vh - 80px); 
-        overflow-y: auto;
-    }
+    #sidebar {
+        /* Barra lateral fija: se mantiene visible al hacer scroll */
+        position: sticky; 
+        top: 80px; /* Separación del encabezado fijo (que mide 4rem/64px + margen) */
+        height: calc(100vh - 80px); 
+        overflow-y: auto;
+    }
 }
 /* --- FIN LAYOUT GRID --- */
 
@@ -39,9 +39,9 @@ body {
 .checkbox-wrap { position: relative; padding-left: 2.1rem; display: inline-flex; align-items: center; cursor: pointer; }
 .checkbox-wrap input[type="checkbox"] { position: absolute; left: 0; top: 0.12rem; width: 1.25rem; height: 1.25rem; opacity: 0; }
 .checkbox-box {
-  position: absolute; left: 0; top: 0.12rem; width: 1.25rem; height: 1.25rem;
-  border: 2px solid var(--pink-200); border-radius: .25rem; display: inline-flex; align-items:center; justify-content:center;
-  transition: all .18s; background: white;
+  position: absolute; left: 0; top: 0.12rem; width: 1.25rem; height: 1.25rem;
+  border: 2px solid var(--pink-200); border-radius: .25rem; display: inline-flex; align-items:center; justify-content:center;
+  transition: all .18s; background: white;
 }
 .checkbox-box .tick { font-size: 1rem; color: white; opacity: 0; transition: opacity .15s; line-height: 1; }
 input[type="checkbox"]:checked + .checkbox-box { background: var(--pink-500); border-color: var(--pink-500); }
@@ -49,34 +49,35 @@ input[type="checkbox"]:checked + .checkbox-box .tick { opacity: 1; }
 .task-done { text-decoration: line-through; color: #6b7280; }
 .modal { transition: opacity .25s, transform .25s; }
 @keyframes shake {
-  0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }
+  0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }
 }
 .shake-anim { animation: shake 0.3s ease-in-out; }
 .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Estilo para las pestañas de la lección */
 .tab-button.active {
-    background-color: white;
-    color: var(--pink-500);
-    font-weight: 600;
-    border-bottom-color: white;
+    background-color: white;
+    color: var(--pink-500);
+    font-weight: 600;
+    border-bottom-color: white;
 }
+
 /* Estilo para el resultado del chequeo de gramática de la IA */
 .ai-feedback {
-    margin-top: 1rem;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    background-color: #f0fdf4; 
-    border: 1px solid #dcfce7;
-    white-space: pre-wrap;
-    font-size: 0.9rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #f0fdf4; 
+    border: 1px solid #dcfce7;
+    white-space: pre-wrap;
+    font-size: 0.9rem;
 }
 .ai-feedback strong {
-    color: #15803d; 
+    color: #15803d; 
 }
 .ai-feedback.loading {
-    background-color: #fefce8; 
-    border-color: #fef3c7;
-    color: #ca8a04;
-    text-align: center;
+    background-color: #fefce8; 
+    border-color: #fef3c7;
+    color: #ca8a04;
+    text-align: center;
 }
