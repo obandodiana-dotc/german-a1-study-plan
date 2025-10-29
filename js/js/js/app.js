@@ -11,47 +11,54 @@
         streak: 0,
         lastCompletionDate: null,
         reminders: [],
-        vocabularyScores: {} // INNOVACIÓN 2: Almacenará los scores SRS
+        vocabularyScores: {} // Almacenará los scores SRS (score: repeticiones exitosas, lastReview: timestamp)
     };
     let currentlyDisplayedDay = 1;
-    let currentWordId = null; // INNOVACIÓN 2: ID de la palabra actual para SRS
-    let currentWordData = null; // Datos de la palabra actual
+    let currentWordId = null; 
+    let currentWordData = null; 
 
     // --- Referencias del DOM (Elementos HTML) ---
-    // Se declaran las variables necesarias
     let daysContainer, dayTemplate, taskTemplate, progressPercentEl, progressBar, streakEl, currentDayDisplay, headerDayDisplay;
-    let jumpDay, goDay, resetProgressBtn, prevDayBtn, nextDayBtn;
-    let wodWordEl, wodPluralEl, wodTranslationEl, openWordOfDayCard;
-    let modalBackdrop, modalContainer, modalTitle, closeModalBtn;
-    let quizView, answerView, greetingView, reminderView;
+    let jumpDay, resetProgressBtn, prevDayBtn, nextDayBtn;
+    let wodWordEl, wodTranslationEl, openWordOfDayCard, wodWordDisplay; 
+    let modalBackdrop, modalTitle;
+    let quizView, answerView, greetingView;
     let quizWordTrans, quizInput, quizFeedback, checkAnswerBtn, revealAnswerBtn;
-    let modalMessage, modalExampleSentence, modalExampleTranslation, listenWordBtn, listenExampleBtn, prevWordBtn, nextWordBtn, closeGreetingBtn;
-    let journalModal, journalCurrentDay, journalTextarea, saveJournalBtn, exportStateBtn, importStateBtn, importFile;
-    
-    // --- NUEVAS REFERENCIAS DOM PARA INNOVACIONES ---
-    let checkGrammarBtn, aiFeedbackContainer; // INNOVACIÓN 1: Chequeo de gramática
-    let srsEasyBtn, srsHardBtn; // INNOVACIÓN 2: Botones para SRS
+    let modalMessage, modalExampleSentence, modalExampleTranslation, closeGreetingBtn;
+    let journalModal, journalCurrentDay, journalTextarea, saveJournalBtn;
+    let checkGrammarBtn, aiFeedbackContainer; 
+    let srsEasyBtn, srsHardBtn; 
 
-
-    // --- Funciones de Estado y Persistencia ---
 
     function initDOMReferences() {
-        // [Referencias DOM originales]
+        // [Referencias DOM de Navegación y Encabezado]
         daysContainer = document.getElementById('days-container');
         dayTemplate = document.getElementById('day-template');
         taskTemplate = document.getElementById('task-template');
+        headerDayDisplay = document.getElementById('header-day-display');
+        jumpDay = document.getElementById('jump-day');
+        prevDayBtn = document.getElementById('prev-day-btn');
+        nextDayBtn = document.getElementById('next-day-btn');
+        currentDayDisplay = document.getElementById('current-day-display');
+
+        // [Referencias DOM de Estadísticas (Sidebar)]
         progressPercentEl = document.getElementById('progress-percent-el');
         progressBar = document.getElementById('progress-bar');
         streakEl = document.getElementById('streak-el');
-        currentDayDisplay = document.getElementById('current-day-display');
-        headerDayDisplay = document.getElementById('header-day-display');
-        jumpDay = document.getElementById('jump-day');
-        // ... (otras referencias de navegación y stats) ...
+        resetProgressBtn = document.getElementById('reset-progress-btn');
 
+        // [Referencias DOM de Word of the Day (WOD/SRS - Sidebar)]
+        wodWordEl = document.getElementById('wod-word-el');
+        wodTranslationEl = document.getElementById('wod-translation-el');
+        openWordOfDayCard = document.getElementById('open-word-of-day-card');
+        wodWordDisplay = document.getElementById('wod-word-display');
+        
         // [Referencias DOM de Modales y Quiz]
         modalBackdrop = document.getElementById('modal-backdrop');
+        modalTitle = document.getElementById('modal-title');
         quizView = document.getElementById('quiz-view');
         answerView = document.getElementById('answer-view');
+        greetingView = document.getElementById('greeting-view');
         quizWordTrans = document.getElementById('quiz-word-trans');
         quizInput = document.getElementById('quiz-input');
         quizFeedback = document.getElementById('quiz-feedback');
@@ -60,36 +67,39 @@
         modalMessage = document.getElementById('modal-message');
         modalExampleSentence = document.getElementById('modal-example-sentence');
         modalExampleTranslation = document.getElementById('modal-example-translation');
+        closeGreetingBtn = document.getElementById('closeGreetingBtn');
         
-        // [Referencias DOM del Diario]
+        // [Referencias DOM del Diario / IA]
         journalModal = document.getElementById('journalModal');
         journalTextarea = document.getElementById('journalTextarea');
         journalCurrentDay = document.querySelector('.journal-current-day');
+        saveJournalBtn = document.getElementById('saveJournalBtn');
+        checkGrammarBtn = document.getElementById('checkGrammarBtn'); 
+        aiFeedbackContainer = document.getElementById('aiFeedbackContainer'); 
         
-        // [NUEVAS Referencias para INNOVACIONES]
-        checkGrammarBtn = document.getElementById('checkGrammarBtn'); // INNOVACIÓN 1
-        aiFeedbackContainer = document.getElementById('aiFeedbackContainer'); // INNOVACIÓN 1
-        srsEasyBtn = document.getElementById('srsEasyBtn'); // INNOVACIÓN 2
-        srsHardBtn = document.getElementById('srsHardBtn'); // INNOVACIÓN 2
+        // [Referencias para SRS]
+        srsEasyBtn = document.getElementById('srsEasyBtn'); 
+        srsHardBtn = document.getElementById('srsHardBtn'); 
+        // Note: Se omiten listenWordBtn y listenExampleBtn ya que Text-to-Speech requiere librerías externas o Web Speech API.
     }
 
     function loadState() {
         const storedState = localStorage.getItem('germanPlanState');
         if (storedState) {
             state = JSON.parse(storedState);
+        } else {
+            currentlyDisplayedDay = 1;
         }
-        // INNOVACIÓN 2: Asegurar que vocabularyScores existe y tiene valores por defecto si es nuevo.
         if (!state.vocabularyScores || Object.keys(state.vocabularyScores).length === 0) {
             initializeVocabularyScores();
         }
     }
 
-    // INNOVACIÓN 2: Inicialización de scores
     function initializeVocabularyScores() {
         state.vocabularyScores = {};
         if (typeof VOCABULARIO_SRS !== 'undefined') {
              VOCABULARIO_SRS.forEach(word => {
-                // score 0 = nunca visto/más difícil. lastReview 0 = nunca revisado.
+                // score 0 = nunca visto/más difícil.
                 state.vocabularyScores[word.id] = { score: 0, lastReview: 0 }; 
             });
         }
@@ -99,39 +109,99 @@
         localStorage.setItem('germanPlanState', JSON.stringify(state));
     }
     
-    // ... (Otras funciones como saveJournal, updateProgress, showModal se asumen existentes) ...
+    function showModal(view, dayIndex = null) {
+        // Oculta todos los modales
+        [quizView, answerView, greetingView, journalModal].forEach(el => {
+            if (el) el.classList.add('hidden');
+        });
+        
+        if (modalBackdrop) {
+            modalBackdrop.classList.remove('hidden');
+            modalBackdrop.style.display = 'block';
+        }
 
+        if (view === 'quiz' && quizView) quizView.classList.remove('hidden');
+        if (view === 'answer' && answerView) answerView.classList.remove('hidden');
+        if (view === 'journal' && journalModal) {
+            journalModal.classList.remove('hidden');
+            const dayData = PLAN_DIARIO[currentlyDisplayedDay - 1];
+            if (journalCurrentDay) journalCurrentDay.textContent = currentlyDisplayedDay;
+            if (document.querySelector('.journal-prompt')) document.querySelector('.journal-prompt').textContent = dayData.journalPrompt;
+            if (journalTextarea) journalTextarea.value = state.journal[currentlyDisplayedDay] || '';
+            
+            // Limpiar feedback de la IA al abrir
+            if (aiFeedbackContainer) {
+                aiFeedbackContainer.classList.add('hidden');
+                aiFeedbackContainer.innerHTML = '';
+            }
+        }
+        if (view === 'greeting' && greetingView) greetingView.classList.remove('hidden');
+    }
 
-    // --- INNOVACIÓN 2: SISTEMA DE REPETICIÓN ESPACIADA (SRS) ---
+    function saveJournal() {
+        if (!journalTextarea) return;
+        state.journal[currentlyDisplayedDay] = journalTextarea.value;
+        saveState();
+        if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
+    }
+
+    function updateUIStats() {
+        // Actualiza el porcentaje de progreso y racha en el sidebar
+        const totalDays = PLAN_DIARIO.length;
+        const progress = currentlyDisplayedDay; 
+        const percent = Math.floor((progress / totalDays) * 100);
+        
+        if(progressPercentEl) progressPercentEl.textContent = `${percent}%`;
+        if(progressBar) progressBar.style.width = `${percent}%`;
+        if(streakEl) streakEl.textContent = state.streak;
+    }
+
+    function checkAnswer() {
+        const userAnswer = quizInput.value.trim().toLowerCase();
+        // currentWordData siempre está disponible después de renderWordOfTheDay()
+        const correctAnswer = currentWordData.word.trim().toLowerCase();
+
+        if (userAnswer === correctAnswer) {
+            if (modalTitle) modalTitle.textContent = '¡Correcto! 🎉';
+            if (modalMessage) modalMessage.textContent = `La palabra "${currentWordData.wordTrans}" se dice "${currentWordData.word}".`;
+            updateSRS(currentWordId, 'easy');
+            showModal('answer');
+        } else {
+            if (quizFeedback) quizFeedback.textContent = 'Respuesta incorrecta. ¡Sigue intentando!';
+            if (quizInput) quizInput.classList.add('shake-anim');
+            setTimeout(() => { if (quizInput) quizInput.classList.remove('shake-anim'); }, 300);
+        }
+    }
+
+    function revealAnswer() {
+        if (modalTitle) modalTitle.textContent = 'Respuesta Revelada';
+        if (modalMessage) modalMessage.textContent = `La palabra correcta es: "${currentWordData.word}".`;
+        updateSRS(currentWordId, 'hard'); 
+        showModal('answer');
+    }
+
+    // --- SISTEMA DE REPETICIÓN ESPACIADA (SRS) ---
 
     function getWordForSRS() {
-        // Lógica para seleccionar la palabra menos dominada o la más antigua de revisar.
+        // Lógica para encontrar la palabra con el score más bajo o la más antigua
         let wordToReviewId = null;
         let lowestScore = Infinity;
         let oldestReview = Infinity;
 
-        // Asegurar que todas las palabras están en el estado si es la primera carga.
-        if (Object.keys(state.vocabularyScores).length === 0 && typeof VOCABULARIO_SRS !== 'undefined') {
-            initializeVocabularyScores();
-            saveState();
-        }
-
         for (const id in state.vocabularyScores) {
             const scoreData = state.vocabularyScores[id];
             
-            // Si tiene un score menor (es más difícil)
             if (scoreData.score < lowestScore) {
                 lowestScore = scoreData.score;
                 wordToReviewId = id;
             } 
-            // Si el score es el mismo, priorizar la que se revisó hace más tiempo
             else if (scoreData.score === lowestScore && scoreData.lastReview < oldestReview) {
                 oldestReview = scoreData.lastReview;
                 wordToReviewId = id;
             }
         }
         
-        return wordToReviewId || 'wod-1'; // Fallback a Día 1
+        return wordToReviewId || 'wod-1'; 
     }
 
     function updateSRS(wordId, difficulty) {
@@ -147,76 +217,88 @@
         
         state.vocabularyScores[wordId].lastReview = Date.now();
         saveState();
-
-        // Ocultar modal actual y preparar el siguiente quiz
-        modalBackdrop.classList.add('hidden');
-        modalBackdrop.style.display = 'none';
-
-        renderWordOfTheDay();
-        showModal('quiz');
+        renderWordOfTheDay(); // Renderiza la siguiente palabra en el sidebar
     }
 
     function renderWordOfTheDay() {
-        // INNOVACIÓN 2: Usar SRS para determinar qué palabra mostrar
+        // 1. Obtiene la siguiente palabra según el SRS
         currentWordId = getWordForSRS();
         const wordIndex = parseInt(currentWordId.split('-')[1]) - 1;
         currentWordData = PLAN_DIARIO[wordIndex];
 
-        // ... (Lógica de renderizado WOD original para el card en la página principal) ...
-        // ... (Actualizar quiz-word-trans, quiz-input, etc.) ...
+        // 2. Renderiza la tarjeta del sidebar
+        if (wodTranslationEl) wodTranslationEl.textContent = currentWordData.wordTrans;
+        if (wodWordDisplay) {
+            // Muestra la palabra y el plural (opcionalmente podrías ocultar esto si solo quieres la traducción)
+            const plural = currentWordData.plural && currentWordData.plural !== currentWordData.word ? ` (${currentWordData.plural})` : '';
+            wodWordDisplay.innerHTML = `Palabra: <span id="wod-word-el" class="font-bold">${currentWordData.word}${plural}</span>`;
+        }
+        
+        // 3. Configura los datos del modal del quiz
+        if (quizWordTrans) quizWordTrans.textContent = `¿Cómo se dice "${currentWordData.wordTrans}"?`;
+        if (quizInput) quizInput.value = '';
+        if (quizFeedback) quizFeedback.textContent = '';
+        
+        // 4. Configura los datos del modal de respuesta
+        if (modalExampleSentence) modalExampleSentence.textContent = currentWordData.exampleSentence;
+        if (modalExampleTranslation) modalExampleTranslation.textContent = currentWordData.exampleTranslation;
     }
 
 
-    // --- INNOVACIÓN 1: CHEQUEO DE GRAMÁTICA CON MOCK IA ---
+    // --- CHEQUEO DE GRAMÁTICA CON MOCK IA ---
 
     function MockAIGrammarCheck() {
         const text = journalTextarea.value.trim();
         if (!text) {
-            aiFeedbackContainer.textContent = 'Por favor, escribe algo en el diario para que la IA lo verifique.';
-            aiFeedbackContainer.classList.remove('hidden');
-            aiFeedbackContainer.classList.add('ai-feedback');
+            if (aiFeedbackContainer) {
+                aiFeedbackContainer.textContent = 'Por favor, escribe algo en el diario para que la IA lo verifique.';
+                aiFeedbackContainer.classList.remove('hidden', 'loading');
+                aiFeedbackContainer.classList.add('ai-feedback');
+            }
             return;
         }
 
-        // Mostrar estado de carga de la IA
-        aiFeedbackContainer.classList.remove('hidden', 'ai-feedback');
-        aiFeedbackContainer.classList.add('loading');
-        aiFeedbackContainer.innerHTML = '🧠 Analizando gramática con Co-Pilot IA...';
-        checkGrammarBtn.disabled = true;
+        if (aiFeedbackContainer) {
+            aiFeedbackContainer.classList.remove('hidden', 'ai-feedback');
+            aiFeedbackContainer.classList.add('loading');
+            aiFeedbackContainer.innerHTML = '🧠 Analizando gramática con Co-Pilot IA...';
+        }
+        if (checkGrammarBtn) checkGrammarBtn.disabled = true;
 
-        // Simular llamada asíncrona a la API de IA (2 segundos de latencia)
         setTimeout(() => {
-            aiFeedbackContainer.classList.remove('loading');
-            checkGrammarBtn.disabled = false;
+            if (aiFeedbackContainer) aiFeedbackContainer.classList.remove('loading');
+            if (checkGrammarBtn) checkGrammarBtn.disabled = false;
 
-            // Simulación de Corrección y Feedback
             let correctedText = text;
             let feedback = '¡Excelente! Gramática correcta y clara. Muy buen uso de la estructura de oración.';
 
-            // Lógica de MOCK simple para demostración:
+            // Lógica de simulación simple
             if (text.toLowerCase().includes('ich haben')) {
                 correctedText = text.replace(/ich haben/gi, 'ich habe');
                 feedback = `**Corrección Clave:** El verbo "haben" (tener) se conjuga como "ich habe", no "ich haben".\n\n**Texto Corregido (IA Co-Pilot):**\n\n\`\`\`\n${correctedText}\n\`\`\`\n\n**Análisis:** Atento a la conjugación básica del verbo.`;
             } else if (text.toLowerCase().includes('ich sein')) {
                 correctedText = text.replace(/ich sein/gi, 'ich bin');
-                feedback = `**Corrección Clave:** El verbo "sein" (ser/estar) se conjuga como "ich bin", no "ich sein".\n\n**Texto Corregido (IA Co-Pilot):**\n\n\`\`\`\n${correctedText}\n\`\`\`\n\n**Análisis:** ¡Sigue practicando las conjugaciones básicas!`;
+                feedback = `**Corrección Clave:** El verbo "sein" (ser/estar) se conjuga como "ich bin", no "ich sein".\n\n**Texto Corregida (IA Co-Pilot):**\n\n\`\`\`\n${correctedText}\n\`\`\`\n\n**Análisis:** ¡Sigue practicando las conjugaciones básicas!`;
             } 
             else if (text.length < 10) {
                  feedback = `**Consejo:** La gramática básica está bien, pero intenta escribir frases más largas para practicar la estructura de la oración.`;
             }
 
-            aiFeedbackContainer.innerHTML = feedback.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            aiFeedbackContainer.classList.add('ai-feedback');
-        }, 2000); // 2 segundos de simulación
+            if (aiFeedbackContainer) {
+                aiFeedbackContainer.innerHTML = feedback.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                aiFeedbackContainer.classList.add('ai-feedback');
+            }
+        }, 2000); 
     }
 
-
-    // --- INNOVACIÓN 3: RENDERIZADO DE EJERCICIOS INTERACTIVOS ---
+    // --- RENDERIZADO DE TAREAS Y EJERCICIOS ---
 
     function renderMiniExercises(dayIndex) {
         const dayData = PLAN_DIARIO[dayIndex];
         const container = document.querySelector('.mini-exercises-container');
-        container.innerHTML = ''; // Limpiar ejercicios anteriores
+        if (!container) return;
+        
+        container.innerHTML = ''; 
 
         if (!dayData.miniExercises || dayData.miniExercises.length === 0) {
             container.innerHTML = '<p class="text-gray-500 text-center py-8">¡Aún no hay ejercicios interactivos para este día! Vuelve pronto.</p>';
@@ -233,11 +315,9 @@
 
             if (exercise.type === 'fill_in') {
                 const parts = exercise.prompt.split('___');
-                // Se usa el ID del ejercicio para el input
                 html += `<div class="text-lg text-gray-800">${parts[0]} <input type="text" id="input-${exercise.id}" class="w-20 p-1 border-b-2 border-pink-300 focus:border-pink-500 text-pink-600 font-semibold text-center" placeholder="..." autocomplete="off"> ${parts[1]}</div>`;
                 html += `<p class="text-sm text-gray-500 mt-2">Pista: ${exercise.hint}</p>`;
             } else if (exercise.type === 'match') {
-                 // Simplificación: solo muestra las parejas (ejercicio de lectura/comprensión)
                 html += `<p class="text-lg text-gray-800 font-semibold mb-3">Empareja el concepto:</p>`;
                 html += `<div class="grid grid-cols-2 gap-2 text-sm">`;
                 exercise.items.forEach((item, i) => {
@@ -255,15 +335,13 @@
             container.appendChild(exerciseEl);
         });
 
-        // Añadir listeners para los botones de verificación de ejercicios
         container.querySelectorAll('.check-exercise-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const exId = e.target.getAttribute('data-exid');
                 const exType = e.target.getAttribute('data-type');
-                const dayData = PLAN_DIARIO[currentlyDisplayedDay - 1];
                 const exercise = dayData.miniExercises.find(ex => ex.id === exId);
-
                 const feedbackEl = document.getElementById(`feedback-${exId}`);
+                
                 feedbackEl.classList.remove('text-green-500', 'text-red-500');
 
                 if (exType === 'fill_in') {
@@ -272,7 +350,7 @@
                         feedbackEl.textContent = '¡Correcto! ✅';
                         feedbackEl.classList.add('text-green-500');
                     } else {
-                        feedbackEl.textContent = `Incorrecto. Pista: "${exercise.hint}"`;
+                        feedbackEl.textContent = `Incorrecto. Respuesta correcta: "${exercise.answer}"`;
                         feedbackEl.classList.add('text-red-500');
                     }
                 } else if (exType === 'match') {
@@ -283,93 +361,183 @@
         });
     }
 
-    // --- RENDERIZADO PRINCIPAL (MODIFICAR RENDER SINGLE DAY para pestañas) ---
+    function renderTask(task, dayId) {
+        const taskClone = taskTemplate.content.cloneNode(true);
+        const taskDescription = taskClone.querySelector('.task-description');
+        const taskTimeBadge = taskClone.querySelector('.task-time-badge');
+        
+        if (taskDescription) taskDescription.textContent = task.desc;
+        if (taskTimeBadge) {
+             taskTimeBadge.textContent = task.time;
+             taskTimeBadge.classList.add(task.color); 
+        }
+        return taskClone;
+    }
 
     function renderSingleDay(dayIndex) {
         const day = PLAN_DIARIO[dayIndex];
         const dayTemplateClone = dayTemplate.content.cloneNode(true);
         const dayCard = dayTemplateClone.querySelector('.day-card');
         
-        // Asignación de contenido (título, tareas, etc.)
-        dayCard.querySelector('.day-title').textContent = `Día ${day.day}: ${day.title}`;
+        dayCard.querySelector('.day-title').textContent = `Lección: ${day.title}`; 
         dayCard.querySelector('.lesson-content').innerHTML = day.lessonContent;
-        // ... (otras asignaciones de contenido) ...
+        
+        const taskList = dayCard.querySelector('.task-list');
+        if (taskList) taskList.innerHTML = ''; 
+        if (day.tasks && taskList) {
+            day.tasks.forEach(task => {
+                taskList.appendChild(renderTask(task, day.day));
+            });
+        }
 
-        // --- Referencias de Pestañas y Contenido ---
         const lessonTab = dayCard.querySelector('.lesson-tab');
         const tasksTab = dayCard.querySelector('.tasks-tab');
         const exercisesTab = dayCard.querySelector('.exercises-tab'); 
 
-        // --- Manejo de Pestañas (INNOVACIÓN 3) ---
         const tabButtons = dayCard.querySelectorAll('.tab-button');
         tabButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 const targetTab = e.target.getAttribute('data-tab');
                 
-                // 1. Resetear activos y ocultar contenidos
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 [lessonTab, tasksTab, exercisesTab].forEach(content => content.classList.add('hidden'));
 
-                // 2. Activar la pestaña correcta
                 e.target.classList.add('active');
                 
                 if (targetTab === 'lesson') lessonTab.classList.remove('hidden');
                 if (targetTab === 'tasks') tasksTab.classList.remove('hidden');
                 if (targetTab === 'exercises') {
                     exercisesTab.classList.remove('hidden');
-                    // INNOVACIÓN 3: Renderizar ejercicios al abrir la pestaña
                     renderMiniExercises(dayIndex);
                 }
             });
         });
         
+        dayCard.querySelector('.journal-focus-btn').addEventListener('click', () => {
+            currentlyDisplayedDay = day.day;
+            showModal('journal');
+        });
+        
         return dayTemplateClone;
     }
 
-    // ... (El resto de las funciones auxiliares se mantiene) ...
+    function renderDays() {
+        if (!daysContainer) return;
+        daysContainer.innerHTML = '';
+        daysContainer.appendChild(renderSingleDay(currentlyDisplayedDay - 1));
+
+        if(currentDayDisplay) currentDayDisplay.textContent = `Día ${currentlyDisplayedDay}`;
+        if(headerDayDisplay) headerDayDisplay.textContent = `Día ${currentlyDisplayedDay} de ${PLAN_DIARIO.length}`;
+        if (jumpDay) jumpDay.value = currentlyDisplayedDay;
+
+        if(prevDayBtn) prevDayBtn.disabled = currentlyDisplayedDay === 1;
+        if(nextDayBtn) nextDayBtn.disabled = currentlyDisplayedDay === PLAN_DIARIO.length;
+    }
+
+    function navigateDay(direction) {
+        if (direction === 'next' && currentlyDisplayedDay < PLAN_DIARIO.length) {
+            currentlyDisplayedDay++;
+        } else if (direction === 'prev' && currentlyDisplayedDay > 1) {
+            currentlyDisplayedDay--;
+        }
+        renderDays();
+        updateUIStats();
+        saveState();
+    }
+
+
+    // --- Inicialización y Event Listeners ---
 
     function setupEventListeners() {
-        // ... (Listeners existentes) ...
-        
-        // --- LISTENERS DE INNOVACIÓN 1 (DIARIO/IA) ---
+        // Navegación
+        if(prevDayBtn) prevDayBtn.addEventListener('click', () => navigateDay('prev'));
+        if(nextDayBtn) nextDayBtn.addEventListener('click', () => navigateDay('next'));
+
+        // Jump Day (en el Header)
+        if (jumpDay) {
+            PLAN_DIARIO.forEach(day => {
+                const option = document.createElement('option');
+                option.value = day.day;
+                option.textContent = `Día ${day.day}`;
+                jumpDay.appendChild(option);
+            });
+            jumpDay.addEventListener('change', (e) => {
+                currentlyDisplayedDay = parseInt(e.target.value);
+                renderDays();
+                updateUIStats();
+                saveState();
+            });
+        }
+
+        // Quiz (SRS)
+        if(openWordOfDayCard) openWordOfDayCard.addEventListener('click', () => showModal('quiz'));
+        if(quizInput) quizInput.addEventListener('keypress', (e) => { 
+            if (e.key === 'Enter') { 
+                checkAnswer(); 
+            } 
+        });
+        if(checkAnswerBtn) checkAnswerBtn.addEventListener('click', checkAnswer);
+        if(revealAnswerBtn) revealAnswerBtn.addEventListener('click', revealAnswer);
+
+        // Diario / IA
         if (checkGrammarBtn) checkGrammarBtn.addEventListener('click', MockAIGrammarCheck);
-        if (saveJournalBtn) saveJournalBtn.addEventListener('click', () => {
-             // Limpiar el feedback de la IA al guardar
-             aiFeedbackContainer.classList.add('hidden');
-             aiFeedbackContainer.innerHTML = '';
-             // Se asume que saveJournal() existe y guarda el texto del diario
-             // saveJournal(); 
+        if (saveJournalBtn) saveJournalBtn.addEventListener('click', saveJournal);
+
+        // SRS Score Buttons 
+        if (srsEasyBtn) srsEasyBtn.addEventListener('click', () => {
+            updateSRS(currentWordId, 'easy');
+            if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
+        });
+        if (srsHardBtn) srsHardBtn.addEventListener('click', () => {
+            updateSRS(currentWordId, 'hard');
+            if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
         });
 
-        // Listener para botones SRS (INNOVACIÓN 2)
-        if (srsEasyBtn) srsEasyBtn.addEventListener('click', () => updateSRS(currentWordId, 'easy'));
-        if (srsHardBtn) srsHardBtn.addEventListener('click', () => updateSRS(currentWordId, 'hard'));
+        // Cierre de Modales
+        document.querySelectorAll('.close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
+            });
+        });
+        if(modalBackdrop) modalBackdrop.addEventListener('click', (e) => { 
+            if (e.target === modalBackdrop) { 
+                modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; 
+            } 
+        });
+        if(closeGreetingBtn) closeGreetingBtn.addEventListener('click', () => { 
+            if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
+        });
 
-        // ... (Otros listeners) ...
+
+        // Otros listeners
+        if(resetProgressBtn) resetProgressBtn.addEventListener('click', () => {
+             if(confirm('¿Estás seguro de que quieres reiniciar todo el progreso?')) {
+                localStorage.removeItem('germanPlanState');
+                window.location.reload();
+            }
+        });
+        
+        window.addEventListener('beforeunload', saveState);
     }
 
     function init() {
         loadState();
         initDOMReferences(); 
         
-        // Asegurarse de que el vocabulario esté inicializado para SRS
         if (Object.keys(state.vocabularyScores).length === 0) {
             initializeVocabularyScores();
             saveState();
         }
 
-        // Simplemente renderiza la UI inicial
-        // renderDays(); // Asume que esta función renderiza todos los días
-        // updateUIStats(); // Asume que esta función actualiza el porcentaje y racha
-        // renderWordOfTheDay(); // Llama la palabra inicial basada en SRS
+        renderWordOfTheDay(); 
+        renderDays();
+        updateUIStats(); 
         setupEventListeners();
         
-        // Esto es un placeholder para asegurar que la app funciona
-        if (daysContainer) {
-            daysContainer.innerHTML = '';
-            daysContainer.appendChild(renderSingleDay(currentlyDisplayedDay - 1));
+        // Mostrar saludo si es la primera vez
+        if (localStorage.getItem('germanPlanState') === null) {
+            showModal('greeting');
         }
-
     }
 
     document.addEventListener('DOMContentLoaded', init);
