@@ -37,12 +37,25 @@ input[type="checkbox"]:checked + .checkbox-box .tick { opacity: 1; }
     border-bottom-color: white;
 }
 .tab-button {
-    background-color: #f3f4f6; /* gray-100 */
-    border-color: #e5e7eb; /* gray-200 */
-    transition: background-color 0.15s;
-    border-bottom: 2px solid var(--pink-500);
+    /* Mantenemos estilos generales de tab-button */
 }
-/* Estilo para el contenido de la lección */
-.lesson-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: #a855f7; /* purple-500 */ }
-.lesson-content p { margin-bottom: 0.75rem; line-height: 1.5; }
-.lesson-content strong { font-weight: 700; color: #ec4899; }
+
+/* --- INNOVACIÓN 1: Estilo para el resultado del chequeo de gramática de la IA --- */
+.ai-feedback {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #f0fdf4; /* Verde claro para feedback positivo/educativo */
+    border: 1px solid #dcfce7;
+    white-space: pre-wrap;
+    font-size: 0.9rem;
+}
+.ai-feedback strong {
+    color: #15803d; /* Verde oscuro */
+}
+.ai-feedback.loading {
+    background-color: #fefce8; /* Amarillo claro mientras carga */
+    border-color: #fef3c7;
+    color: #ca8a04;
+    text-align: center;
+}
