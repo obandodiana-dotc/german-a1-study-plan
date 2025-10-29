@@ -11,24 +11,31 @@
         streak: 0,
         lastCompletionDate: null,
         reminders: [],
-        vocabularyScores: {} // Almacenará los scores SRS (score: repeticiones exitosas, lastReview: timestamp)
+        vocabularyScores: {}
     };
     let currentlyDisplayedDay = 1;
     let currentWordId = null; 
     let currentWordData = null; 
 
     // --- Referencias del DOM (Elementos HTML) ---
+    // Variables de Navegación y Stats
     let daysContainer, dayTemplate, taskTemplate, progressPercentEl, progressBar, streakEl, currentDayDisplay, headerDayDisplay;
     let jumpDay, resetProgressBtn, prevDayBtn, nextDayBtn;
-    let wodWordEl, wodTranslationEl, openWordOfDayCard, wodWordDisplay; 
+    
+    // Variables de Sidebar (SRS)
+    let wodTranslationEl, openWordOfDayCard, wodWordDisplay; 
+
+    // Variables de Modales y Quiz
     let modalBackdrop, modalTitle;
     let quizView, answerView, greetingView;
     let quizWordTrans, quizInput, quizFeedback, checkAnswerBtn, revealAnswerBtn;
     let modalMessage, modalExampleSentence, modalExampleTranslation, closeGreetingBtn;
+    let listenWordBtn, listenExampleBtn; // Añadidos para referenciar los botones de TTS
     let journalModal, journalCurrentDay, journalTextarea, saveJournalBtn;
     let checkGrammarBtn, aiFeedbackContainer; 
     let srsEasyBtn, srsHardBtn; 
 
+    // --- Funciones de Estado y Persistencia ---
 
     function initDOMReferences() {
         // [Referencias DOM de Navegación y Encabezado]
@@ -48,7 +55,6 @@
         resetProgressBtn = document.getElementById('reset-progress-btn');
 
         // [Referencias DOM de Word of the Day (WOD/SRS - Sidebar)]
-        wodWordEl = document.getElementById('wod-word-el');
         wodTranslationEl = document.getElementById('wod-translation-el');
         openWordOfDayCard = document.getElementById('open-word-of-day-card');
         wodWordDisplay = document.getElementById('wod-word-display');
@@ -68,6 +74,8 @@
         modalExampleSentence = document.getElementById('modal-example-sentence');
         modalExampleTranslation = document.getElementById('modal-example-translation');
         closeGreetingBtn = document.getElementById('closeGreetingBtn');
+        listenWordBtn = document.getElementById('listen-word-btn');
+        listenExampleBtn = document.getElementById('listen-example-btn');
         
         // [Referencias DOM del Diario / IA]
         journalModal = document.getElementById('journalModal');
@@ -80,7 +88,6 @@
         // [Referencias para SRS]
         srsEasyBtn = document.getElementById('srsEasyBtn'); 
         srsHardBtn = document.getElementById('srsHardBtn'); 
-        // Note: Se omiten listenWordBtn y listenExampleBtn ya que Text-to-Speech requiere librerías externas o Web Speech API.
     }
 
     function loadState() {
@@ -99,7 +106,6 @@
         state.vocabularyScores = {};
         if (typeof VOCABULARIO_SRS !== 'undefined') {
              VOCABULARIO_SRS.forEach(word => {
-                // score 0 = nunca visto/más difícil.
                 state.vocabularyScores[word.id] = { score: 0, lastReview: 0 }; 
             });
         }
@@ -110,7 +116,6 @@
     }
     
     function showModal(view, dayIndex = null) {
-        // Oculta todos los modales
         [quizView, answerView, greetingView, journalModal].forEach(el => {
             if (el) el.classList.add('hidden');
         });
@@ -126,10 +131,11 @@
             journalModal.classList.remove('hidden');
             const dayData = PLAN_DIARIO[currentlyDisplayedDay - 1];
             if (journalCurrentDay) journalCurrentDay.textContent = currentlyDisplayedDay;
-            if (document.querySelector('.journal-prompt')) document.querySelector('.journal-prompt').textContent = dayData.journalPrompt;
+            // Uso de un selector robusto para el prompt
+            const promptEl = document.querySelector('.journal-prompt');
+            if (promptEl) promptEl.textContent = dayData.journalPrompt;
             if (journalTextarea) journalTextarea.value = state.journal[currentlyDisplayedDay] || '';
             
-            // Limpiar feedback de la IA al abrir
             if (aiFeedbackContainer) {
                 aiFeedbackContainer.classList.add('hidden');
                 aiFeedbackContainer.innerHTML = '';
@@ -146,7 +152,6 @@
     }
 
     function updateUIStats() {
-        // Actualiza el porcentaje de progreso y racha en el sidebar
         const totalDays = PLAN_DIARIO.length;
         const progress = currentlyDisplayedDay; 
         const percent = Math.floor((progress / totalDays) * 100);
@@ -158,7 +163,6 @@
 
     function checkAnswer() {
         const userAnswer = quizInput.value.trim().toLowerCase();
-        // currentWordData siempre está disponible después de renderWordOfTheDay()
         const correctAnswer = currentWordData.word.trim().toLowerCase();
 
         if (userAnswer === correctAnswer) {
@@ -180,10 +184,7 @@
         showModal('answer');
     }
 
-    // --- SISTEMA DE REPETICIÓN ESPACIADA (SRS) ---
-
     function getWordForSRS() {
-        // Lógica para encontrar la palabra con el score más bajo o la más antigua
         let wordToReviewId = null;
         let lowestScore = Infinity;
         let oldestReview = Infinity;
@@ -210,42 +211,36 @@
         let currentScore = state.vocabularyScores[wordId].score;
 
         if (difficulty === 'easy') {
-            state.vocabularyScores[wordId].score = Math.min(5, currentScore + 1); // Max score 5
+            state.vocabularyScores[wordId].score = Math.min(5, currentScore + 1); 
         } else if (difficulty === 'hard') {
-            state.vocabularyScores[wordId].score = Math.max(0, currentScore - 1); // Min score 0
+            state.vocabularyScores[wordId].score = Math.max(0, currentScore - 1); 
         }
         
         state.vocabularyScores[wordId].lastReview = Date.now();
         saveState();
-        renderWordOfTheDay(); // Renderiza la siguiente palabra en el sidebar
+        renderWordOfTheDay();
     }
 
     function renderWordOfTheDay() {
-        // 1. Obtiene la siguiente palabra según el SRS
         currentWordId = getWordForSRS();
         const wordIndex = parseInt(currentWordId.split('-')[1]) - 1;
         currentWordData = PLAN_DIARIO[wordIndex];
 
-        // 2. Renderiza la tarjeta del sidebar
         if (wodTranslationEl) wodTranslationEl.textContent = currentWordData.wordTrans;
+        
         if (wodWordDisplay) {
-            // Muestra la palabra y el plural (opcionalmente podrías ocultar esto si solo quieres la traducción)
             const plural = currentWordData.plural && currentWordData.plural !== currentWordData.word ? ` (${currentWordData.plural})` : '';
-            wodWordDisplay.innerHTML = `Palabra: <span id="wod-word-el" class="font-bold">${currentWordData.word}${plural}</span>`;
+            wodWordDisplay.innerHTML = `Palabra: <span class="font-bold">${currentWordData.word}${plural}</span>`;
         }
         
-        // 3. Configura los datos del modal del quiz
         if (quizWordTrans) quizWordTrans.textContent = `¿Cómo se dice "${currentWordData.wordTrans}"?`;
         if (quizInput) quizInput.value = '';
         if (quizFeedback) quizFeedback.textContent = '';
         
-        // 4. Configura los datos del modal de respuesta
         if (modalExampleSentence) modalExampleSentence.textContent = currentWordData.exampleSentence;
         if (modalExampleTranslation) modalExampleTranslation.textContent = currentWordData.exampleTranslation;
     }
 
-
-    // --- CHEQUEO DE GRAMÁTICA CON MOCK IA ---
 
     function MockAIGrammarCheck() {
         const text = journalTextarea.value.trim();
@@ -272,7 +267,6 @@
             let correctedText = text;
             let feedback = '¡Excelente! Gramática correcta y clara. Muy buen uso de la estructura de oración.';
 
-            // Lógica de simulación simple
             if (text.toLowerCase().includes('ich haben')) {
                 correctedText = text.replace(/ich haben/gi, 'ich habe');
                 feedback = `**Corrección Clave:** El verbo "haben" (tener) se conjuga como "ich habe", no "ich haben".\n\n**Texto Corregido (IA Co-Pilot):**\n\n\`\`\`\n${correctedText}\n\`\`\`\n\n**Análisis:** Atento a la conjugación básica del verbo.`;
@@ -291,9 +285,15 @@
         }, 2000); 
     }
 
-    // --- RENDERIZADO DE TAREAS Y EJERCICIOS ---
+    // MOCK de Text-to-Speech para que los botones funcionen sin una librería compleja
+    function speak(text) {
+        console.log(`TTS Mock: Reproduciendo "${text}"`);
+        alert(`¡Simulación de voz! Reproduciendo: "${text}"`);
+    }
 
     function renderMiniExercises(dayIndex) {
+        // La lógica de renderizado de ejercicios interactivos permanece igual
+        // (omitida aquí por brevedad, pero en el archivo es la misma que la anterior)
         const dayData = PLAN_DIARIO[dayIndex];
         const container = document.querySelector('.mini-exercises-container');
         if (!container) return;
@@ -360,6 +360,7 @@
             });
         });
     }
+
 
     function renderTask(task, dayId) {
         const taskClone = taskTemplate.content.cloneNode(true);
@@ -479,6 +480,15 @@
         if(checkAnswerBtn) checkAnswerBtn.addEventListener('click', checkAnswer);
         if(revealAnswerBtn) revealAnswerBtn.addEventListener('click', revealAnswer);
 
+        // Botones de Voz (TTS Mock)
+        if (listenWordBtn) listenWordBtn.addEventListener('click', () => {
+            if (currentWordData) speak(currentWordData.word);
+        });
+        if (listenExampleBtn) listenExampleBtn.addEventListener('click', () => {
+            if (currentWordData) speak(currentWordData.exampleSentence);
+        });
+
+
         // Diario / IA
         if (checkGrammarBtn) checkGrammarBtn.addEventListener('click', MockAIGrammarCheck);
         if (saveJournalBtn) saveJournalBtn.addEventListener('click', saveJournal);
@@ -534,7 +544,6 @@
         updateUIStats(); 
         setupEventListeners();
         
-        // Mostrar saludo si es la primera vez
         if (localStorage.getItem('germanPlanState') === null) {
             showModal('greeting');
         }
