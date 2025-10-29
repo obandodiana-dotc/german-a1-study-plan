@@ -11,8 +11,57 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --pink-500: #ec4899;
+      --pink-200: #fbcfe8;
+      --pink-50: #fdf2f8;
+      --grad-from: #f472b6; 
+      --grad-to: #a855f7; 
+    }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+    .font-display { font-family: 'Dancing Script', cursive; }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .checkbox-wrap { position: relative; padding-left: 2.1rem; display: inline-flex; align-items: center; cursor: pointer; }
+    .checkbox-wrap input[type="checkbox"] { position: absolute; left: 0; top: 0.12rem; width: 1.25rem; height: 1.25rem; opacity: 0; }
+    .checkbox-box {
+      position: absolute; left: 0; top: 0.12rem; width: 1.25rem; height: 1.25rem;
+      border: 2px solid var(--pink-200); border-radius: .25rem; display: inline-flex; align-items:center; justify-content:center;
+      transition: all .18s; background: white;
+    }
+    .checkbox-box .tick { font-size: 1rem; color: white; opacity: 0; transition: opacity .15s; line-height: 1; }
+    input[type="checkbox"]:checked + .checkbox-box { background: var(--pink-500); border-color: var(--pink-500); }
+    input[type="checkbox"]:checked + .checkbox-box .tick { opacity: 1; }
+    .task-done { text-decoration: line-through; color: #6b7280; }
+    .modal { transition: opacity .25s, transform .25s; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }
+    }
+    .shake-anim { animation: shake 0.3s ease-in-out; }
+    .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    /* Estilo para las pestañas de la lección */
+    .tab-button.active {
+        background-color: white;
+        color: var(--pink-500);
+        font-weight: 600;
+        border-bottom-color: white;
+    }
+    .tab-button {
+        background-color: #f3f4f6; /* gray-100 */
+        border-color: #e5e7eb; /* gray-200 */
+        transition: background-color 0.15s;
+        border-bottom: 2px solid var(--pink-500);
+    }
+    /* Estilo para el contenido de la lección */
+    .lesson-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: #a855f7; /* purple-500 */ }
+    .lesson-content p { margin-bottom: 0.75rem; line-height: 1.5; }
+    .lesson-content strong { font-weight: 700; color: #ec4899; }
+  </style>
 </head>
 <body class="min-h-screen">
 
@@ -176,7 +225,933 @@
     </li>
   </template>
 
-  <script src="js/plan.js"></script>
-  <script src="js/app.js"></script>
+  <script>
+    (function() {
+
+      // PLAN_DIARIO (ACTUALIZADO con lessonContent)
+      const PLAN_DIARIO = [
+        { day: 1, word: 'Hallo', wordTrans: 'Hola', plural: 'Hallo', title: 'Saludos y Presentaciones', journalPrompt: 'Escribe 3 frases presentándote.', exampleSentence: 'Hallo, wie geht es Ihnen?', exampleTranslation: 'Hola, ¿cómo está usted?', learningGoals: ["Saludar y despedirse formal e informalmente.", "Presentarse (nombre).", "Preguntar '¿Cómo estás?' y responder."], lessonContent: `
+            <h3>Saludos Básicos (Grüße)</h3>
+            <p>La forma más común y versátil de saludar es <strong>Hallo</strong> (Hola). Para ser más específico con el tiempo del día:</p>
+            <ul>
+                <li><strong>Guten Morgen!</strong> (Buenos días - hasta el mediodía)</li>
+                <li><strong>Guten Tag!</strong> (Buen día - de mediodía a tarde, el más neutral)</li>
+                <li><strong>Guten Abend!</strong> (Buenas tardes/noches - a partir de las 6 PM)</li>
+            </ul>
+            <h3>Presentaciones y Formas de Cortesía</h3>
+            <p>En alemán, la cortesía es clave. Usamos <strong>Sie</strong> (Usted, formal) y <strong>du</strong> (tú, informal).</p>
+            <p>Para preguntar el nombre:</p>
+            <ul>
+                <li>Formal: <strong>Wie heißen Sie?</strong> (¿Cómo se llama Usted?)</li>
+                <li>Informal: <strong>Wie heißt du?</strong> (¿Cómo te llamas tú?)</li>
+            </ul>
+            <p>Para responder: <strong>Ich heiße [Tu Nombre].</strong> (Yo me llamo [Tu Nombre]).</p>
+        `, tasks: [ { id:'d1-t1', icon:'🧠', color:'bg-pink-50', desc:'Vocabulario: Aprende 5 saludos y 3 despedidas.', time:'20 min' }, { id:'d1-t2', icon:'🎧', color:'bg-purple-50', desc:'Escucha un diálogo "Hallo, wie geht\'s?" y repite.', time:'15 min' }, { id:'d1-t3', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 3 mini-diálogos presentándote.', time:'15 min' } ] },
+        
+        { day: 2, word: 'die Woche', wordTrans: 'la semana', plural: 'die Wochen', title: 'Formal (Sie) vs. Informal (du)', journalPrompt: 'Escribe 2 frases formales y 2 informales.', exampleSentence: 'Diese Woche habe ich viel Arbeit.', exampleTranslation: 'Esta semana tengo mucho trabajo.', learningGoals: ["Diferenciar entre tratamiento formal (Sie) e informal (du).", "Usar las formas correctas al preguntar el nombre."], lessonContent: `
+            <h3>El Dilema Sie vs. Du</h3>
+            <p>La elección entre <strong>Sie (Usted)</strong> y <strong>du (tú)</strong> es crucial en Alemania. El error más común de los principiantes es usar "du" con desconocidos o personas mayores.</p>
+            <ul>
+                <li><strong>Sie:</strong> Se usa con desconocidos, clientes, jefes, profesores y personas mayores (salvo que ellos te ofrezcan usar "du"). Siempre va con mayúscula inicial.</li>
+                <li><strong>du:</strong> Se usa con amigos, familia, niños y adolescentes, o si te lo han ofrecido explícitamente ("Wir können uns duzen" / "Podemos tutearnos").</li>
+            </ul>
+            <h3>La Palabra del Día: die Woche</h3>
+            <p>La palabra <strong>die Woche</strong> (la semana) es femenina, por lo que usa el artículo femenino <strong>die</strong>. Su plural es <strong>die Wochen</strong>.</p>
+            <p>Aprender la palabra con el artículo es vital: <strong>die Woche, die Wochen</strong>.</p>
+        `, tasks: [ { id:'d2-t1', icon:'🧠', color:'bg-pink-50', desc:'Gramática: Entiende la diferencia entre "Sie" (formal) y "du" (informal).', time:'15 min' }, { id:'d2-t2', icon:'📖', color:'bg-yellow-50', desc:'Lee ejemplos de "Wie heißen Sie?" vs. "Wie heißt du?".', time:'15 min' }, { id:'d2-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica presentarte de ambas formas en voz alta.', time:'15 min' } ] },
+        
+        { day: 3, word: 'sein', wordTrans: 'ser/estar', title: 'El Verbo "sein" (Ser/Estar)', journalPrompt: 'Escribe una frase con cada conjugación de "sein".', exampleSentence: 'Ich bin müde.', exampleTranslation: 'Estoy cansado/a.', learningGoals: ["Conjugar el verbo 'sein' (ser/estar) en presente.", "Formar frases básicas usando 'sein' (nacionalidad, profesión, estado)."], lessonContent: `
+            <h3>El Verbo Irregular más Importante: sein</h3>
+            <p><strong>Sein</strong> (ser/estar) es irregular y fundamental. Debes memorizar estas conjugaciones, ya que se usa constantemente para indicar identidad, estado y ubicación.</p>
+            <div class="p-3 bg-red-50 rounded-md font-mono text-sm">
+                <p>Ich <strong>bin</strong> (Yo soy/estoy)</p>
+                <p>Du <strong>bist</strong> (Tú eres/estás)</p>
+                <p>Er/Sie/Es <strong>ist</strong> (Él/Ella/Ello es/está)</p>
+                <p>Wir <strong>sind</strong> (Nosotros somos/estamos)</p>
+                <p>Ihr <strong>seid</strong> (Vosotros sois/estáis)</p>
+                <p>Sie/sie <strong>sind</strong> (Usted/Ellos son/están)</p>
+            </div>
+            <h3>Ejemplos de Uso</h3>
+            <ul>
+                <li>Nacionalidad: "Ich <strong>bin</strong> Spanier."</li>
+                <li>Estado: "Er <strong>ist</strong> glücklich."</li>
+                <li>Profesión: "Wir <strong>sind</strong> Studenten."</li>
+            </ul>
+        `, tasks: [ { id:'d3-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Conjuga "sein" (ich bin, du bist, er/sie/es ist...).', time:'20 min' }, { id:'d3-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases usando "sein" (Ej: Ich bin müde, Du bist nett).', time:'20 min' }, { id:'d3-t3', icon:'🗣️', color:'bg-orange-50', desc:'Di las conjugaciones de "sein" en voz alta 10 veces.', time:'10 min' } ] },
+        
+        { day: 4, word: 'haben', wordTrans: 'tener', title: 'El Verbo "haben" (Tener)', journalPrompt: 'Escribe 5 cosas que tienes.', exampleSentence: 'Wir haben Hunger.', exampleTranslation: 'Tenemos hambre.', learningGoals: ["Conjugar el verbo 'haben' (tener) en presente.", "Formar frases básicas usando 'haben' (posesión, edad, sensaciones)."], lessonContent: `
+            <h3>Conjugando el Verbo: haben</h3>
+            <p><strong>Haben</strong> (tener) también es irregular, pero se usa para posesión y algunas expresiones de estado (como tener hambre o sed).</p>
+            <div class="p-3 bg-red-50 rounded-md font-mono text-sm">
+                <p>Ich <strong>habe</strong> (Yo tengo)</p>
+                <p>Du <strong>hast</strong> (Tú tienes)</p>
+                <p>Er/Sie/Es <strong>hat</strong> (Él/Ella/Ello tiene)</p>
+                <p>Wir <strong>haben</strong> (Nosotros tenemos)</p>
+                <p>Ihr <strong>habt</strong> (Vosotros tenéis)</p>
+                <p>Sie/sie <strong>haben</strong> (Usted/Ellos tienen)</p>
+            </div>
+            <h3>Importante: haben vs. sein</h3>
+            <p>En alemán, las sensaciones (hambre, sed, sueño) se expresan con <strong>haben</strong> (tener), no con <strong>sein</strong> (estar), a diferencia del español.</p>
+            <ul>
+                <li>Tener hambre: Ich <strong>habe</strong> Hunger.</li>
+                <li>Tener 30 años: Er <strong>hat</strong> dreißig Jahre.</li>
+            </ul>
+        `, tasks: [ { id:'d4-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Conjuga "haben" (ich habe, du hast, er/sie/es hat...).', time:'20 min' }, { id:'d4-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con "haben" (Ej: Ich habe einen Hund, Du hast Hunger).', time:'20 min' }, { id:'d4-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha un audio que use "sein" y "haben".', time:'15 min' } ] },
+        
+        { day: 5, word: 'Woher?', wordTrans: '¿De dónde?', title: 'Preguntas (W-Fragen)', journalPrompt: 'Escribe 3 preguntas W y sus respuestas.', exampleSentence: 'Woher kommen Sie?', exampleTranslation: '¿De dónde viene usted?', learningGoals: ["Identificar y usar las principales partículas interrogativas (Wer, Was, Wo, Wie, Wann, Woher, etc.).", "Formular preguntas básicas sobre información personal."], lessonContent: `
+            <h3>Las Partículas Interrogativas (W-Fragen)</h3>
+            <p>Las preguntas que no se responden con sí/no (como las de información personal) comienzan con una 'W'.</p>
+            <ul>
+                <li><strong>Wer?</strong> (¿Quién?) Ejemplo: Wer ist das?</li>
+                <li><strong>Was?</strong> (¿Qué?) Ejemplo: Was machen Sie?</li>
+                <li><strong>Wo?</strong> (¿Dónde?) Ejemplo: Wo wohnst du?</li>
+                <li><strong>Woher?</strong> (¿De dónde?) Ejemplo: Woher kommen Sie?</li>
+                <li><strong>Wie?</strong> (¿Cómo?) Ejemplo: Wie geht es dir?</li>
+            </ul>
+            <h3>Estructura Clave</h3>
+            <p>La regla de oro en alemán es que el verbo (la acción) siempre debe ir en la <strong>segunda posición</strong> de la oración, incluso en las preguntas con W-Fragen:</p>
+            <p><strong>[W-Frage] + [Verbo conjugado] + [Sujeto/Complementos]</strong></p>
+            <p>Ejemplo: <strong>Wie</strong> <strong>heißen</strong> Sie? / <strong>Wo</strong> <strong>ist</strong> die Toilette?</p>
+        `, tasks: [ { id:'d5-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende las "W-Fragen" (Wer, Was, Wo, Wie, Wann, Woher).', time:'20 min' }, { id:'d5-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe una pregunta con cada "W-Frage" (Ej: Wer bist du? Wo wohnst du?).', time:'20 min' }, { id:'d5-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica preguntar y responder estas preguntas básicas en voz alta.', time:'15 min' } ] },
+        
+        { day: 6, word: 'die Zahl', wordTrans: 'el Número', plural: 'die Zahlen', title: 'El Alfabeto y Números (0-20)', journalPrompt: 'Escribe tu edad y número de teléfono.', exampleSentence: 'Meine Lieblingszahl ist sieben.', exampleTranslation: 'Mi número favorito es el siete.', learningGoals: ["Reconocer y pronunciar el alfabeto alemán.", "Contar del 0 al 20."], lessonContent: `
+            <h3>El Alfabeto Alemán (Das Alphabet)</h3>
+            <p>El alfabeto es similar al español, pero tiene letras con diéresis (Ä, Ö, Ü) y la eszett (ß).</p>
+            <p><strong>Puntos clave:</strong></p>
+            <ul>
+                <li>La letra V se pronuncia como "F" (Ej: Vater -> Fater).</li>
+                <li>La letra W se pronuncia como "V" (Ej: Woche -> Voche).</li>
+                <li>La letra Z se pronuncia como "Ts" (Ej: Zahl -> Tsal).</li>
+            </ul>
+            <h3>Números 0-20</h3>
+            <p>Es esencial memorizar los números hasta el 12. A partir del 13, se forma como en inglés: [Unidad] + [diez].</p>
+            <ul>
+                <li><strong>11:</strong> elf, <strong>12:</strong> zwölf</li>
+                <li><strong>13:</strong> dreizehn, <strong>16:</strong> sechzehn (¡Ojo! Pierde la 's')</li>
+            </ul>
+        `, tasks: [ { id:'d6-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende los números de 0 a 20.', time:'20 min' }, { id:'d6-t2', icon:'🎧', color:'bg-pink-50', desc:'Escucha una canción del alfabeto alemán y cántala.', time:'15 min' }, { id:'d6-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica decir tu número de teléfono y edad.', time:'15 min' } ] },
+        
+        { day: 7, word: 'Repaso', wordTrans: 'Revisión', title: 'Repaso Semana 1', journalPrompt: 'Escribe un párrafo presentándote.', exampleSentence: 'Heute machen wir einen Repaso.', exampleTranslation: 'Hoy hacemos un repaso.', learningGoals: ["Consolidar saludos, presentaciones.", "Repasar conjugaciones de 'sein' y 'haben'.", "Practicar W-Fragen y números básicos."], lessonContent: `<p>Esta semana se centró en las bases de la comunicación: presentarse, preguntar y responder información personal, y los dos verbos más importantes: <strong>sein</strong> (ser/estar) y <strong>haben</strong> (tener).</p><h3>Autoevaluación Rápida</h3><p>Intenta conjugar 'sein' y 'haben' para 'Ich', 'Du', 'Er/Sie/Es' de memoria. Si lo logras, estás listo para la siguiente semana.</p>`, tasks: [ { id:'d7-t1', icon:'📖', color:'bg-yellow-50', desc:'Lee un diálogo corto (A1) e identifica saludos, "sein", "haben".', time:'20 min' }, { id:'d7-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe un párrafo corto (3-5 frases) presentándote.', time:'20 min' }, { id:'d7-t3', icon:'🧠', color:'bg-purple-50', desc:'Repasa vocabulario días 1-6 con flashcards.', time:'15 min' } ] },
+        // --- RESTO DE DÍAS (Sin contenido de lección detallado, solo placeholders) ---
+        // DEBES añadir el contenido de la lección para cada día (lessonContent)
+        { day: 8, word: 'die Familie', wordTrans: 'la Familia', plural: 'die Familien', title: 'La Familia', journalPrompt: 'Describe a tu familia.', exampleSentence: 'Meine Familie wohnt in Spanien.', exampleTranslation: 'Mi familia vive en España.', learningGoals: ["Nombrar a los miembros básicos de la familia.", "Describir relaciones familiares simples."], lessonContent: `<h3>¡Bienvenido al día 8!</h3><p>Aquí aprenderás el vocabulario de la familia. Recuerda siempre aprender el sustantivo junto a su artículo (der/die/das).</p>`, tasks: [ { id:'d8-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende los miembros de la familia.', time:'20 min' }, { id:'d8-t2', icon:'✍️', color:'bg-yellow-50', desc:'Dibuja tu árbol genealógico y etiqueta en alemán.', time:'20 min' }, { id:'d8-t3', icon:'🗣️', color:'bg-orange-50', desc:'Describe a tu familia en frases simples.', time:'15 min' } ] },
+        { day: 9, word: 'der', wordTrans: 'el (masc.)', title: 'Artículos: Nominativo', journalPrompt: 'Escribe 10 sustantivos con su artículo.', exampleSentence: 'Der Stuhl ist alt.', exampleTranslation: 'La silla es vieja.', learningGoals: ["Identificar los 3 géneros gramaticales.", "Usar los artículos definidos (der, die, das) en nominativo."], lessonContent: `<h3>Gramática del día: El Nominativo y los Artículos</h3><p>El nominativo es el caso del sujeto de la oración. ¡Recuerda que todos los sustantivos alemanes llevan mayúscula inicial!</p><p>Masculino: <strong>Der</strong> Mann | Femenino: <strong>Die</strong> Frau | Neutro: <strong>Das</strong> Kind</p>`, tasks: [ { id:'d9-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende los 3 géneros y artículos.', time:'20 min' }, { id:'d9-t2', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 sustantivos CON su artículo.', time:'15 min' }, { id:'d9-t3', icon:'✍️', color:'bg-yellow-50', desc:'Haz una lista de 5 objetos y busca su género/artículo.', time:'20 min' } ] },
+        { day: 10, word: 'den', wordTrans: 'el (masc. acus.)', title: 'Artículos: Akkusativ', journalPrompt: 'Escribe 5 frases en Acusativo.', exampleSentence: 'Ich sehe den Mann.', exampleTranslation: 'Veo al hombre.', learningGoals: ["Comprender el caso acusativo.", "Aplicar el cambio der -> den."], lessonContent: `<h3>El Acusativo (Objeto Directo)</h3><p>El acusativo se usa para el objeto directo de la acción. Solo el artículo masculino cambia: <strong>der</strong> se convierte en <strong>den</strong>.</p><p>Ejemplo: Ich habe <strong>einen</strong> Hund (masc. indefinito) | Ich sehe <strong>den</strong> Tisch (masc. definido).</p>`, tasks: [ { id:'d10-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Entiende el Akkusativ (objeto directo). "der" -> "den".', time:'20 min' }, { id:'d10-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con "haben" + objeto directo.', time:'20 min' }, { id:'d10-t3', icon:'📖', color:'bg-yellow-50', desc:'Completa 10 ejercicios online de Nom vs Akk.', time:'15 min' } ] },
+        { day: 11, word: 'ein', wordTrans: 'un', title: 'Artículos Indefinidos', journalPrompt: 'Escribe 3 frases Nom. y 3 Akk.', exampleSentence: 'Das ist ein Tisch.', exampleTranslation: 'Esto es una mesa.', learningGoals: ["Usar artículos indefinidos Nom/Akk.", "Reconocer los cambios en el acusativo."], lessonContent: `<h3>Artículos Indefinidos: ein/eine</h3><p>En Nominativo son: ein (masc.), eine (fem.), ein (neutro). En Acusativo: **einen** (masc.), eine (fem.), ein (neutro).</p>`, tasks: [ { id:'d11-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende \'ein\' (Nom) y \'einen\' (Akk).', time:'20 min' }, { id:'d11-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe frases: "Das ist ein..." vs. "Ich habe einen...".', time:'20 min' }, { id:'d11-t3', icon:'🗣️', color:'bg-orange-50', desc:'Señala objetos y di "Das es ein/eine...".', time:'10 min' } ] },
+        { day: 12, word: 'mein', wordTrans: 'mi', title: 'Posesivos (mein, dein)', journalPrompt: 'Escribe 5 frases con posesivos.', exampleSentence: 'Mein Bruder heißt Peter.', exampleTranslation: 'Mi hermano se llama Peter.', learningGoals: ["Usar posesivos 'mein' y 'dein'.", "Declinar posesivos."], lessonContent: `<h3>Posesivos: mein y dein</h3><p>Los posesivos se declinan como los artículos indefinidos. Si el sustantivo es femenino o plural, añaden '-e': mein/meine, dein/deine.</p>`, tasks: [ { id:'d12-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende "mein/meine" y "dein/deine" en Nominativo.', time:'20 min' }, { id:'d12-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases sobre tu familia y cosas.', time:'20 min' }, { id:'d12-t3', icon:'🗣️', color:'bg-orange-50', desc:'Describe a tu familia usando posesivos.', time:'15 min' } ] },
+        { day: 13, word: 'rot', wordTrans: 'rojo', title: 'Colores y Adjetivos Básicos', journalPrompt: 'Describe 5 objetos.', exampleSentence: 'Das Auto ist rot.', exampleTranslation: 'El coche es rojo.', learningGoals: ["Nombrar colores.", "Usar adjetivos básicos."], lessonContent: `<h3>Describiendo el mundo: Colores</h3><p>Los colores se usan como en español, pero van sin declinación cuando actúan como predicado (después del verbo sein): Das Auto ist <strong>rot</strong>.</p>`, tasks: [ { id:'d1Next-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 colores y 5 adjetivos.', time:'20 min' }, { id:'d13-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases describiendo objetos.', time:'20 min' }, { id:'d13-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha "Nicos Weg" (A1) e identifica adjetivos.', time:'15 min' } ] },
+        { day: 14, word: 'das Zimmer', wordTrans: 'la Habitación', plural: 'die Zimmer', title: 'Repaso Semana 2', journalPrompt: 'Describe tu habitación.', exampleSentence: 'Mein Zimmer ist klein.', exampleTranslation: 'Mi habitación es pequeña.', learningGoals: ["Consolidar artículos Nom/Akk.", "Practicar vocabulario y posesivos."], lessonContent: `<h3>Repaso de Artículos y Casos</h3><p>Este día es para asegurar que las declinaciones de los artículos definidos e indefinidos en Nominativo y Acusativo son claras. Céntrate en identificar el objeto directo.</p>`, tasks: [ { id:'d14-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Haz un mapa mental de Nom vs Akk.', time:'15 min' }, { id:'d14-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe un párrafo describiendo tu habitación.', time:'25 min' }, { id:'d14-t3', icon:'📖', color:'bg-yellow-50', desc:'Lee un texto A1 sobre una familia.', time:'15 min' } ] },
+        { day: 15, word: 'lernen', wordTrans: 'aprender', title: 'Verbos Regulares', journalPrompt: 'Conjuga "lernen".', exampleSentence: 'Ich lerne Deutsch.', exampleTranslation: 'Aprendo alemán.', learningGoals: ["Conjugar verbos regulares.", "Usar la terminación correcta según el pronombre."], lessonContent: `<h3>La Regla de la Terminación -en</h3><p>La mayoría de verbos terminan en -en. Para conjugar, quita '-en' y añade las terminaciones: -e, -st, -t, -en, -t, -en.</p>`, tasks: [ { id:'d15-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende la conjugación regular.', time:'20 min' }, { id:'d15-t2', icon:'✍️', color:'bg-yellow-50', desc:'Conjuga 5 verbos regulares (Ej: Ich lerne, Du machst).', time:'20 min' }, { id:'d15-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica decir 10 frases con verbos regulares.', time:'15 min' } ] },
+        { day: 16, word: 'fahren', wordTrans: 'conducir/ir', title: 'Verbos Irregulares (con cambio vocal)', journalPrompt: 'Escribe 3 frases con verbos irregulares.', exampleSentence: 'Er fährt zur Arbeit.', exampleTranslation: 'Él conduce al trabajo.', learningGoals: ["Reconocer y conjugar verbos irregulares con cambio de vocal (a->ä, e->i/ie)."], lessonContent: `<h3>Verbos Irregulares (Mutación Vocálica)</h3><p>Muchos verbos en alemán cambian su vocal en la 2ª y 3ª persona del singular (du/er/sie/es). Ejemplo: <strong>fahren</strong> (a -> ä): ich fahre, du fährst, er/sie/es fährt.</p>`, tasks: [ { id:'d16-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende los verbos "fahren" y "sehen" (e->ie).', time:'20 min' }, { id:'d16-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 3 frases con "fahren" y 3 con "sehen".', time:'20 min' }, { id:'d16-t3', icon:'📖', color:'bg-yellow-50', desc:'Busca 3 verbos irregulares más (Ej: sprechen, essen).', time:'15 min' } ] },
+        { day: 17, word: 'der Bahnhof', wordTrans: 'la estación de tren', plural: 'die Bahnhöfe', title: 'Preguntar y dar la hora/dirección', journalPrompt: 'Escribe un diálogo pidiendo una dirección.', exampleSentence: 'Wo ist der Bahnhof?', exampleTranslation: '¿Dónde está la estación de tren?', learningGoals: ["Preguntar la hora (Wie spät ist es?).", "Dar la hora formal e informalmente.", "Preguntar y dar direcciones simples."], lessonContent: `<h3>Preguntando y Dando la Hora</h3><p>Formal: <strong>Es ist [Hora] Uhr [Minutos]</strong>. Informal: Se usa "vor" (antes de) y "nach" (después de) y cuartos ("viertel") y medias horas ("halb"). Ojo: <strong>halb drei</strong> es 2:30.</p>`, tasks: [ { id:'d17-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende a decir la hora (formal/informal).', time:'20 min' }, { id:'d17-t2', icon:'✍️', color:'bg-yellow-50', desc:'Dibuja un mapa y escribe 3 direcciones simples (geradeaus, links, rechts).', time:'20 min' }, { id:'d17-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica decir 5 horas diferentes.', time:'15 min' } ] },
+        { day: 18, word: 'das Brot', wordTrans: 'el pan', plural: 'die Brote', title: 'Comida y Bebida', journalPrompt: 'Escribe tu lista de la compra.', exampleSentence: 'Ich kaufe das Brot.', exampleTranslation: 'Compro el pan.', learningGoals: ["Nombrar comidas y bebidas básicas.", "Hacer un pedido simple en un restaurante."], lessonContent: `<h3>Comida y Pedidos (Bestellungen)</h3><p>Cuando pides comida, puedes usar "Ich möchte..." (Yo quisiera...) o "Ich nehme..." (Yo tomo...). Recuerda los artículos: der Käse, die Butter, das Brot.</p>`, tasks: [ { id:'d18-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 alimentos y 5 bebidas.', time:'20 min' }, { id:'d18-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe un diálogo pidiendo comida y bebida.', time:'20 min' }, { id:'d18-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha un audio sobre compras o un restaurante.', time:'15 min' } ] },
+        { day: 19, word: 'gern', wordTrans: 'con gusto', title: 'Gustos y Aficiones', journalPrompt: 'Escribe 5 cosas que te gustan hacer.', exampleSentence: 'Ich lese gern Bücher.', exampleTranslation: 'Me gusta leer libros.', learningGoals: ["Expresar gustos y aficiones usando 'gern'.", "Nombrar actividades de ocio."], lessonContent: `<h3>Expresando Gustos con 'gern'</h3><p>En alemán no se usa un verbo especial para "gustar" como tal. Simplemente añades el adverbio <strong>gern</strong> (con gusto) después del verbo para indicar que disfrutas de esa actividad.</p><p>Ejemplo: Ich spiele <strong>gern</strong> Fußball.</p>`, tasks: [ { id:'d19-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 verbos de actividad (lesen, schwimmen, kochen).', time:'20 min' }, { id:'d19-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con el patrón "Ich + verbo + gern".', time:'20 min' }, { id:'d19-t3', icon:'🗣️', color:'bg-orange-50', desc:'Pregunta a un amigo (o a ti mismo) "¿Was machst du gern?"', time:'15 min' } ] },
+        { day: 20, word: 'die E-Mail', wordTrans: 'el correo electrónico', plural: 'die E-Mails', title: 'Comunicación y Fechas', journalPrompt: 'Escribe un email corto a un amigo.', exampleSentence: 'Ich schreibe dir eine E-Mail.', exampleTranslation: 'Te escribo un correo electrónico.', learningGoals: ["Escribir un email o una carta corta.", "Nombrar los días de la semana y los meses."], lessonContent: `<h3>Fechas y Días (Tage und Daten)</h3><p>Días de la semana (der Montag, der Dienstag...). Meses (der Januar, der Februar...). Cuando quieres decir "el lunes", usas <strong>am Montag</strong> (Preposición temporal).</p>`, tasks: [ { id:'d20-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende días de la semana y meses.', time:'20 min' }, { id:'d20-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe un email de 5 frases informando sobre tu fin de semana.', time:'20 min' }, { id:'d20-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha y repite el nombre de los meses y días.', time:'15 min' } ] },
+        { day: 21, word: 'Repaso', wordTrans: 'Revisión', title: 'Repaso Semana 3', journalPrompt: 'Escribe un resumen de tu rutina.', exampleSentence: 'Die Woche war lang, jetzt ist Repaso.', exampleTranslation: 'La semana fue larga, ahora es repaso.', learningGoals: ["Consolidar conjugación regular e irregular.", "Repasar vocabulario de comida/ocio/tiempo."], lessonContent: `<h3>Verbos y Expresión de Gustos</h3><p>Asegúrate de que entiendes la posición del verbo en la segunda posición (Ich <strong>spiele</strong> gern Fußball). Repasa los verbos con cambio vocálico para 'du' y 'er/sie/es'.</p>`, tasks: [ { id:'d21-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Revisa la conjugación de 5 verbos regulares e irregulares.', time:'20 min' }, { id:'d21-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe un texto (5-7 frases) sobre tu rutina diaria y gustos.', time:'20 min' }, { id:'d21-t3', icon:'📖', color:'bg-yellow-50', desc:'Haz un test online de nivel A1 de la semana 3.', time:'15 min' } ] },
+        { day: 22, word: 'können', wordTrans: 'poder/saber', title: 'Verbos Modales (können, wollen)', journalPrompt: 'Escribe 3 cosas que puedes hacer y 3 que quieres.', exampleSentence: 'Ich kann Deutsch sprechen.', exampleTranslation: 'Puedo hablar alemán.', learningGoals: ["Usar verbos modales 'können' y 'wollen'.", "Entender la estructura de la oración con verbos modales."], lessonContent: `<h3>Verbos Modales y el Verbo al Final</h3><p>Cuando usas un verbo modal, el verbo principal de la acción se va, sin conjugar (infinitivo), al **final** de la oración.</p><p>Ejemplo: Ich <strong>kann</strong> gut Deutsch <strong>sprechen</strong>.</p>`, tasks: [ { id:'d22-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende a conjugar "können" y "wollen" (irregulares).', time:'20 min' }, { id:'d22-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con el patrón: Modal + Objeto + Infinitivo.', time:'20 min' }, { id:'d22-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica pedir algo: "Ich will/kann...".', time:'15 min' } ] },
+        { day: 23, word: 'müssen', wordTrans: 'deber (obligación)', title: 'Verbos Modales (müssen, dürfen)', journalPrompt: 'Escribe 3 obligaciones y 3 permisos.', exampleSentence: 'Ich muss arbeiten.', exampleTranslation: 'Debo trabajar.', learningGoals: ["Usar verbos modales 'müssen' y 'dürfen'.", "Distinguir entre obligación, necesidad y permiso."], lessonContent: `<h3>Obligación y Permiso</h3><p><strong>Müssen</strong> (tener que, obligación fuerte) y <strong>dürfen</strong> (tener permiso). Ambos siguen la regla del verbo principal al final.</p><p>Ejemplo: Du <strong>darfst</strong> hier nicht <strong>rauchen</strong> (No se te permite fumar aquí).</p>`, tasks: [ { id:'d23-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende a conjugar "müssen" y "dürfen".', time:'20 min' }, { id:'d23-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 3 prohibiciones y 3 obligaciones en alemán.', time:'20 min' }, { id:'d23-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha diálogos que usen modales y anota las frases.', time:'15 min' } ] },
+        { day: 24, word: 'die Wohnung', wordTrans: 'el apartamento', plural: 'die Wohnungen', title: 'Vivienda y Preposiciones de Lugar (Wo)', journalPrompt: 'Describe tu apartamento usando preposiciones.', exampleSentence: 'Die Küche ist in der Wohnung.', exampleTranslation: 'La cocina está en el apartamento.', learningGoals: ["Nombrar habitaciones y muebles.", "Usar preposiciones de lugar (in, auf, unter) con Dativ."], lessonContent: `<h3>Wo (Dónde) y el Caso Dativo</h3><p>Cuando preguntas <strong>Wo?</strong> (Dónde?), la preposición de lugar (in, auf, unter, etc.) activa el caso **Dativo**.</p><p>Ejemplo: Die Lampe ist <strong>auf dem Tisch</strong> (auf + Dativo masculino: der -> dem).</p>`, tasks: [ { id:'d24-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 palabras de muebles y habitaciones.', time:'20 min' }, { id:'d24-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases usando preposiciones de lugar (Wo? -> Dativ).', time:'20 min' }, { id:'d24-t3', icon:'🗣️', color:'bg-orange-50', desc:'Describe la posición de 5 objetos en tu habitación.', time:'15 min' } ] },
+        { day: 25, word: 'die Reise', wordTrans: 'el viaje', plural: 'die Reisen', title: 'Viajes y Transporte', journalPrompt: 'Escribe sobre un viaje reciente o planeado.', exampleSentence: 'Ich mache eine Reise nach Berlin.', exampleTranslation: 'Hago un viaje a Berlín.', learningGoals: ["Nombrar tipos de transporte.", "Hablar de planes de viaje simples.", "Usar preposiciones de movimiento (Wohin)."], lessonContent: `<h3>Wohin (A dónde) y el Caso Acusativo</h3><p>Cuando preguntas <strong>Wohin?</strong> (¿A dónde?), la preposición de lugar activa el caso **Acusativo**.</p><p>Ejemplo: Ich gehe <strong>in die Küche</strong> (in + Acusativo femenino: die -> die).</p>`, tasks: [ { id:'d25-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 5 tipos de transporte.', time:'20 min' }, { id:'d25-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con el patrón: Verbo de movimiento + Preposición + Acusativo.', time:'20 min' }, { id:'d25-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha audios sobre anuncios de trenes/vuelos.', time:'15 min' } ] },
+        { day: 26, word: 'das Wetter', wordTrans: 'el clima', plural: 'das Wetter', title: 'Clima y Estaciones', journalPrompt: 'Describe el clima de hoy y de tu país.', exampleSentence: 'Das Wetter ist heute schön.', exampleTranslation: 'El clima es lindo hoy.', learningGoals: ["Nombrar las estaciones y el clima básico.", "Hacer preguntas sobre el clima."], lessonContent: `<h3>Hablando del Clima</h3><p>Para hablar del clima, se usa a menudo el sujeto impersonal <strong>Es</strong> (ello).</p><p>Ejemplo: <strong>Es</strong> regnet (Llueve). <strong>Es</strong> ist kalt (Hace frío).</p>`, tasks: [ { id:'d26-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende las 4 estaciones y 10 palabras de clima.', time:'20 min' }, { id:'d26-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases sobre el clima de las estaciones (Ej: Im Winter ist es kalt).', time:'20 min' }, { id:'d26-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica decir el pronóstico del tiempo para mañana.', time:'15 min' } ] },
+        { day: 27, word: 'der Beruf', wordTrans: 'la profesión', plural: 'die Berufe', title: 'Profesiones y Trabajo', journalPrompt: 'Describe tu profesión y la de 2 personas más.', exampleSentence: 'Ich bin Student.', exampleTranslation: 'Soy estudiante.', learningGoals: ["Nombrar profesiones comunes.", "Preguntar y responder sobre el trabajo (Was machst du beruflich?)."], lessonContent: `<h3>Las Profesiones</h3><p>En alemán, las profesiones tienen forma masculina y femenina. Ejemplo: der Lehrer (el profesor) y die Lehrerin (la profesora).</p><p>Para preguntar: <strong>Was sind Sie von Beruf?</strong> (¿Qué es usted de profesión?).</p>`, tasks: [ { id:'d27-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 profesiones (masculinas y femeninas).', time:'20 min' }, { id:'d27-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases sobre profesiones usando "Ich bin..." o "Er/Sie ist...".', time:'20 min' }, { id:'d27-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha 5 diálogos cortos sobre el trabajo.', time:'15 min' } ] },
+        { day: 28, word: 'weil', wordTrans: 'porque', title: 'Conjunciones Subordinantes (weil)', journalPrompt: 'Escribe 3 frases usando "weil".', exampleSentence: 'Ich lerne Deutsch, weil es interessant ist.', exampleTranslation: 'Aprendo alemán porque es interesante.', learningGoals: ["Usar la conjunción 'weil'.", "Dominar la estructura subordinada (verbo al final)."], lessonContent: `<h3>La Regla del Verbo al Final con 'weil'</h3><p>Las conjunciones subordinantes como <strong>weil</strong> (porque) envían el verbo conjugado al **final** de la oración subordinada.</p><p>Ejemplo: Ich gehe nach Hause, <strong>weil ich müde bin</strong>.</p>`, tasks: [ { id:'d28-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende la regla: weil + sujeto + complementos + verbo (al final).', time:'20 min' }, { id:'d28-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases que expliquen por qué haces algo (Ej: Ich esse, weil ich Hunger habe).', time:'20 min' }, { id:'d28-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica decir las frases del diario en voz alta.', time:'15 min' } ] },
+        { day: 29, word: 'Prüfung', wordTrans: 'examen', title: 'Simulación de Examen A1', journalPrompt: 'Escribe 5 preguntas y respuestas típicas de un examen A1.', exampleSentence: 'Ich mache heute die Prüfung.', exampleTranslation: 'Hago el examen hoy.', learningGoals: ["Practicar todos los temas de la gramática A1.", "Prepararse para los formatos de preguntas de exámenes reales (Goethe/Telc)."], lessonContent: `<h3>Consejos para la Prueba A1</h3><p>Concéntrate en el formato: 1. Comprensión Lectora/Auditiva (identificar info clave), 2. Gramática/Vocabulario (artículos, verbos, preposiciones), 3. Expresión Escrita/Oral (presentación personal, rellenar formularios).</p>`, tasks: [ { id:'d29-t1', icon:'📖', color:'bg-yellow-50', desc:'Lectura: Haz un modelo de examen de lectura A1.', time:'30 min' }, { id:'d29-t2', icon:'🎧', color:'bg-pink-50', desc:'Auditiva: Haz un modelo de examen de audición A1.', time:'30 min' }, { id:'d29-t3', icon:'🗣️', color:'bg-orange-50', desc:'Oral: Prepárate para presentarte y hablar de 3 temas (familia, hobby, trabajo).', time:'20 min' } ] },
+        { day: 30, word: 'Tschüss', wordTrans: 'Adiós', plural: 'Tschüss', title: '¡Felicidades! Nivel A1 Terminado', journalPrompt: 'Escribe un plan de estudio para el nivel A2.', exampleSentence: 'Tschüss, bis bald!', exampleTranslation: 'Adiós, ¡hasta pronto!', learningGoals: ["Reconocer el progreso hecho.", "Planificar los siguientes pasos de aprendizaje (A2)."], lessonContent: `<h3>¡Felicidades!</h3><p>Has completado el plan de 30 días. Tu progreso en el Nivel A1 es notable. En el nivel A2, te concentrarás en el **Präteritum** (pasado simple), el **Dativ** y las preposiciones complejas. ¡A seguir aprendiendo!</p>`, tasks: [ { id:'d30-t1', icon:'🧠', color:'bg-purple-50', desc:'Mentalidad: Revisa tu diario de 30 días y mira tu progreso.', time:'20 min' }, { id:'d30-t2', icon:'✍️', color:'bg-yellow-50', desc:'Planifica los temas gramaticales de A2.', time:'20 min' }, { id:'d30-t3', icon:'🎉', color:'bg-pink-50', desc:'¡Celebra tu éxito! Repite tus frases favoritas.', time:'10 min' } ] },
+      ];
+
+      // --- ESTADO Y ALMACENAMIENTO ---
+      let state = {
+        currentDay: 1,
+        tasks: {}, 
+        journals: {},
+        reminders: [],
+        lastActiveDate: null,
+      };
+
+      function loadState() {
+        const savedState = localStorage.getItem('germanPlanState');
+        if (savedState) {
+          state = JSON.parse(savedState);
+          // Migración/Actualización de datos (si es necesario)
+          state.tasks = state.tasks || {};
+          state.journals = state.journals || {};
+          state.reminders = state.reminders || [];
+          state.lastActiveDate = state.lastActiveDate || null;
+        }
+      }
+
+      function saveState() {
+        localStorage.setItem('germanPlanState', JSON.stringify(state));
+        console.log("Estado guardado automáticamente.");
+      }
+
+      // --- LÓGICA DE RACHA (STREAK) ---
+      function getStreak() {
+        let streak = 0;
+        let currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Reset time to midnight
+        let checkDate = new Date(currentDate);
+
+        // Check if today's tasks are done
+        const todayDayIndex = state.currentDay - 1;
+        if (todayDayIndex >= 0 && PLAN_DIARIO[todayDayIndex] && areAllTasksDone(PLAN_DIARIO[todayDayIndex].tasks, todayDayIndex + 1)) {
+          streak = 1;
+          checkDate.setDate(checkDate.getDate() - 1); // Move to yesterday
+        }
+
+        // Check previous days
+        for (let i = state.currentDay - 2; i >= 0; i--) {
+            const dayData = PLAN_DIARIO[i];
+            const dayNumber = i + 1;
+            
+            // Reconstruct the date when this day was completed
+            let completionDate = null;
+            // This is a simplified check: we assume a day is "completed" if all tasks are done.
+            // A more robust implementation would track *when* they were completed.
+            if (areAllTasksDone(dayData.tasks, dayNumber)) {
+              // Simple heuristic: The day was completed on its number-th day from start, 
+              // or on the day before the first task was checked today.
+              // For simplicity, we just check if the tasks for day N were done before or on day N.
+              
+              // For a real streak logic, we need to know the *completion date* for each day.
+              // Since we don't store individual task completion dates, we'll use a simplified model:
+              // Streak is the number of consecutive days *ending yesterday* for which the previous day's tasks were completed.
+              
+              // Simplified check: If day N is completed, and it's the day before checkDate, count it.
+              
+              // A simple, functional streak: count how many consecutive days, ending with the previous completed day, have their tasks done.
+              
+              // For the sake of this simple app, we'll just check if the previous day's tasks are done, and if today's are done.
+              // If Day N is completed, and Day N+1 is completed, streak = 2.
+              // We'll count completed days from the start up to (and including) state.currentDay - 1.
+              // If today's tasks are done, we include today.
+              
+              streak = dayNumber;
+            } else {
+              break;
+            }
+        }
+        
+        let consecutiveCompletedDays = 0;
+        for (let i = 0; i < state.currentDay; i++) {
+          const dayNumber = i + 1;
+          const dayTasks = PLAN_DIARIO[i].tasks;
+          if (areAllTasksDone(dayTasks, dayNumber)) {
+            consecutiveCompletedDays++;
+          } else {
+            // Reset streak if a day is missed, but only up to the currently displayed day
+            // This logic is complex without time-stamping, so we will use a simpler display logic:
+            // STREAK = number of consecutive *completed* days leading up to today (or the last completed day).
+          }
+        }
+        
+        // This simple version will just display the longest chain of completed days from day 1 to the current day.
+        
+        // Final simplified streak calculation:
+        let simpleStreak = 0;
+        for (let i = 1; i <= state.currentDay; i++) {
+            if (areAllTasksDone(PLAN_DIARIO[i-1].tasks, i)) {
+                simpleStreak++;
+            } else {
+                // If a day is missed, the streak is broken for this simple count
+                // But we don't want to reset if the tasks are just for a future day.
+                // We'll check from the last day backwards.
+                break;
+            }
+        }
+
+        // New, more correct approach: Calculate max consecutive days finished *up to* yesterday/today.
+        let maxStreak = 0;
+        let currentStreak = 0;
+        
+        // We only care about days up to the one before the current day,
+        // unless today's is complete.
+        const daysToCheck = areAllTasksDone(PLAN_DIARIO[state.currentDay - 1]?.tasks, state.currentDay) ? state.currentDay : state.currentDay - 1;
+
+        for (let i = 1; i <= daysToCheck; i++) {
+            if (areAllTasksDone(PLAN_DIARIO[i-1].tasks, i)) {
+                currentStreak++;
+                maxStreak = Math.max(maxStreak, currentStreak);
+            } else {
+                currentStreak = 0;
+            }
+        }
+        
+        return maxStreak; // Returns max consecutive days finished.
+      }
+      
+      function updateStreakDisplay() {
+          const streakValue = getStreak();
+          const streakDisplay = document.getElementById('streak');
+          if (streakDisplay) {
+             streakDisplay.textContent = `${streakValue} Día${streakValue === 1 ? '' : 's'} 🔥`;
+          }
+      }
+
+      // --- LÓGICA DE DÍAS Y NAVEGACIÓN ---
+      let currentlyDisplayedDay = state.currentDay; 
+      
+      function goToDay(dayNumber) {
+        dayNumber = Math.min(Math.max(1, dayNumber), PLAN_DIARIO.length); // Clamp
+        currentlyDisplayedDay = dayNumber;
+        renderDay(dayNumber);
+        updateNavigationButtons(dayNumber);
+        updateHeaderAndProgress();
+        updateJournalDaySelect(dayNumber);
+        updateJournal(dayNumber);
+        updateWordOfDay(dayNumber);
+        saveState(); // Guardar el día actual al navegar
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function updateNavigationButtons(dayNumber) {
+        const prevBtn = document.getElementById('prevDayBtn');
+        const nextBtn = document.getElementById('nextDayBtn');
+        
+        if (prevBtn) prevBtn.disabled = dayNumber <= 1;
+        if (nextBtn) nextBtn.disabled = dayNumber >= PLAN_DIARIO.length;
+        
+        const currentDayDisplay = document.getElementById('currentDayDisplay');
+        if (currentDayDisplay) {
+            currentDayDisplay.textContent = `Día ${dayNumber} / ${PLAN_DIARIO.length}`;
+        }
+      }
+
+      function updateWordOfDay(dayNumber) {
+        const dayData = PLAN_DIARIO[dayNumber - 1];
+        if (dayData) {
+          document.getElementById('wodTitle').textContent = `Wort des Tages (Palabra del Día - Día ${dayNumber})`;
+          document.getElementById('wodWord').textContent = dayData.word;
+          document.getElementById('wodTranslation').textContent = dayData.wordTrans;
+          document.getElementById('wodPlural').textContent = dayData.plural ? `Plural: ${dayData.plural}` : '';
+        }
+      }
+
+      // --- LÓGICA DE TAREAS Y PROGRESO ---
+      function getDayTasksState(dayNumber) {
+        const dayKey = `day-${dayNumber}`;
+        if (!state.tasks[dayKey]) {
+          state.tasks[dayKey] = {};
+          // Initialize state based on the tasks defined in PLAN_DIARIO
+          PLAN_DIARIO[dayNumber - 1].tasks.forEach(task => {
+            state.tasks[dayKey][task.id] = false;
+          });
+        }
+        return state.tasks[dayKey];
+      }
+
+      function areAllTasksDone(tasks, dayNumber) {
+        const tasksState = getDayTasksState(dayNumber);
+        if (tasks.length === 0) return false; // Day must have tasks to be "done"
+        return tasks.every(task => tasksState[task.id] === true);
+      }
+      
+      function getTotalProgress() {
+          let totalTasks = 0;
+          let completedTasks = 0;
+          PLAN_DIARIO.forEach((dayData, index) => {
+              const dayNumber = index + 1;
+              const tasksState = getDayTasksState(dayNumber);
+              dayData.tasks.forEach(task => {
+                  totalTasks++;
+                  if (tasksState[task.id] === true) {
+                      completedTasks++;
+                  }
+              });
+          });
+          return { totalTasks, completedTasks };
+      }
+
+      function updateHeaderAndProgress() {
+        const { totalTasks, completedTasks } = getTotalProgress();
+        const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+        
+        const progressPercent = document.getElementById('progressPercent');
+        const progressBar = document.getElementById('progressBar');
+        const headerDayDisplay = document.getElementById('headerDayDisplay');
+        
+        if (progressPercent) progressPercent.textContent = `${progress}%`;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (headerDayDisplay) headerDayDisplay.textContent = `Día ${currentlyDisplayedDay} / ${PLAN_DIARIO.length}`;
+
+        // Lógica para avanzar el día actual (state.currentDay)
+        const currentDayTasks = PLAN_DIARIO[state.currentDay - 1]?.tasks;
+        if (currentDayTasks && areAllTasksDone(currentDayTasks, state.currentDay) && state.currentDay < PLAN_DIARIO.length) {
+          state.currentDay++; // Avanzar automáticamente al siguiente día no completado
+          saveState();
+        }
+        
+        // Renderizar de nuevo el día actual si está siendo visualizado
+        if (currentlyDisplayedDay === state.currentDay - 1 && state.currentDay > 1) {
+             goToDay(state.currentDay); // Opcional: navegar al nuevo día
+        }
+
+        updateStreakDisplay();
+      }
+
+      function handleTaskChange(event, dayNumber, taskId) {
+        const isChecked = event.target.checked;
+        const dayKey = `day-${dayNumber}`;
+        
+        if (!state.tasks[dayKey]) {
+          getDayTasksState(dayNumber); // Ensure initialization
+        }
+        
+        state.tasks[dayKey][taskId] = isChecked;
+        
+        const listItem = event.target.closest('.task-item');
+        if (listItem) {
+          const taskLabel = listItem.querySelector('.task-label');
+          if (taskLabel) {
+            if (isChecked) {
+              taskLabel.classList.add('task-done');
+            } else {
+              taskLabel.classList.remove('task-done');
+            }
+          }
+        }
+
+        updateHeaderAndProgress();
+        renderDay(currentlyDisplayedDay); // Re-render para actualizar el estado de "Completado"
+        saveState();
+
+        // Confetti al terminar un día
+        const dayData = PLAN_DIARIO[dayNumber - 1];
+        if (areAllTasksDone(dayData.tasks, dayNumber)) {
+          showConfetti();
+        }
+      }
+
+      function renderTasks(dayData, dayNumber, taskListContainer) {
+        taskListContainer.innerHTML = '';
+        const dayTasksState = getDayTasksState(dayNumber);
+        const template = document.getElementById('task-template');
+        
+        dayData.tasks.forEach(task => {
+          const clone = template.content.cloneNode(true);
+          const taskItem = clone.querySelector('.task-item');
+          const checkbox = clone.querySelector('.task-checkbox');
+          const taskIcon = clone.querySelector('.task-icon');
+          const taskDesc = clone.querySelector('.task-desc');
+          const taskTime = clone.querySelector('.task-time');
+          const taskLabel = clone.querySelector('.task-label');
+          
+          checkbox.id = `task-${dayNumber}-${task.id}`;
+          checkbox.checked = dayTasksState[task.id] === true;
+          checkbox.addEventListener('change', (e) => handleTaskChange(e, dayNumber, task.id));
+
+          taskIcon.textContent = task.icon;
+          taskDesc.textContent = task.desc;
+          taskTime.textContent = task.time ? `(${task.time})` : '';
+          
+          if (checkbox.checked) {
+             taskLabel.classList.add('task-done');
+          }
+
+          taskListContainer.appendChild(clone);
+        });
+      }
+
+      function renderDay(dayNumber) {
+        const dayData = PLAN_DIARIO[dayNumber - 1];
+        const container = document.getElementById('daysContainer');
+        container.innerHTML = ''; // Limpiar contenido anterior
+        
+        if (!dayData) {
+          container.innerHTML = `<p class="text-red-500">Error: Día ${dayNumber} no encontrado.</p>`;
+          return;
+        }
+
+        const template = document.getElementById('day-template');
+        const clone = template.content.cloneNode(true);
+        
+        // Rellenar cabecera del día
+        clone.querySelector('.day-title').textContent = `📅 Día ${dayNumber}: ${dayData.title}`;
+        clone.querySelector('.day-word strong').textContent = dayData.word;
+
+        // Título/Palabra clave
+        const dayStatus = clone.querySelector('.day-status');
+        if (areAllTasksDone(dayData.tasks, dayNumber)) {
+           dayStatus.innerHTML = '<span class="text-green-600 font-bold">Completado 🎉</span>';
+        } else {
+           dayStatus.innerHTML = '<span class="text-yellow-600 font-medium">Pendiente...</span>';
+        }
+        
+        // Rellenar contenido de la lección
+        const lessonContent = clone.querySelector('.lesson-content');
+        lessonContent.innerHTML = dayData.lessonContent || '<p>Contenido de la lección no disponible para este día.</p>';
+
+        // Rellenar la lista de tareas
+        const taskList = clone.querySelector('.task-list');
+        renderTasks(dayData, dayNumber, taskList);
+
+        // Añadir evento al botón de diario
+        const journalFocusBtn = clone.querySelector('.journal-focus-btn');
+        journalFocusBtn.addEventListener('click', () => {
+            updateJournalDaySelect(dayNumber);
+            updateJournal(dayNumber);
+            document.getElementById('journalText').focus();
+            window.scrollTo({ top: document.getElementById('journalText').getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' });
+        });
+
+        // Manejar las pestañas
+        const dayArticle = clone.querySelector('article');
+        const tabButtons = dayArticle.querySelectorAll('.tab-button');
+        const lessonTab = dayArticle.querySelector('.lesson-tab');
+        const tasksTab = dayArticle.querySelector('.tasks-tab');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const targetTab = e.target.getAttribute('data-tab');
+                
+                // Reset active class on all buttons
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Set active class on clicked button
+                e.target.classList.add('active');
+
+                // Toggle content visibility
+                lessonTab.classList.add('hidden');
+                tasksTab.classList.add('hidden');
+
+                if (targetTab === 'lesson') {
+                    lessonTab.classList.remove('hidden');
+                } else if (targetTab === 'tasks') {
+                    tasksTab.classList.remove('hidden');
+                }
+            });
+        });
+
+        container.appendChild(clone);
+      }
+
+      // --- MODAL Y QUIZ (Wort des Tages) ---
+      let currentWordIndex = 0;
+
+      function showModal(type, dayIndex = currentlyDisplayedDay - 1) {
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const modal = document.getElementById('modal');
+        const quizView = document.getElementById('quizView');
+        const answerView = document.getElementById('answerView');
+        const greetingView = document.getElementById('greetingView');
+        const reminderView = document.getElementById('reminderView');
+        
+        if (!modalBackdrop || !modal) return;
+        
+        // Ocultar todas las vistas
+        quizView.classList.add('hidden');
+        answerView.classList.add('hidden');
+        greetingView.classList.add('hidden');
+        reminderView.classList.add('hidden');
+        
+        modalBackdrop.classList.remove('hidden');
+        modalBackdrop.style.display = 'flex';
+        modal.classList.remove('shake-anim'); // Reset shake
+
+        if (type === 'quiz') {
+            currentWordIndex = dayIndex;
+            setupQuiz();
+            quizView.classList.remove('hidden');
+            document.getElementById('modalTitle').textContent = `Wort des Tages (Día ${dayIndex + 1})`;
+            document.getElementById('quizInput').focus();
+        } else if (type === 'greeting') {
+            document.getElementById('modalTitle').textContent = '¡Bienvenido a Tu Plan de Alemán!';
+            document.getElementById('greetingMessage').textContent = 'Estás a punto de empezar tu viaje A1. ¡Mucha suerte!';
+            greetingView.classList.remove('hidden');
+        } else if (type === 'reminder') {
+            document.getElementById('modalTitle').textContent = 'Recordatorios y Notas';
+            renderReminders();
+            reminderView.classList.remove('hidden');
+            document.getElementById('reminderInput').focus();
+        }
+      }
+
+      function setupQuiz() {
+        const dayData = PLAN_DIARIO[currentWordIndex];
+        if (dayData) {
+          document.getElementById('quizWordTrans').textContent = dayData.wordTrans;
+          document.getElementById('quizInput').value = '';
+          document.getElementById('quizFeedback').textContent = '';
+          document.getElementById('checkAnswerBtn').classList.remove('hidden');
+          document.getElementById('revealAnswerBtn').classList.remove('hidden');
+        }
+      }
+
+      function checkAnswer() {
+        const dayData = PLAN_DIARIO[currentWordIndex];
+        const input = document.getElementById('quizInput').value.trim();
+        const feedback = document.getElementById('quizFeedback');
+        
+        if (!dayData || !input) {
+          feedback.textContent = 'Por favor, introduce una respuesta.';
+          return;
+        }
+
+        // Simplificación: solo la palabra sin artículo
+        const correctWord = dayData.word.replace(/^(der|die|das)\s/i, '').trim();
+        const correctFullWord = dayData.word.trim();
+
+        if (input.toLowerCase() === correctWord.toLowerCase() || input.toLowerCase() === correctFullWord.toLowerCase()) {
+          showAnswer(true);
+        } else {
+          feedback.textContent = '❌ Respuesta incorrecta. Intenta de nuevo.';
+          document.getElementById('modal').classList.add('shake-anim');
+          setTimeout(() => document.getElementById('modal').classList.remove('shake-anim'), 300);
+        }
+      }
+
+      function showAnswer(isCorrect = false) {
+        const dayData = PLAN_DIARIO[currentWordIndex];
+        const quizView = document.getElementById('quizView');
+        const answerView = document.getElementById('answerView');
+        
+        quizView.classList.add('hidden');
+        answerView.classList.remove('hidden');
+
+        document.getElementById('modalMessage').innerHTML = isCorrect 
+            ? `¡Correcto! La palabra del Día ${currentWordIndex + 1} es: <strong>${dayData.word}</strong> (${dayData.wordTrans})`
+            : `La palabra del Día ${currentWordIndex + 1} es: <strong>${dayData.word}</strong> (${dayData.wordTrans})`;
+        
+        document.getElementById('modalExampleSentence').textContent = dayData.exampleSentence || 'No hay ejemplo.';
+        document.getElementById('modalExampleTranslation').textContent = dayData.exampleTranslation || '';
+
+        // Actualizar navegación de palabras
+        document.getElementById('prevWord').disabled = currentWordIndex <= 0;
+        document.getElementById('nextWord').disabled = currentWordIndex >= PLAN_DIARIO.length - 1;
+        
+        // Botón "Cerrar"
+        const closeModalBtn = document.getElementById('closeModal');
+        if (closeModalBtn) closeModalBtn.focus();
+      }
+
+      function nextWord() {
+        if (currentWordIndex < PLAN_DIARIO.length - 1) {
+          currentWordIndex++;
+          setupQuiz();
+          document.getElementById('quizView').classList.remove('hidden');
+          document.getElementById('answerView').classList.add('hidden');
+          document.getElementById('modalTitle').textContent = `Wort des Tages (Día ${currentWordIndex + 1})`;
+        }
+        document.getElementById('prevWord').disabled = currentWordIndex <= 0;
+        document.getElementById('nextWord').disabled = currentWordIndex >= PLAN_DIARIO.length - 1;
+      }
+
+      function prevWord() {
+        if (currentWordIndex > 0) {
+          currentWordIndex--;
+          setupQuiz();
+          document.getElementById('quizView').classList.remove('hidden');
+          document.getElementById('answerView').classList.add('hidden');
+          document.getElementById('modalTitle').textContent = `Wort des Tages (Día ${currentWordIndex + 1})`;
+        }
+        document.getElementById('prevWord').disabled = currentWordIndex <= 0;
+        document.getElementById('nextWord').disabled = currentWordIndex >= PLAN_DIARIO.length - 1;
+      }
+
+      // --- LÓGICA DEL DIARIO ---
+      function updateJournal(dayNumber) {
+        const journalTextarea = document.getElementById('journalText');
+        const journalCurrentDay = document.getElementById('journalCurrentDay');
+        const dayKey = `day-${dayNumber}`;
+        
+        if (journalTextarea && journalCurrentDay) {
+            journalTextarea.value = state.journals[dayKey] || '';
+            journalTextarea.placeholder = PLAN_DIARIO[dayNumber - 1]?.journalPrompt || 'Escribe tus frases...';
+            journalCurrentDay.textContent = dayNumber;
+        }
+      }
+      
+      function updateJournalDaySelect(dayNumber) {
+        const journalDaySelect = document.getElementById('journalDay');
+        if (journalDaySelect) {
+            // Rellenar las opciones si es la primera vez
+            if (journalDaySelect.options.length === 0) {
+                PLAN_DIARIO.forEach((dayData, index) => {
+                    const option = document.createElement('option');
+                    option.value = index + 1;
+                    option.textContent = `Día ${index + 1}: ${dayData.title}`;
+                    journalDaySelect.appendChild(option);
+                });
+                journalDaySelect.addEventListener('change', (e) => {
+                    const selectedDay = parseInt(e.target.value);
+                    if (!isNaN(selectedDay)) {
+                        updateJournal(selectedDay);
+                    }
+                });
+            }
+            // Seleccionar el día correcto
+            journalDaySelect.value = dayNumber;
+        }
+      }
+
+      function saveJournal() {
+        const dayNumber = parseInt(document.getElementById('journalDay').value);
+        const text = document.getElementById('journalText').value;
+        const dayKey = `day-${dayNumber}`;
+        
+        if (!isNaN(dayNumber) && dayKey) {
+            state.journals[dayKey] = text;
+            saveState();
+            const saveBtn = document.getElementById('saveJournal');
+            saveBtn.textContent = '¡Guardado!';
+            setTimeout(() => { saveBtn.textContent = 'Guardar'; }, 1500);
+        }
+      }
+      
+      // Auto-save journal every 30 seconds
+      function setupAutoSave() {
+          const journalTextarea = document.getElementById('journalText');
+          if (journalTextarea) {
+              journalTextarea.addEventListener('input', () => {
+                  // Throttle autosave or just update state for manual save
+                  // For simplicity, we rely on the window.beforeunload save, 
+                  // but we'll add a simple save on input to reflect state immediately.
+                  const dayNumber = parseInt(document.getElementById('journalDay').value);
+                  const text = journalTextarea.value;
+                  const dayKey = `day-${dayNumber}`;
+                  if (!isNaN(dayNumber) && dayKey) {
+                      state.journals[dayKey] = text;
+                  }
+              });
+          }
+          // The main save logic is tied to beforeunload and the button click.
+      }
+      
+      // --- IMPORTAR / EXPORTAR ---
+      function exportState() {
+          const json = JSON.stringify(state);
+          const blob = new Blob([json], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `german_plan_state_${new Date().toISOString().slice(0, 10)}.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+      }
+      
+      function importState(file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+              try {
+                  const importedState = JSON.parse(e.target.result);
+                  // Validación mínima para asegurar que es nuestro formato
+                  if (importedState && typeof importedState.currentDay === 'number' && importedState.tasks && importedState.journals) {
+                      state = importedState;
+                      saveState();
+                      alert('¡Progreso importado con éxito! Recargando la aplicación.');
+                      window.location.reload();
+                  } else {
+                      alert('Error: El archivo importado no parece ser un archivo de estado de este plan.');
+                  }
+              } catch (error) {
+                  alert('Error al leer el archivo: Formato JSON inválido.');
+              }
+          };
+          reader.readAsText(file);
+      }
+      
+      // --- LÓGICA DE RECORDATORIOS ---
+      function addReminder() {
+          const input = document.getElementById('reminderInput');
+          const text = input.value.trim();
+          if (text) {
+              state.reminders.push({ id: Date.now(), text: text });
+              input.value = '';
+              renderReminders();
+              saveState();
+          }
+      }
+      
+      function deleteReminder(id) {
+          state.reminders = state.reminders.filter(r => r.id !== id);
+          renderReminders();
+          saveState();
+      }
+
+      function renderReminders() {
+          const list = document.getElementById('reminderList');
+          if (!list) return;
+
+          list.innerHTML = '';
+          
+          if (state.reminders.length === 0) {
+              list.innerHTML = '<li class="text-gray-500 italic text-sm">No hay notas guardadas.</li>';
+              return;
+          }
+
+          state.reminders.forEach(reminder => {
+              const li = document.createElement('li');
+              li.className = 'flex justify-between items-start p-2 bg-gray-50 rounded-md border border-gray-200';
+              li.innerHTML = `
+                  <span class="text-sm text-gray-800 flex-1 pr-2">${reminder.text}</span>
+                  <button data-id="${reminder.id}" class="delete-reminder-btn text-red-500 hover:text-red-700 text-xs font-medium px-1 pt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+              `;
+              list.appendChild(li);
+          });
+          
+          list.querySelectorAll('.delete-reminder-btn').forEach(btn => {
+              btn.addEventListener('click', (e) => {
+                  const id = parseInt(e.currentTarget.getAttribute('data-id'));
+                  deleteReminder(id);
+              });
+          });
+      }
+
+      // --- FUNCIONES UTILITARIAS ---
+      function speakGerman(text) {
+          if ('speechSynthesis' in window) {
+              const utterance = new SpeechSynthesisUtterance(text);
+              utterance.lang = 'de-DE'; // Código de idioma para alemán
+              speechSynthesis.speak(utterance);
+          } else {
+              alert('Tu navegador no soporta la API de Síntesis de Voz.');
+          }
+      }
+      
+      function showConfetti() {
+          if (typeof confetti !== 'undefined') {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+          }
+      }
+
+      // --- INICIALIZACIÓN ---
+      function initializeApp() {
+          loadState();
+          
+          // Verificar si es la primera visita
+          if (localStorage.getItem('germanPlanFirstVisit') === null) {
+              localStorage.setItem('germanPlanFirstVisit', 'false');
+              showModal('greeting'); // Mostrar mensaje de bienvenida la primera vez
+          }
+
+          // Verificar si el día actual almacenado está completo
+          let initialDay = state.currentDay;
+          if (initialDay <= PLAN_DIARIO.length) {
+             const currentDayTasks = PLAN_DIARIO[initialDay - 1]?.tasks;
+             // Si el día actual está completo, avanzamos al siguiente día disponible
+             while (initialDay <= PLAN_DIARIO.length && areAllTasksDone(currentDayTasks, initialDay)) {
+                initialDay++;
+             }
+             // Si encontramos un día no completado, lo establecemos como el día actual
+             if (initialDay <= PLAN_DIARIO.length) {
+                state.currentDay = initialDay;
+             }
+             // Si todos los días están completos, se queda en el último día
+             if (initialDay > PLAN_DIARIO.length) {
+                 state.currentDay = PLAN_DIARIO.length;
+             }
+          }
+          currentlyDisplayedDay = state.currentDay;
+          
+          // Lógica para el "Jump Day" select
+          const jumpDaySelect = document.getElementById('jumpDay');
+          if (jumpDaySelect) {
+              PLAN_DIARIO.forEach((dayData) => {
+                  const option = document.createElement('option');
+                  option.value = dayData.day;
+                  option.textContent = `Día ${dayData.day}: ${dayData.title}`;
+                  jumpDaySelect.appendChild(option);
+              });
+          }
+          
+          // Renderizar la vista inicial
+          goToDay(state.currentDay);
+          setupAutoSave();
+
+          // Configurar Event Listeners
+          const prevDayBtn = document.getElementById('prevDayBtn');
+          const nextDayBtn = document.getElementById('nextDayBtn');
+          const goDayBtn = document.getElementById('goDay');
+          const openWordOfDayCard = document.getElementById('openWordOfDayCard');
+          const checkAnswerBtn = document.getElementById('checkAnswerBtn');
+          const revealAnswerBtn = document.getElementById('revealAnswerBtn');
+          const quizInput = document.getElementById('quizInput');
+          const prevWord = document.getElementById('prevWord');
+          const nextWord = document.getElementById('nextWord');
+          const closeModalBtn = document.getElementById('closeModal');
+          const closeGreetingBtn = document.getElementById('closeGreetingBtn');
+          const modalBackdrop = document.getElementById('modalBackdrop');
+          const listenWordBtn = document.getElementById('listenWordBtn');
+          const listenExampleBtn = document.getElementById('listenExampleBtn');
+          const resetProgressBtn = document.getElementById('resetProgress');
+          const saveJournalBtn = document.getElementById('saveJournal');
+          const exportStateBtn = document.getElementById('exportState');
+          const importStateBtn = document.getElementById('importStateBtn');
+          const importFile = document.getElementById('importFile');
+          const openReminderModalBtn = document.getElementById('openReminderModalBtn');
+          const addReminderBtn = document.getElementById('addReminderBtn');
+          const reminderInput = document.getElementById('reminderInput');
+          const closeReminderModal = document.getElementById('closeReminderModal');
+
+          if (prevDayBtn) prevDayBtn.addEventListener('click', () => goToDay(currentlyDisplayedDay - 1));
+          if (nextDayBtn) nextDayBtn.addEventListener('click', () => goToDay(currentlyDisplayedDay + 1));
+          
+          if (goDayBtn) goDayBtn.addEventListener('click', () => {
+              const selectedDay = parseInt(document.getElementById('jumpDay').value);
+              if (!isNaN(selectedDay)) { goToDay(selectedDay); }
+          });
+          
+          if (resetProgressBtn) resetProgressBtn.addEventListener('click', () => {
+              if (confirm('¿Estás seguro de que quieres reiniciar TODO tu progreso (tareas, diario, día actual)? Esta acción es irreversible.')) {
+                  localStorage.removeItem('germanPlanState');
+                  localStorage.removeItem('germanPlanFirstVisit');
+                  window.location.reload();
+              }
+          });
+
+          if (saveJournalBtn) saveJournalBtn.addEventListener('click', saveJournal);
+          if (exportStateBtn) exportStateBtn.addEventListener('click', exportState);
+          if (importStateBtn) importStateBtn.addEventListener('click', () => { importFile.click(); });
+          if (importFile) importFile.addEventListener('change', (e) => {
+              if (e.target.files.length > 0) {
+                  importState(e.target.files[0]);
+              }
+          });
+
+          if (openWordOfDayCard) openWordOfDayCard.addEventListener('click', () => { showModal('quiz', currentlyDisplayedDay - 1); });
+          if (checkAnswerBtn) checkAnswerBtn.addEventListener('click', checkAnswer);
+          if (revealAnswerBtn) revealAnswerBtn.addEventListener('click', () => showAnswer(false));
+          if (quizInput) quizInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { checkAnswer(); } });
+          if (prevWord) prevWord.addEventListener('click', prevWord);
+          if (nextWord) nextWord.addEventListener('click', nextWord);
+          
+          if (listenWordBtn) listenWordBtn.addEventListener('click', () => { 
+              const day = PLAN_DIARIO[currentWordIndex]; 
+              if (day) speakGerman(day.word); 
+          });
+          
+          if (listenExampleBtn) listenExampleBtn.addEventListener('click', () => { 
+              const day = PLAN_DIARIO[currentWordIndex]; 
+              if (day) speakGerman(day.exampleSentence); 
+          });
+          
+          if (openReminderModalBtn) openReminderModalBtn.addEventListener('click', () => { showModal('reminder', currentlyDisplayedDay - 1); });
+          if (addReminderBtn) addReminderBtn.addEventListener('click', addReminder);
+          if (reminderInput) reminderInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { addReminder(); } });
+          if (closeReminderModal) closeReminderModal.addEventListener('click', () => { if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; } });
+          
+          if (closeModalBtn) closeModalBtn.addEventListener('click', () => { if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; } });
+          if (closeGreetingBtn) closeGreetingBtn.addEventListener('click', () => { if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; } });
+          if (modalBackdrop) modalBackdrop.addEventListener('click', (e) => { 
+            if (e.target === modalBackdrop) { 
+              modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; 
+            } 
+          });
+          window.addEventListener('beforeunload', saveState);
+      }
+
+      // --- INICIO ---
+      document.addEventListener('DOMContentLoaded', initializeApp);
+
+    })();
+  </script>
 </body>
 </html>
