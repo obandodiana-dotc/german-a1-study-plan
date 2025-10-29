@@ -1,203 +1,66 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="de">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Plan de 1 Mes para Aprender Alemán (A1) ✨ - Día a Día</title>
+  <title>Plan de 1 Mes para Aprender Alemán (A1) ✨</title>
 
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+  <!-- Tipografías -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2 {
+      font-family: 'Dancing Script', cursive;
+    }
+  </style>
 </head>
-<body class="min-h-screen">
 
-  <header class="bg-gradient-to-r from-[var(--grad-from)] to-[var(--grad-to)] text-white p-4 shadow-lg sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <h1 class="text-3xl font-display">German A1 Plan ✨</h1>
-      <div class="flex items-center space-x-4">
-        <p class="text-sm opacity-90" id="header-day-display">Día 1 de 30</p>
-        <select id="jump-day" class="p-2 border border-gray-300 rounded-lg text-sm text-gray-700 bg-white shadow">
-          </select>
+<body class="text-gray-800 p-4 sm:p-6 lg:p-10">
+  <main class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6">
+    <header class="text-center">
+      <h1 class="text-3xl sm:text-4xl font-bold text-blue-700 mb-2">📘 Plan de 1 Mes para Aprender Alemán (A1)</h1>
+      <p class="text-gray-600">Organizado día por día con vocabulario, gramática y práctica</p>
+    </header>
+
+    <section id="plan-section" class="space-y-4">
+      <h2 class="text-2xl font-semibold text-blue-600">Día <span id="day-number">1</span></h2>
+      <div id="day-content" class="space-y-4">
+        <p>Cargando contenido...</p>
       </div>
-    </div>
-  </header>
+    </section>
 
-  <div class="max-w-7xl mx-auto main-content-grid">
-    
-    <main class="p-4 sm:p-6 lg:col-span-2">
-        
-        <section class="flex justify-between items-center mb-6 p-4 bg-white rounded-xl shadow-md">
-            <button id="prev-day-btn" class="nav-btn px-4 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600 transition-colors" disabled>← Día Anterior</button>
-            <p id="current-day-display" class="text-2xl font-bold text-gray-800">Día 1</p>
-            <button id="next-day-btn" class="nav-btn px-4 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600 transition-colors">Día Siguiente →</button>
-        </section>
+    <nav class="flex justify-between pt-4 border-t border-gray-300">
+      <button id="prev-day" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">⬅ Día anterior</button>
+      <button id="next-day" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">Día siguiente ➡</button>
+    </nav>
 
-        <section id="days-container" class="space-y-6">
-            </section>
-        
-    </main>
-
-    <aside id="sidebar" class="p-4 lg:p-6 space-y-6 lg:col-span-1">
-        
-        <section class="p-5 bg-white rounded-xl shadow-lg border-t-4 border-purple-500">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Tu Progreso Mensual 🚀</h3>
-            <div class="flex flex-col space-y-4">
-                <div class="flex justify-between items-center">
-                    <p class="text-gray-600">Días Completados</p>
-                    <p class="text-2xl font-bold text-pink-500" id="progress-percent-el">0%</p>
-                </div>
-                <div class="bg-gray-200 rounded-full h-3 shadow-inner">
-                    <div class="bg-pink-500 h-3 rounded-full transition-all duration-500" id="progress-bar" style="width: 0%"></div>
-                </div>
-                <div class="flex justify-between items-center pt-2">
-                    <p class="text-gray-600">Racha Actual (Días)</p>
-                    <p class="text-3xl font-extrabold text-purple-700" id="streak-el">0</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="p-5 bg-white rounded-xl shadow-lg border-t-4 border-pink-500">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Palabra para Repasar (SRS) 🧠</h3>
-            <div id="word-of-day-card">
-                <p class="text-gray-600 mb-2">Traducción:</p>
-                <p id="wod-translation-el" class="text-2xl font-bold text-pink-600 mb-3">Loading...</p>
-                <p class="text-sm text-gray-400">Palabra: <span id="wod-word-el" class="font-bold"></span></p> 
-            </div>
-            <button id="open-word-of-day-card" class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600 transition-colors">
-                Iniciar Quiz SRS
-            </button>
-        </section>
-        
-        <div class="mt-8 text-center pt-4 border-t border-gray-100">
-          <button id="reset-progress-btn" class="text-sm text-red-500 hover:text-red-700">Reiniciar Progreso</button>
-        </div>
-
-    </aside>
-
-  </div> <footer class="text-center p-4 text-sm text-gray-500 mt-10">
-    <p>Hecho con 🧠 y 💻 por un aprendiz.</p>
-    <div class="mt-2 space-x-3">
-        <button id="export-state-btn" class="text-xs text-gray-500 hover:text-gray-700">Exportar Estado</button>
-        <input type="file" id="import-file" accept=".json" class="hidden">
-        <button id="import-state-btn" class="text-xs text-gray-500 hover:text-gray-700">Importar Estado</button>
-    </div>
-  </footer>
-
-
-  <template id="day-template">
-    <article class="day-card bg-white p-5 rounded-xl shadow-md">
-      <h2 class="text-xl font-bold text-gray-800 mb-4 day-title"></h2>
-
-      <div class="border-b border-gray-200">
-        <div class="flex -mb-px">
-            <button data-tab="lesson" class="tab-button px-4 py-2 text-sm text-gray-600 rounded-t-lg border border-b-0 border-gray-200 -mb-px active">
-                Clase del Día 📖
-            </button>
-            <button data-tab="tasks" class="tab-button px-4 py-2 text-sm text-gray-600 rounded-t-lg border border-b-0 border-gray-200 -mb-px ml-1">
-                Práctica y Tareas ✅
-            </button>
-            <button data-tab="exercises" class="tab-button interactive-tab px-4 py-2 text-sm text-gray-600 rounded-t-lg border border-b-0 border-gray-200 -mb-px ml-1">
-                Ejercicios Interactivos 🧩
-            </button>
-        </div>
+    <section class="bg-blue-50 p-4 rounded-xl shadow-inner mt-6">
+      <h2 class="text-xl font-semibold text-blue-700 mb-2">🧠 Palabra para repasar (SRS)</h2>
+      <div id="srs-container" class="text-gray-700">
+        <p><strong>Palabra:</strong> <span id="srs-word">Loading...</span></p>
+        <p><strong>Traducción:</strong> <span id="srs-translation">Loading...</span></p>
       </div>
+    </section>
 
-      <div class="tab-content lesson-tab pt-4 lesson-content"></div>
-      
-      <div class="tab-content tasks-tab pt-4 hidden">
-        <div class="day-content open">
-            <ul class="space-y-2 task-list"></ul>
-            <button class="mt-3 px-3 py-2 bg-pink-100 text-pink-700 rounded-md text-sm journal-focus-btn">Escribir en el diario de este día</button>
-        </div>
+    <section class="bg-green-50 p-4 rounded-xl shadow-inner mt-6">
+      <h2 class="text-xl font-semibold text-green-700 mb-2">📝 Ejercicios interactivos</h2>
+      <div id="exercises-container" class="text-gray-700">
+        <p>No hay ejercicios interactivos para este día.</p>
       </div>
-      
-      <div class="tab-content exercises-tab pt-4 hidden">
-        <div class="mini-exercises-container space-y-4">
-            <p class="text-gray-500 text-center">No hay ejercicios interactivos para este día.</p>
-        </div>
-      </div>
-    </article>
-  </template>
+    </section>
+  </main>
 
-  <template id="task-template">
-    <li class="flex items-start gap-3 p-3 rounded-lg task-item">
-      <label class="checkbox-wrap w-full">
-        <input type="checkbox" class="task-checkbox">
-        <span class="checkbox-box"><span class="tick">✓</span></span>
-        <span class="ml-4 text-gray-700 task-description"></span>
-        <span class="task-time-badge px-2 py-0.5 ml-2 rounded-full text-xs font-semibold"></span>
-      </label>
-    </li>
-  </template>
-
-  <div id="modal-backdrop" class="modal fixed inset-0 z-50 bg-black bg-opacity-50 hidden">
-    <div id="modal-container" class="relative w-full h-full">
-        <div id="quiz-view" class="modal-content bg-white rounded-lg p-6 max-w-lg w-full mx-auto my-12 transform absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
-            <h3 class="text-xl font-bold mb-4">Quiz de Vocabulario</h3>
-            <p id="quiz-word-trans" class="text-2xl font-semibold text-gray-700 mb-4"></p>
-            <input type="text" id="quiz-input" placeholder="Escribe la palabra en alemán..." class="w-full p-3 border border-gray-300 rounded-md mb-4">
-            <p id="quiz-feedback" class="text-red-500 mb-4"></p>
-            <div class="flex justify-between">
-                <button id="check-answer-btn" class="px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600 transition-colors">Comprobar</button>
-                <button id="reveal-answer-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">Mostrar Respuesta</button>
-            </div>
-        </div>
-        
-        <div id="answer-view" class="modal-content bg-white rounded-lg p-6 max-w-lg w-full mx-auto my-12 transform absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
-            <h3 class="text-xl font-bold mb-4" id="modal-title">¡Correcto!</h3>
-            <p class="text-gray-700 mb-4" id="modal-message"></p>
-            <p class="font-bold text-gray-800 mt-4">Ejemplo:</p>
-            <p id="modal-example-sentence" class="text-pink-600 italic mb-2"></p>
-            <p id="modal-example-translation" class="text-gray-500 mb-4"></p>
-            <div class="flex justify-between items-center mt-6">
-                <div class="space-x-2">
-                    <button id="listen-word-btn" class="px-3 py-2 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200">🔊 Palabra</button>
-                    <button id="listen-example-btn" class="px-3 py-2 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200">🔊 Ejemplo</button>
-                </div>
-                <div class="space-x-2">
-                    <button id="srsHardBtn" class="px-3 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-colors">Difícil</button>
-                    <button id="srsEasyBtn" class="px-3 py-2 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 transition-colors">Fácil</button>
-                </div>
-                <button class="text-sm text-gray-500 hover:text-gray-700 close-modal-btn">Cerrar</button>
-            </div>
-        </div>
-        
-        <div id="greeting-view" class="modal-content bg-white rounded-lg p-6 max-w-lg w-full mx-auto my-12 transform absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
-             <h3 class="text-xl font-bold mb-4">¡Bienvenido!</h3>
-             <p>Este es tu plan de 30 días.</p>
-             <button id="closeGreetingBtn" class="px-4 py-2 bg-pink-500 text-white rounded-md mt-4">Empezar</button>
-        </div>
-        
-        <div id="journalModal" class="modal-content bg-white rounded-lg p-6 max-w-lg w-full mx-auto my-12 transform absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
-            <h3 class="text-xl font-bold mb-4">Diario de Aprendizaje - Día <span class="journal-current-day"></span></h3>
-            <p class="text-sm text-gray-500 mb-3 journal-prompt"></p>
-            
-            <textarea id="journalTextarea" rows="6" class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"></textarea>
-            
-            <div class="flex justify-between items-center mt-4">
-                <div>
-                    <button id="checkGrammarBtn" class="px-3 py-2 bg-pink-500 text-white rounded-md text-sm hover:bg-pink-600 transition-colors mr-2">
-                        Verificación Gramatical (IA) 🧠
-                    </button>
-                    <button id="saveJournalBtn" class="px-3 py-2 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300 transition-colors">
-                        Guardar y Cerrar
-                    </button>
-                </div>
-                <button class="text-sm text-gray-500 hover:text-gray-700 close-modal-btn">Cerrar</button>
-            </div>
-            <div id="aiFeedbackContainer" class="ai-feedback hidden"></div>
-        </div>
-    </div>
-  </div>
-
-
-  <script src="js.plan.js"></script>
-  <script src="app.js"></script>
-
+  <!-- ✅ Scripts corregidos -->
+  <script src="js/plan.js" defer></script>
+  <script src="js/app.js" defer></script>
 </body>
 </html>
