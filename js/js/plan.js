@@ -29,7 +29,7 @@ const PLAN_DIARIO = [
             </ul>
         `,
         tasks: [ { id:'d1-t1', icon:'🗣️', color:'bg-pink-50', desc:'Di los saludos básicos en voz alta 10 veces.', time:'5 min' }, { id:'d1-t2', icon:'✍️', color:'bg-blue-50', desc:'Escribe la diferencia entre Sie y du.', time:'10 min' } ],
-        // --- INNOVACIÓN 3: MINI-EJERCICIOS INTERACTIVOS ---
+        // --- MINI-EJERCICIOS INTERACTIVOS ---
         miniExercises: [
             { id: 'ex1-1', type: 'fill_in', prompt: 'Ich ___ müde.', answer: 'bin', hint: 'Verbo "ser/estar" (sein)' },
             { id: 'ex1-2', type: 'match', items: ['Guten Tag', 'Wie heißen Sie?'], matches: ['Saludo neutro', 'Pregunta formal por el nombre'] }
@@ -51,7 +51,7 @@ const PLAN_DIARIO = [
             { id: 'ex2-1', type: 'fill_in', prompt: '___ arbeite in Berlin.', answer: 'Ich', hint: 'El pronombre para la primera persona' }
         ]
     },
-    // Relleno genérico para completar los 30 días y que el SRS funcione
+    // Relleno genérico para completar los 30 días
     ...Array.from({ length: 28 }, (_, i) => ({
         day: i + 3,
         word: `Wort-${i + 3}`,
@@ -69,7 +69,7 @@ const PLAN_DIARIO = [
     { day: 30, word: 'das Zertifikat', wordTrans: 'el certificado', plural: 'die Zertifikate', title: '¡Felicidades! Logro A1', journalPrompt: 'Escribe tu reflexión del mes y tus metas futuras.', exampleSentence: 'Das Zertifikat ist wichtig.', exampleTranslation: 'El certificado es importante.', learningGoals: ["Reflexionar sobre el aprendizaje.", "Establecer metas para el Nivel A2."], lessonContent: `<h3>¡Lo lograste!</h3><p>El primer mes es el más difícil. Tómate el tiempo de celebrar tu logro y planear tu próximo paso.</p>`, tasks: [ { id:'d30-t1', icon:'🧠', color:'bg-purple-50', desc:'Revisa todas las tareas pendientes.', time:'30 min' } ] }
 ];
 
-// --- INNOVACIÓN 2: VOCABULARIO EXTENDIDO PARA SRS ---
+// --- VOCABULARIO EXTENDIDO PARA SRS ---
 const VOCABULARIO_SRS = PLAN_DIARIO.map((day, index) => ({
     id: `wod-${index + 1}`,
     word: day.word,
