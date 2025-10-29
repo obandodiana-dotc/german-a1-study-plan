@@ -388,3 +388,51 @@ const PLAN_DIARIO = [
         <p>El primer mes es el más difícil. Tómate el tiempo de celebrar tu logro y planear tu próximo paso, que probablemente será el Nivel A2, donde empezarás a usar el pasado (Perfecto) y estructuras de frases más complejas.</p>
     `, tasks: [ { id:'d30-t1', icon:'🧠', color:'bg-purple-50', desc:'Revisa todas las tareas pendientes y márcalas como hechas.', time:'30 min' }, { id:'d30-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe la reflexión del mes en el diario de este día.', time:'30 min' }, { id:'d30-t3', icon:'🗣️', color:'bg-orange-50', desc:'Di en voz alta 10 frases que no sabías decir hace un mes.', time:'30 min' } ] }
 ];
+// js/plan.js
+// Esta constante contiene la información estructurada de cada día del plan.
+
+const PLAN_DIARIO = [
+    { 
+        day: 1, 
+        word: 'Hallo', 
+        wordTrans: 'Hola', 
+        plural: 'Hallo', 
+        title: 'Saludos y Presentaciones', 
+        journalPrompt: 'Escribe 3 frases presentándote.', 
+        exampleSentence: 'Hallo, wie geht es Ihnen?', 
+        exampleTranslation: 'Hola, ¿cómo está usted?', 
+        learningGoals: ["Saludar y despedirse formal e informalmente.", "Presentarse (nombre).", "Preguntar '¿Cómo estás?' y responder."], 
+        lessonContent: `
+            <h3>Saludos Básicos (Grüße)</h3>
+            <p>La forma más común y versátil de saludar es <strong>Hallo</strong> (Hola). Para ser más específico con el tiempo del día:</p>
+            <ul>
+                <li><strong>Guten Morgen!</strong> (Buenos días - hasta el mediodía)</li>
+                <li><strong>Guten Tag!</strong> (Buen día - de mediodía a tarde, el más neutral)</li>
+                <li><strong>Guten Abend!</strong> (Buenas tardes/noches - a partir de las 6 PM)</li>
+            </ul>
+            <h3>Presentaciones y Formas de Cortesía</h3>
+            <p>En alemán, la cortesía es clave. Usamos <strong>Sie</strong> (Usted, formal) y <strong>du</strong> (tú, informal).</p>
+            <p>Para preguntar el nombre:</p>
+            <ul>
+                <li>Formal: <strong>Wie heißen Sie?</strong> (¿Cómo se llama Usted?)</li>
+            </ul>
+        `,
+        // --- INNOVACIÓN 3: MINI-EJERCICIOS INTERACTIVOS ---
+        miniExercises: [
+            // El usuario debe introducir 'bin'
+            { id: 'ex1-1', type: 'fill_in', prompt: 'Ich ___ müde.', answer: 'bin', hint: 'Verbo "ser/estar" (sein)' },
+            // Ejercicio de emparejamiento (se muestra solo para lectura y confirmación)
+            { id: 'ex1-2', type: 'match', items: ['Guten Tag', 'Wie heißen Sie?'], matches: ['Saludo neutro', 'Pregunta formal por el nombre'] }
+        ]
+    },
+    // ... (El resto de días de PLAN_DIARIO se mantiene igual o se les añaden miniExercises) ...
+    // Nota: El ejemplo anterior de D30 en el snippet sigue aquí.
+];
+
+// --- INNOVACIÓN 2: VOCABULARIO EXTENDIDO PARA SRS ---
+// Helper que extrae las palabras clave y les asigna un ID para el sistema SRS.
+const VOCABULARIO_SRS = PLAN_DIARIO.map((day, index) => ({
+    id: `wod-${index + 1}`,
+    word: day.word,
+    wordTrans: day.wordTrans
+}));
