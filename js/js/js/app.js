@@ -11,568 +11,858 @@
         streak: 0,
         lastCompletionDate: null,
         reminders: [],
-        vocabularyScores: {} // Inicialización clave para evitar errores
+        vocabularyScores: {} // AÑADIDO: Estado para el SRS (CORRECCIÓN CRÍTICA)
     };
     let currentlyDisplayedDay = 1;
-    let currentWordId = null; 
-    let currentWordData = null; 
+    let currentWordIndex = 0; // Para el Quiz de Palabra del Día (ya no se usa, pero se mantiene si se necesita)
 
     // --- Referencias del DOM (Elementos HTML) ---
-    // Variables de Navegación y Stats
     let daysContainer, dayTemplate, taskTemplate, progressPercentEl, progressBar, streakEl, currentDayDisplay, headerDayDisplay;
-    let jumpDay, resetProgressBtn, prevDayBtn, nextDayBtn;
-    
-    // Variables de Sidebar (SRS)
-    let wodTranslationEl, openWordOfDayCard, wodWordEl; // Referencia corregida
-    
-    // Variables de Modales y Quiz
-    let modalBackdrop, modalTitle;
-    let quizView, answerView, greetingView;
+    let jumpDay, goDay, resetProgressBtn, prevDayBtn, nextDayBtn;
+    // Referencias corregidas/añadidas para el SRS:
+    let wodWordEl, wodTranslationEl, openWordOfDayCard; 
+    let srsHardBtn, srsMediumBtn, srsEasyBtn;
+    let wodTitleEl; 
+
+    let modalBackdrop, modalContainer, modalTitle, closeModalBtn;
+    let quizView, answerView, greetingView, reminderView;
     let quizWordTrans, quizInput, quizFeedback, checkAnswerBtn, revealAnswerBtn;
-    let modalMessage, modalExampleSentence, modalExampleTranslation, closeGreetingBtn;
-    let listenWordBtn, listenExampleBtn; 
-    let journalModal, journalCurrentDay, journalTextarea, saveJournalBtn;
-    let checkGrammarBtn, aiFeedbackContainer; 
-    let srsEasyBtn, srsHardBtn; 
+    let modalMessage, modalExampleSentence, modalExampleTranslation, listenWordBtn, listenExampleBtn, prevWordBtn, nextWordBtn, closeGreetingBtn;
+    let journalDaySelector, journalCurrentDay, journalTextarea, saveJournalBtn, exportStateBtn, importStateBtn, importFile, autosaveNotice;
+    let openReminderModalBtn, reminderInput, addReminderBtn, reminderList, closeReminderModal;
 
-    // --- Funciones de Estado y Persistencia ---
-
-    function initDOMReferences() {
-        // [Referencias DOM de Navegación y Encabezado]
-        daysContainer = document.getElementById('days-container');
+    function getElements() {
+        // Contenedores y Plantillas
+        daysContainer = document.getElementById('daysContainer');
         dayTemplate = document.getElementById('day-template');
         taskTemplate = document.getElementById('task-template');
-        headerDayDisplay = document.getElementById('header-day-display');
-        jumpDay = document.getElementById('jump-day');
-        prevDayBtn = document.getElementById('prev-day-btn');
-        nextDayBtn = document.getElementById('next-day-btn');
-        currentDayDisplay = document.getElementById('current-day-display');
+        
+        // Stats y Navegación
+        progressPercentEl = document.getElementById('progressPercent');
+        progressBar = document.getElementById('progressBar');
+        streakEl = document.getElementById('streak');
+        headerDayDisplay = document.getElementById('headerDayDisplay');
+        currentDayDisplay = document.getElementById('currentDayDisplay');
+        jumpDay = document.getElementById('jumpDay');
+        goDay = document.getElementById('goDay');
+        resetProgressBtn = document.getElementById('resetProgress');
+        prevDayBtn = document.getElementById('prevDayBtn');
+        nextDayBtn = document.getElementById('nextDayBtn');
 
-        // [Referencias DOM de Estadísticas (Sidebar)]
-        progressPercentEl = document.getElementById('progress-percent-el');
-        progressBar = document.getElementById('progress-bar');
-        streakEl = document.getElementById('streak-el');
-        resetProgressBtn = document.getElementById('reset-progress-btn');
-
-        // [Referencias DOM de Word of the Day (WOD/SRS - Sidebar)]
+        // Palabra del Día (SRS) - IDs Corregidos
+        wodTitleEl = document.getElementById('wodTitle');
+        wodWordEl = document.getElementById('wod-word-el'); 
         wodTranslationEl = document.getElementById('wod-translation-el');
-        openWordOfDayCard = document.getElementById('open-word-of-day-card');
-        wodWordEl = document.getElementById('wod-word-el'); // APUNTA AL SPAN
+        openWordOfDayCard = document.getElementById('openWordOfDayCard');
+        srsHardBtn = document.getElementById('srs-hard-btn');
+        srsMediumBtn = document.getElementById('srs-medium-btn');
+        srsEasyBtn = document.getElementById('srs-easy-btn');
         
-        // [Referencias DOM de Modales y Quiz]
-        modalBackdrop = document.getElementById('modal-backdrop');
-        modalTitle = document.getElementById('modal-title');
-        quizView = document.getElementById('quiz-view');
-        answerView = document.getElementById('answer-view');
-        greetingView = document.getElementById('greeting-view');
-        quizWordTrans = document.getElementById('quiz-word-trans');
-        quizInput = document.getElementById('quiz-input');
-        quizFeedback = document.getElementById('quiz-feedback');
-        checkAnswerBtn = document.getElementById('check-answer-btn');
-        revealAnswerBtn = document.getElementById('reveal-answer-btn');
-        modalMessage = document.getElementById('modal-message');
-        modalExampleSentence = document.getElementById('modal-example-sentence');
-        modalExampleTranslation = document.getElementById('modal-example-translation');
+        // Modal (General)
+        modalBackdrop = document.getElementById('modalBackdrop');
+        modalContainer = document.getElementById('modal');
+        modalTitle = document.getElementById('modalTitle');
+        closeModalBtn = document.getElementById('closeModal');
         closeGreetingBtn = document.getElementById('closeGreetingBtn');
-        listenWordBtn = document.getElementById('listen-word-btn');
-        listenExampleBtn = document.getElementById('listen-example-btn');
         
-        // [Referencias DOM del Diario / IA]
-        journalModal = document.getElementById('journalModal');
-        journalTextarea = document.getElementById('journalTextarea');
-        journalCurrentDay = document.querySelector('.journal-current-day');
-        saveJournalBtn = document.getElementById('saveJournalBtn');
-        checkGrammarBtn = document.getElementById('checkGrammarBtn'); 
-        aiFeedbackContainer = document.getElementById('aiFeedbackContainer'); 
+        // Modal (Views)
+        quizView = document.getElementById('quizView');
+        answerView = document.getElementById('answerView');
+        greetingView = document.getElementById('greetingView');
+        reminderView = document.getElementById('reminderView');
         
-        // [Referencias para SRS]
-        srsEasyBtn = document.getElementById('srsEasyBtn'); 
-        srsHardBtn = document.getElementById('srsHardBtn'); 
+        // Modal (Quiz/Answer)
+        quizWordTrans = document.getElementById('quizWordTrans');
+        quizInput = document.getElementById('quizInput');
+        quizFeedback = document.getElementById('quizFeedback');
+        checkAnswerBtn = document.getElementById('checkAnswerBtn');
+        revealAnswerBtn = document.getElementById('revealAnswerBtn');
+        modalMessage = document.getElementById('modalMessage');
+        modalExampleSentence = document.getElementById('modalExampleSentence');
+        modalExampleTranslation = document.getElementById('modalExampleTranslation');
+        listenWordBtn = document.getElementById('listenWordBtn');
+        listenExampleBtn = document.getElementById('listenExampleBtn');
+        prevWordBtn = document.getElementById('prevWord');
+        nextWordBtn = document.getElementById('nextWord');
+
+        // Diario
+        journalDaySelector = document.getElementById('journalDay');
+        journalCurrentDay = document.getElementById('journalCurrentDay');
+        journalTextarea = document.getElementById('journalText');
+        saveJournalBtn = document.getElementById('saveJournal');
+        exportStateBtn = document.getElementById('exportState');
+        importStateBtn = document.getElementById('importStateBtn');
+        importFile = document.getElementById('importFile');
+        autosaveNotice = document.getElementById('autosaveNotice');
+        
+        // Recordatorios
+        openReminderModalBtn = document.getElementById('openReminderModalBtn');
+        reminderInput = document.getElementById('reminderInput');
+        addReminderBtn = document.getElementById('addReminderBtn');
+        reminderList = document.getElementById('reminderList');
+        closeReminderModal = document.getElementById('closeReminderModal');
     }
 
-    // FIX: Asegura que el estado se inicialice si no hay datos guardados
-    function loadState() {
-        const storedState = localStorage.getItem('germanPlanState');
-        if (storedState) {
-            state = JSON.parse(storedState);
-        } else {
-            currentlyDisplayedDay = 1;
+    // --- Funciones de Utilidad ---
+
+    function getTodayKey() {
+        const d = new Date();
+        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+    }
+
+    function calculateStreak() {
+        if (!state.lastCompletionDate) {
+            return 0;
         }
-        // CRÍTICO: Si no hay puntuaciones guardadas (primera carga), inicializa.
-        if (!state.vocabularyScores || Object.keys(state.vocabularyScores).length === 0) {
-            initializeVocabularyScores();
+
+        let currentStreak = state.streak;
+        const lastDate = new Date(state.lastCompletionDate);
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+
+        // Función para limpiar la hora
+        const normalizeDate = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        const normalizedToday = normalizeDate(today);
+        const normalizedYesterday = normalizeDate(yesterday);
+        const normalizedLastDate = normalizeDate(lastDate);
+
+        // Si la última fecha es hoy, no cambia la racha.
+        if (normalizedLastDate.getTime() === normalizedToday.getTime()) {
+            return currentStreak;
+        }
+
+        // Si la última fecha fue ayer, incrementa la racha.
+        if (normalizedLastDate.getTime() === normalizedYesterday.getTime()) {
+            return currentStreak + 1;
+        }
+
+        // Si la última fecha fue anterior a ayer, la racha se rompe.
+        return 0;
+    }
+
+    function updateStreakDisplay() {
+        const streakValue = calculateStreak();
+        streakEl.textContent = `${streakValue} Días 🔥`;
+        state.streak = streakValue; // Actualiza el estado
+    }
+
+    function calculateProgress() {
+        let totalTasks = 0;
+        let completedTasks = 0;
+        
+        PLAN_DIARIO.forEach(day => {
+            day.tasks.forEach(task => {
+                totalTasks++;
+                if (state.tasks[task.id]) {
+                    completedTasks++;
+                }
+            });
+        });
+
+        const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+        progressPercentEl.textContent = `${percentage}%`;
+        progressBar.style.width = `${percentage}%`;
+
+        // Si completó el 100% y aún no ha visto el mensaje de felicitación hoy.
+        if (percentage === 100 && !localStorage.getItem('confettiShownToday')) {
+            showModal('greeting', 0, '🎉 ¡Felicidades! Completaste el Nivel A1. ¡Ahora a por el A2!');
+            // Marca que ya se mostró hoy para evitar spam
+            localStorage.setItem('confettiShownToday', getTodayKey());
+            
+            // Llama a confetti
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 150,
+                    spread: 60
+                });
+            }
         }
     }
+
+    function saveState() {
+        // Auto-guardar el diario actual antes de guardar todo el estado.
+        saveJournalEntry(); 
+        
+        // Guardar el estado
+        localStorage.setItem('germanAppProgress', JSON.stringify(state));
+        
+        // Guardar la fecha del día actual para la racha, solo si hoy completó tareas.
+        if (Object.keys(state.tasks).some(id => state.tasks[id])) {
+             localStorage.setItem('lastCompletionDate', new Date().toISOString());
+        }
+    }
+
+    function loadState() {
+        // Cargar estado principal
+        const savedProgress = localStorage.getItem('germanAppProgress');
+        if (savedProgress) {
+            state = JSON.parse(savedProgress);
+            
+            // Corrección y compatibilidad de estado
+            if (state.lastCompletionDate) {
+                state.lastCompletionDate = new Date(state.lastCompletionDate).toISOString();
+            }
+
+            if (!state.reminders) {
+                 state.reminders = [];
+            }
+            
+            if (!state.vocabularyScores) { // COMPATIBILIDAD CON ESTADO ANTIGUO (CORRECCIÓN CRÍTICA)
+                 state.vocabularyScores = {};
+            }
+        }
+
+        // Cargar la última fecha de finalización (si se guardó separadamente)
+        const savedLastDate = localStorage.getItem('lastCompletionDate');
+        if (savedLastDate) {
+            state.lastCompletionDate = savedLastDate;
+        }
+
+        // Mostrar mensaje de bienvenida si es la primera vez
+        if (!savedProgress) {
+            showModal('greeting', 0, '¡Bienvenido/a a tu Plan de Alemán A1! Sigue los días para avanzar.');
+        }
+
+        // Inicializar scores de vocabulario si es la primera vez (CORRECCIÓN CRÍTICA)
+        initializeVocabularyScores();
+
+        // Recalcular racha al inicio
+        updateStreakDisplay();
+    }
+
+    // Función para sanear HTML para inyección (CSRF/XSS)
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+    
+    // --- Funciones de Lógica SRS (Palabra del Día) ---
 
     function initializeVocabularyScores() {
-        state.vocabularyScores = {};
-        if (typeof VOCABULARIO_SRS !== 'undefined') {
-             VOCABULARIO_SRS.forEach(word => {
-                // Score 0: listo para la primera revisión
-                state.vocabularyScores[word.id] = { score: 0, lastReview: 0 }; 
-            });
+        if (typeof VOCABULARIO_SRS === 'undefined') {
+            console.error("VOCABULARIO_SRS no está definido. Asegúrate de que js.plan.js se cargue correctamente.");
+            return;
         }
-    }
-    
-    function saveState() {
-        localStorage.setItem('germanPlanState', JSON.stringify(state));
-    }
-    
-    // ... [showModal, saveJournal, updateUIStats permanecen iguales] ...
-    
-    function showModal(view, dayIndex = null) {
-        [quizView, answerView, greetingView, journalModal].forEach(el => {
-            if (el) el.classList.add('hidden');
+
+        VOCABULARIO_SRS.forEach(wordData => {
+            if (!state.vocabularyScores[wordData.id]) {
+                // score: 0 (nuevo), nextReview: hoy, interval: 1 (días)
+                state.vocabularyScores[wordData.id] = {
+                    score: 0, 
+                    nextReview: getTodayKey(), 
+                    interval: 1 
+                };
+            }
         });
-        
-        if (modalBackdrop) {
-            modalBackdrop.classList.remove('hidden');
-            modalBackdrop.style.display = 'block';
-        }
-
-        if (view === 'quiz' && quizView) quizView.classList.remove('hidden');
-        if (view === 'answer' && answerView) answerView.classList.remove('hidden');
-        if (view === 'journal' && journalModal) {
-            journalModal.classList.remove('hidden');
-            const dayData = PLAN_DIARIO[currentlyDisplayedDay - 1];
-            if (journalCurrentDay) journalCurrentDay.textContent = currentlyDisplayedDay;
-            const promptEl = document.querySelector('.journal-prompt');
-            if (promptEl) promptEl.textContent = dayData.journalPrompt;
-            if (journalTextarea) journalTextarea.value = state.journal[currentlyDisplayedDay] || '';
-            
-            if (aiFeedbackContainer) {
-                aiFeedbackContainer.classList.add('hidden');
-                aiFeedbackContainer.innerHTML = '';
-            }
-        }
-        if (view === 'greeting' && greetingView) greetingView.classList.remove('hidden');
-    }
-
-    function saveJournal() {
-        if (!journalTextarea) return;
-        state.journal[currentlyDisplayedDay] = journalTextarea.value;
         saveState();
-        if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
     }
 
-    function updateUIStats() {
-        const totalDays = PLAN_DIARIO.length;
-        // Asumiendo que el día actual es el progreso
-        const progress = currentlyDisplayedDay; 
-        const percent = Math.floor((progress / totalDays) * 100);
-        
-        if(progressPercentEl) progressPercentEl.textContent = `${percent}%`;
-        if(progressBar) progressBar.style.width = `${percent}%`;
-        if(streakEl) streakEl.textContent = state.streak;
-    }
+    function getWordForSrs() {
+        if (typeof VOCABULARIO_SRS === 'undefined') return null;
 
+        const todayKey = getTodayKey();
+        const wordsToReview = VOCABULARIO_SRS.filter(wordData => {
+            const scoreData = state.vocabularyScores[wordData.id];
+            if (!scoreData) return false;
 
-    function checkAnswer() {
-        const userAnswer = quizInput.value.trim().toLowerCase();
-        const correctAnswer = currentWordData.word.trim().toLowerCase();
+            // Las palabras cuyo nextReview es hoy o anterior deben ser revisadas
+            return scoreData.nextReview <= todayKey;
+        });
 
-        if (userAnswer === correctAnswer) {
-            if (modalTitle) modalTitle.textContent = '¡Correcto! 🎉';
-            if (modalMessage) modalMessage.textContent = `La palabra "${currentWordData.wordTrans}" se dice "${currentWordData.word}".`;
-            updateSRS(currentWordId, 'easy');
-            showModal('answer');
-        } else {
-            if (quizFeedback) quizFeedback.textContent = 'Respuesta incorrecta. ¡Sigue intentando!';
-            if (quizInput) quizInput.classList.add('shake-anim');
-            setTimeout(() => { if (quizInput) quizInput.classList.remove('shake-anim'); }, 300);
+        // Simplemente toma la primera palabra que necesita ser revisada.
+        if (wordsToReview.length > 0) {
+            return wordsToReview[0];
         }
-    }
 
-    function revealAnswer() {
-        if (modalTitle) modalTitle.textContent = 'Respuesta Revelada';
-        if (modalMessage) modalMessage.textContent = `La palabra correcta es: "${currentWordData.word}".`;
-        updateSRS(currentWordId, 'hard'); 
-        showModal('answer');
-    }
-
-    // Lógica para el Spaced Repetition System (SRS)
-    function getWordForSRS() {
-        let wordToReviewId = null;
-        let lowestScore = Infinity;
-        let oldestReview = Infinity;
-
-        // Itera sobre todas las palabras para encontrar la menos revisada (lowestScore)
-        for (const id in state.vocabularyScores) {
-            const scoreData = state.vocabularyScores[id];
-            
-            // Prioridad 1: La palabra con la puntuación más baja
-            if (scoreData.score < lowestScore) {
-                lowestScore = scoreData.score;
-                wordToReviewId = id;
-            } 
-            // Prioridad 2: Si las puntuaciones son iguales, elige la que se revisó hace más tiempo
-            else if (scoreData.score === lowestScore && scoreData.lastReview < oldestReview) {
-                oldestReview = scoreData.lastReview;
-                wordToReviewId = id;
-            }
-        }
+        // Si no hay palabras para hoy, muestra la palabra del día actual o el día 1
+        const currentDayData = PLAN_DIARIO[currentlyDisplayedDay - 1];
         
-        // Retorna la palabra con la puntuación más baja (o la primera si todas son iguales/infinito)
-        return wordToReviewId || 'wod-1'; 
+        return {
+            id: 'no-review', 
+            word: currentDayData.word, 
+            wordTrans: currentDayData.wordTrans
+        };
     }
 
-    function updateSRS(wordId, difficulty) {
-        if (!state.vocabularyScores[wordId]) return;
-
-        let currentScore = state.vocabularyScores[wordId].score;
-
-        if (difficulty === 'easy') {
-            // Aumenta la dificultad (máximo 5)
-            state.vocabularyScores[wordId].score = Math.min(5, currentScore + 1); 
-        } else if (difficulty === 'hard') {
-            // Disminuye la dificultad (mínimo 0)
-            state.vocabularyScores[wordId].score = Math.max(0, currentScore - 1); 
+    function updateScore(wordId, score) {
+        if (wordId === 'no-review') {
+            // No actualizar el score si no es una palabra de revisión
+            console.log("No hay palabra para actualizar el score hoy.");
+            renderWordOfTheDay(); // Re-renderiza para que muestre la próxima palabra disponible
+            return;
         }
+
+        let scoreData = state.vocabularyScores[wordId];
+        if (!scoreData) return;
+
+        let newScore = scoreData.score;
+        let newInterval = scoreData.interval;
+
+        // Lógica simple de SRS:
+        // 1 (Difícil): Intervalo = 1 día. Score = 0.
+        // 2 (Medio): Intervalo = Intervalo anterior + 1. Score++.
+        // 3 (Fácil): Intervalo = Intervalo anterior * 2. Score++.
+
+        if (score === 1) { // Difícil
+            newInterval = 1;
+            newScore = 0;
+        } else if (score === 2) { // Medio
+            newInterval = newInterval + 1;
+            newScore = newScore + 1;
+        } else if (score === 3) { // Fácil
+            newInterval = newInterval * 2;
+            newScore = newScore + 1;
+        }
+
+        // Asegura que el intervalo sea al menos 1 día
+        if (newInterval < 1) newInterval = 1;
+
+        // Calcular la fecha de próxima revisión
+        const nextReviewDate = new Date();
+        nextReviewDate.setDate(nextReviewDate.getDate() + newInterval);
         
-        state.vocabularyScores[wordId].lastReview = Date.now();
+        // Actualizar el estado
+        state.vocabularyScores[wordId] = {
+            score: newScore,
+            nextReview: `${nextReviewDate.getFullYear()}-${nextReviewDate.getMonth() + 1}-${nextReviewDate.getDate()}`,
+            interval: newInterval
+        };
+
         saveState();
-        renderWordOfTheDay();
+        renderWordOfTheDay(); // Cargar la siguiente palabra
     }
-
+    
     function renderWordOfTheDay() {
-        currentWordId = getWordForSRS();
-        // El ID de la palabra es 'wod-X', el índice es X-1
-        const wordIndex = parseInt(currentWordId.split('-')[1]) - 1;
-        // La data de la palabra está en PLAN_DIARIO, ya que cada día tiene una palabra clave
-        currentWordData = PLAN_DIARIO[wordIndex]; 
+        const wordData = getWordForSrs();
 
-        // RENDERIZADO DEL SIDEBAR
-        if (wodTranslationEl) wodTranslationEl.textContent = currentWordData.wordTrans;
+        if (!wodWordEl || !wodTranslationEl || !wodTitleEl) return;
         
-        // FIX: Usar el wodWordEl (el span) para inyectar solo el texto
-        if (wodWordEl) {
-            const plural = currentWordData.plural && currentWordData.plural !== currentWordData.word ? ` (${currentWordData.plural})` : '';
-            wodWordEl.textContent = `${currentWordData.word}${plural}`;
-        }
-        
-        // RENDERIZADO DEL MODAL DE QUIZ
-        if (quizWordTrans) quizWordTrans.textContent = `¿Cómo se dice "${currentWordData.wordTrans}"?`;
-        if (quizInput) quizInput.value = '';
-        if (quizFeedback) quizFeedback.textContent = '';
-        
-        // RENDERIZADO DEL MODAL DE RESPUESTA
-        if (modalExampleSentence) modalExampleSentence.textContent = currentWordData.exampleSentence;
-        if (modalExampleTranslation) modalExampleTranslation.textContent = currentWordData.exampleTranslation;
-    }
-
-
-    function MockAIGrammarCheck() {
-        // ... (Esta función permanece sin cambios, es una simulación de IA) ...
-        const text = journalTextarea.value.trim();
-        if (!text) {
-            if (aiFeedbackContainer) {
-                aiFeedbackContainer.textContent = 'Por favor, escribe algo en el diario para que la IA lo verifique.';
-                aiFeedbackContainer.classList.remove('hidden', 'loading');
-                aiFeedbackContainer.classList.add('ai-feedback');
-            }
-            return;
-        }
-
-        if (aiFeedbackContainer) {
-            aiFeedbackContainer.classList.remove('hidden', 'ai-feedback');
-            aiFeedbackContainer.classList.add('loading');
-            aiFeedbackContainer.innerHTML = '🧠 Analizando gramática con Co-Pilot IA...';
-        }
-        if (checkGrammarBtn) checkGrammarBtn.disabled = true;
-
-        setTimeout(() => {
-            if (aiFeedbackContainer) aiFeedbackContainer.classList.remove('loading');
-            if (checkGrammarBtn) checkGrammarBtn.disabled = false;
-
-            let correctedText = text;
-            let feedback = '¡Excelente! Gramática correcta y clara. Muy buen uso de la estructura de oración.';
-
-            if (text.toLowerCase().includes('ich haben')) {
-                correctedText = text.replace(/ich haben/gi, 'ich habe');
-                feedback = `**Corrección Clave:** El verbo "haben" (tener) se conjuga como "ich habe", no "ich haben".\n\n**Texto Corregido (IA Co-Pilot):**\n\n\`\`\`\n${correctedText}\n\`\`\`\n\n**Análisis:** Atento a la conjugación básica del verbo.`;
-            } else if (text.toLowerCase().includes('ich sein')) {
-                correctedText = text.replace(/ich sein/gi, 'ich bin');
-                feedback = `**Corrección Clave:** El verbo "sein" (ser/estar) se conjuga como "ich bin", no "ich sein".\n\n**Texto Corregida (IA Co-Pilot):**\n\n\`\`\`\n${correctedText}\n\`\`\`\n\n**Análisis:** ¡Sigue practicando las conjugaciones básicas!`;
-            } 
-            else if (text.length < 10) {
-                 feedback = `**Consejo:** La gramática básica está bien, pero intenta escribir frases más largas para practicar la estructura de la oración.`;
-            }
-
-            if (aiFeedbackContainer) {
-                aiFeedbackContainer.innerHTML = feedback.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                aiFeedbackContainer.classList.add('ai-feedback');
-            }
-        }, 2000); 
-    }
-
-    function speak(text) {
-        // Implementación Mock de Texto a Voz
-        console.log(`TTS Mock: Reproduciendo "${text}"`);
-        // Se puede reemplazar con la API de Web Speech Synthesis
-        // const synth = window.speechSynthesis;
-        // const utterance = new SpeechSynthesisUtterance(text);
-        // utterance.lang = 'de-DE'; 
-        // synth.speak(utterance);
-        alert(`¡Simulación de voz! Reproduciendo: "${text}"`);
-    }
-
-    function renderMiniExercises(dayIndex) {
-        const dayData = PLAN_DIARIO[dayIndex];
-        const container = document.querySelector('.mini-exercises-container');
-        if (!container) return;
-        
-        container.innerHTML = ''; 
-
-        if (!dayData.miniExercises || dayData.miniExercises.length === 0) {
-            container.innerHTML = '<p class="text-gray-500 text-center py-8">¡Aún no hay ejercicios interactivos para este día! Vuelve pronto.</p>';
-            return;
-        }
-        
-        dayData.miniExercises.forEach((exercise, index) => {
-            const exerciseEl = document.createElement('div');
-            exerciseEl.id = `exercise-${exercise.id}`;
-            exerciseEl.classList.add('p-4', 'border', 'rounded-lg', 'bg-pink-50', 'shadow-sm');
-
-            let html = `<p class="font-medium text-pink-700 mb-2">Ejercicio ${index + 1}:</p>`;
-            let buttonText = 'Verificar';
-
-            if (exercise.type === 'fill_in') {
-                const parts = exercise.prompt.split('___');
-                html += `<div class="text-lg text-gray-800">${parts[0]} <input type="text" id="input-${exercise.id}" class="w-20 p-1 border-b-2 border-pink-300 focus:border-pink-500 text-pink-600 font-semibold text-center" placeholder="..." autocomplete="off"> ${parts[1]}</div>`;
-                html += `<p class="text-sm text-gray-500 mt-2">Pista: ${exercise.hint}</p>`;
-            } else if (exercise.type === 'match') {
-                html += `<p class="text-lg text-gray-800 font-semibold mb-3">Empareja el concepto:</p>`;
-                html += `<div class="grid grid-cols-2 gap-2 text-sm">`;
-                exercise.items.forEach((item, i) => {
-                    html += `<div class="p-2 bg-white rounded border">${item}</div>`;
-                    html += `<div class="p-2 bg-gray-100 rounded border font-mono">${exercise.matches[i]}</div>`;
-                });
-                html += `</div>`;
-                buttonText = 'Entendido';
-            }
-
-            html += `<div id="feedback-${exercise.id}" class="mt-3 text-sm font-semibold"></div>`;
-            html += `<button data-exid="${exercise.id}" data-type="${exercise.type}" class="mt-4 px-3 py-1 bg-pink-500 text-white rounded-md text-sm hover:bg-pink-600 check-exercise-btn">${buttonText}</button>`;
+        if (wordData && wordData.id !== 'no-review') {
+            const scoreData = state.vocabularyScores[wordData.id];
+            wodTitleEl.textContent = `Palabra para Repasar (SRS)`;
+            wodTranslationEl.textContent = escapeHtml(wordData.wordTrans);
+            wodWordEl.textContent = escapeHtml(wordData.word);
+            openWordOfDayCard.classList.remove('no-review');
             
-            exerciseEl.innerHTML = html;
-            container.appendChild(exerciseEl);
-        });
+            // Opcional: Mostrar la próxima revisión
+            if (scoreData && scoreData.interval > 1) {
+                wodWordEl.title = `Próx. Revisión en: ${scoreData.interval} días (${scoreData.nextReview})`;
+            } else {
+                 wodWordEl.title = 'Palabra nueva o difícil. Revisar mañana.';
+            }
 
-        container.querySelectorAll('.check-exercise-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const exId = e.target.getAttribute('data-exid');
-                const exType = e.target.getAttribute('data-type');
-                const exercise = dayData.miniExercises.find(ex => ex.id === exId);
-                const feedbackEl = document.getElementById(`feedback-${exId}`);
-                
-                feedbackEl.classList.remove('text-green-500', 'text-red-500');
-
-                if (exType === 'fill_in') {
-                    const input = document.getElementById(`input-${exId}`);
-                    if (input.value.toLowerCase().trim() === exercise.answer.toLowerCase().trim()) {
-                        feedbackEl.textContent = '¡Correcto! ✅';
-                        feedbackEl.classList.add('text-green-500');
-                    } else {
-                        feedbackEl.textContent = `Incorrecto. Respuesta correcta: "${exercise.answer}"`;
-                        feedbackEl.classList.add('text-red-500');
-                    }
-                } else if (exType === 'match') {
-                     feedbackEl.textContent = '¡Muy bien! Pasa al siguiente ejercicio. 👏';
-                     feedbackEl.classList.add('text-green-500');
-                }
-            });
-        });
-    }
-
-    function renderTask(task, dayId) {
-        const taskClone = taskTemplate.content.cloneNode(true);
-        const taskDescription = taskClone.querySelector('.task-description');
-        const taskTimeBadge = taskClone.querySelector('.task-time-badge');
-        
-        if (taskDescription) taskDescription.textContent = task.desc;
-        if (taskTimeBadge) {
-             taskTimeBadge.textContent = task.time;
-             taskTimeBadge.classList.add(task.color); 
+        } else {
+            // No hay palabras para repasar hoy
+            wodTitleEl.textContent = `¡Revisión Completada! (Día ${currentlyDisplayedDay})`;
+            wodTranslationEl.textContent = escapeHtml(wordData.wordTrans || 'Ninguna');
+            wodWordEl.textContent = escapeHtml(wordData.word || 'Palabra');
+            wodWordEl.title = 'No hay palabras pendientes de revisión hoy.';
+            openWordOfDayCard.classList.add('no-review');
         }
-        return taskClone;
     }
 
-    function renderSingleDay(dayIndex) {
-        const day = PLAN_DIARIO[dayIndex];
-        const dayTemplateClone = dayTemplate.content.cloneNode(true);
-        const dayCard = dayTemplateClone.querySelector('.day-card');
-        
-        dayCard.querySelector('.day-title').textContent = `Lección: ${day.title}`; 
-        dayCard.querySelector('.lesson-content').innerHTML = day.lessonContent;
-        
-        const taskList = dayCard.querySelector('.task-list');
-        if (taskList) taskList.innerHTML = ''; 
-        if (day.tasks && taskList) {
-            day.tasks.forEach(task => {
-                taskList.appendChild(renderTask(task, day.day));
-            });
-        }
-
-        const lessonTab = dayCard.querySelector('.lesson-tab');
-        const tasksTab = dayCard.querySelector('.tasks-tab');
-        const exercisesTab = dayCard.querySelector('.exercises-tab'); 
-
-        const tabButtons = dayCard.querySelectorAll('.tab-button');
-        tabButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const targetTab = e.target.getAttribute('data-tab');
-                
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                [lessonTab, tasksTab, exercisesTab].forEach(content => content.classList.add('hidden'));
-
-                e.target.classList.add('active');
-                
-                if (targetTab === 'lesson') lessonTab.classList.remove('hidden');
-                if (targetTab === 'tasks') tasksTab.classList.remove('hidden');
-                if (targetTab === 'exercises') {
-                    exercisesTab.classList.remove('hidden');
-                    renderMiniExercises(dayIndex);
-                }
-            });
+    function initializeSrsListeners() {
+        // Asigna un listener a cada botón SRS
+        if (srsHardBtn) srsHardBtn.addEventListener('click', (e) => {
+            const currentWord = getWordForSrs();
+            if (currentWord) updateScore(currentWord.id, parseInt(e.target.dataset.score));
+        });
+        if (srsMediumBtn) srsMediumBtn.addEventListener('click', (e) => {
+            const currentWord = getWordForSrs();
+            if (currentWord) updateScore(currentWord.id, parseInt(e.target.dataset.score));
+        });
+        if (srsEasyBtn) srsEasyBtn.addEventListener('click', (e) => {
+            const currentWord = getWordForSrs();
+            if (currentWord) updateScore(currentWord.id, parseInt(e.target.dataset.score));
         });
         
-        dayCard.querySelector('.journal-focus-btn').addEventListener('click', () => {
-            currentlyDisplayedDay = day.day;
-            showModal('journal');
+        // Esto podría abrir un modal de quiz más tarde, por ahora solo muestra/oculta.
+        if (openWordOfDayCard) openWordOfDayCard.addEventListener('click', () => {
+             // Lógica futura para un modal de quiz más completo
         });
-        
-        return dayTemplateClone;
     }
+
+    // --- Funciones de Renderizado ---
 
     function renderDays() {
-        if (!daysContainer) return;
+        if (!daysContainer || !dayTemplate) return;
         daysContainer.innerHTML = '';
-        daysContainer.appendChild(renderSingleDay(currentlyDisplayedDay - 1));
+        
+        PLAN_DIARIO.forEach(dayData => {
+            const dayEl = renderSingleDay(dayData);
+            daysContainer.appendChild(dayEl);
+        });
+        
+        // Resaltar el día actual o el más avanzado sin completar
+        const firstIncompleteDay = PLAN_DIARIO.find(day => day.tasks.some(task => !state.tasks[task.id]));
+        const targetDay = firstIncompleteDay ? firstIncompleteDay.day : PLAN_DIARIO.length;
+        
+        currentlyDisplayedDay = targetDay;
+        
+        // Mostrar solo el día actual, ocultar los demás inicialmente
+        document.querySelectorAll('.day-article').forEach(el => el.classList.add('hidden'));
+        const activeDayEl = document.querySelector(`.day-article[data-day="${currentlyDisplayedDay}"]`);
+        if (activeDayEl) {
+            activeDayEl.classList.remove('hidden');
+        }
 
-        if(currentDayDisplay) currentDayDisplay.textContent = `Día ${currentlyDisplayedDay}`;
-        if(headerDayDisplay) headerDayDisplay.textContent = `Día ${currentlyDisplayedDay} de ${PLAN_DIARIO.length}`;
-        if (jumpDay) jumpDay.value = currentlyDisplayedDay;
-
-        if(prevDayBtn) prevDayBtn.disabled = currentlyDisplayedDay === 1;
-        if(nextDayBtn) nextDayBtn.disabled = currentlyDisplayedDay === PLAN_DIARIO.length;
+        updateNavigationButtons();
+        updateDayDisplay();
     }
 
-    function navigateDay(direction) {
-        if (direction === 'next' && currentlyDisplayedDay < PLAN_DIARIO.length) {
-            currentlyDisplayedDay++;
-        } else if (direction === 'prev' && currentlyDisplayedDay > 1) {
-            currentlyDisplayedDay--;
+    function renderSingleDay(dayData) {
+        const clone = dayTemplate.content.cloneNode(true);
+        const article = clone.querySelector('article');
+        
+        article.classList.add('day-article');
+        article.setAttribute('data-day', dayData.day);
+
+        const titleEl = clone.querySelector('.day-title');
+        titleEl.textContent = `📅 Día ${dayData.day}: ${dayData.title}`;
+        
+        const wordEl = clone.querySelector('.day-word strong');
+        wordEl.textContent = dayData.word;
+        
+        // Lesson Content
+        const lessonContentEl = clone.querySelector('.lesson-content');
+        lessonContentEl.innerHTML = dayData.lessonContent || 'Contenido de la lección no disponible.'; // Sanear si es necesario
+        
+        // Task List
+        const taskList = clone.querySelector('.task-list');
+        dayData.tasks.forEach(task => {
+            const taskEl = renderSingleTask(task, dayData.day);
+            taskList.appendChild(taskEl);
+        });
+
+        // Day Status
+        const dayStatusEl = clone.querySelector('.day-status');
+        const totalTasks = dayData.tasks.length;
+        const completedTasks = dayData.tasks.filter(task => state.tasks[task.id]).length;
+        dayStatusEl.textContent = `${completedTasks} / ${totalTasks} tareas`;
+
+        if (completedTasks === totalTasks) {
+             dayStatusEl.classList.add('text-pink-600', 'font-bold');
+        } else {
+             dayStatusEl.classList.remove('text-pink-600', 'font-bold');
         }
-        renderDays();
-        updateUIStats();
+
+        // Eventos de Pestañas
+        const tabButtons = clone.querySelectorAll('.tab-button');
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetTab = e.target.getAttribute('data-tab');
+                const tabsContainer = e.target.closest('article');
+                
+                // Activar el botón
+                tabsContainer.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Mostrar el contenido
+                tabsContainer.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                tabsContainer.querySelector(`.${targetTab}-tab`).classList.remove('hidden');
+            });
+        });
+
+        // Evento de Botón del Diario
+        const journalFocusBtn = clone.querySelector('.journal-focus-btn');
+        journalFocusBtn.addEventListener('click', () => {
+            selectJournalDay(dayData.day);
+            // Hacer scroll suave hacia el área del diario
+            journalTextarea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            journalTextarea.focus();
+        });
+
+        return article;
+    }
+
+    function renderSingleTask(task, day) {
+        const clone = taskTemplate.content.cloneNode(true);
+        const li = clone.querySelector('.task-item');
+        li.setAttribute('data-task-id', task.id);
+        li.setAttribute('data-day', day);
+        
+        const checkbox = clone.querySelector('.task-checkbox');
+        checkbox.id = task.id; // Asignar ID al checkbox
+        checkbox.checked = !!state.tasks[task.id];
+        
+        const label = clone.querySelector('.task-label');
+        label.setAttribute('for', task.id); // Asignar for al label
+        
+        const descEl = clone.querySelector('.task-desc');
+        descEl.textContent = task.desc;
+        
+        const iconEl = clone.querySelector('.task-icon');
+        iconEl.textContent = task.icon;
+        
+        const timeEl = clone.querySelector('.task-time');
+        timeEl.textContent = task.time;
+
+        // Estilo de tarea completada
+        if (checkbox.checked) {
+            label.classList.add('task-done');
+        } else {
+            label.classList.remove('task-done');
+        }
+
+        // Listener
+        checkbox.addEventListener('change', (e) => {
+            state.tasks[task.id] = e.target.checked;
+
+            // Actualizar estilo
+            if (e.target.checked) {
+                label.classList.add('task-done');
+            } else {
+                label.classList.remove('task-done');
+            }
+
+            // Re-renderizar el estado del día y las estadísticas
+            updateDayStatus(day);
+            calculateProgress();
+            
+            // Lógica de Racha
+            if (e.target.checked) {
+                const currentDayTasks = PLAN_DIARIO.find(d => d.day == day).tasks;
+                const allCompleted = currentDayTasks.every(t => state.tasks[t.id]);
+
+                // Solo actualiza la racha si el día está 100% completado.
+                if (allCompleted) {
+                    const todayKey = getTodayKey();
+                    const lastCompletionKey = localStorage.getItem('lastCompletionDateKey');
+
+                    // Si la última finalización fue ayer o hoy (y no hay una marca de hoy), actualiza la fecha.
+                    if (!lastCompletionKey || lastCompletionKey !== todayKey) {
+                        // Aquí se actualiza la fecha de finalización. La racha se recalcula en `updateStreakDisplay`.
+                        state.lastCompletionDate = new Date().toISOString();
+                        localStorage.setItem('lastCompletionDateKey', todayKey); // Marca la racha de HOY
+                    }
+                }
+            }
+            updateStreakDisplay();
+            saveState();
+        });
+        
+        return clone;
+    }
+
+    function updateDayStatus(day) {
+        const dayData = PLAN_DIARIO.find(d => d.day == day);
+        if (!dayData) return;
+        
+        const totalTasks = dayData.tasks.length;
+        const completedTasks = dayData.tasks.filter(task => state.tasks[task.id]).length;
+        
+        const article = document.querySelector(`.day-article[data-day="${day}"]`);
+        if (article) {
+            const dayStatusEl = article.querySelector('.day-status');
+            dayStatusEl.textContent = `${completedTasks} / ${totalTasks} tareas`;
+
+            if (completedTasks === totalTasks) {
+                dayStatusEl.classList.add('text-pink-600', 'font-bold');
+            } else {
+                dayStatusEl.classList.remove('text-pink-600', 'font-bold');
+            }
+        }
+    }
+
+    // --- Funciones de Navegación ---
+
+    function updateDayDisplay() {
+        headerDayDisplay.textContent = `Día ${currentlyDisplayedDay} / ${PLAN_DIARIO.length}`;
+        currentDayDisplay.textContent = `Día ${currentlyDisplayedDay} / ${PLAN_DIARIO.length}`;
+        updateNavigationButtons();
+
+        // Actualizar el diario al cambiar de día
+        selectJournalDay(currentlyDisplayedDay);
+        
+        // Re-renderizar el SRS para que muestre la palabra del día actual si no hay revisión pendiente
+        renderWordOfTheDay(); 
+
+        // Muestra el día actual y oculta los demás
+        document.querySelectorAll('.day-article').forEach(el => el.classList.add('hidden'));
+        const activeDayEl = document.querySelector(`.day-article[data-day="${currentlyDisplayedDay}"]`);
+        if (activeDayEl) {
+            activeDayEl.classList.remove('hidden');
+            activeDayEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function updateNavigationButtons() {
+        prevDayBtn.disabled = currentlyDisplayedDay <= 1;
+        nextDayBtn.disabled = currentlyDisplayedDay >= PLAN_DIARIO.length;
+    }
+
+    function goToDay(day) {
+        if (day >= 1 && day <= PLAN_DIARIO.length) {
+            currentlyDisplayedDay = day;
+            updateDayDisplay();
+        }
+    }
+
+    function prevDay() {
+        goToDay(currentlyDisplayedDay - 1);
+    }
+
+    function nextDay() {
+        goToDay(currentlyDisplayedDay + 1);
+    }
+    
+    // --- Funciones de Diario ---
+
+    function selectJournalDay(day) {
+        if (journalDaySelector) {
+            journalDaySelector.value = day;
+            journalCurrentDay.textContent = `Día ${day}`;
+            journalTextarea.value = state.journal[day] || '';
+            journalTextarea.focus();
+        }
+    }
+
+    function saveJournalEntry() {
+        if (journalDaySelector) {
+            const day = journalDaySelector.value;
+            const text = journalTextarea.value;
+            state.journal[day] = text;
+            saveState();
+            showAutosaveNotice();
+        }
+    }
+
+    function showAutosaveNotice() {
+        if (autosaveNotice) {
+            autosaveNotice.classList.remove('opacity-0');
+            autosaveNotice.classList.add('opacity-100');
+            setTimeout(() => {
+                autosaveNotice.classList.remove('opacity-100');
+                autosaveNotice.classList.add('opacity-0');
+            }, 2000);
+        }
+    }
+
+    // --- Funciones de Recordatorios ---
+
+    function addReminder() {
+        if (!reminderInput || !addReminderBtn) return;
+
+        const text = reminderInput.value.trim();
+        if (text) {
+            state.reminders.push({ id: Date.now(), text, completed: false });
+            reminderInput.value = '';
+            renderReminders();
+            saveState();
+        }
+    }
+
+    function toggleReminder(id) {
+        const reminder = state.reminders.find(r => r.id === id);
+        if (reminder) {
+            reminder.completed = !reminder.completed;
+            renderReminders();
+            saveState();
+        }
+    }
+
+    function removeReminder(id) {
+        state.reminders = state.reminders.filter(r => r.id !== id);
+        renderReminders();
         saveState();
     }
 
+    function renderReminders() {
+        if (!reminderList) return;
 
-    // --- Inicialización y Event Listeners ---
+        reminderList.innerHTML = '';
+        state.reminders.forEach(reminder => {
+            const li = document.createElement('li');
+            li.className = 'flex justify-between items-center p-2 rounded-md transition hover:bg-gray-50';
+            li.innerHTML = `
+                <label class="checkbox-wrap w-full cursor-pointer">
+                    <input type="checkbox" class="task-checkbox" ${reminder.completed ? 'checked' : ''} data-id="${reminder.id}">
+                    <span class="checkbox-box mr-3"><span class="tick">✓</span></span>
+                    <span class="ml-4 ${reminder.completed ? 'line-through text-gray-500' : 'text-gray-800'}">${escapeHtml(reminder.text)}</span>
+                </label>
+                <button data-id="${reminder.id}" class="remove-reminder-btn text-gray-400 hover:text-red-500 transition ml-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            `;
+            
+            li.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
+                toggleReminder(parseInt(e.target.dataset.id));
+            });
+            
+            li.querySelector('.remove-reminder-btn').addEventListener('click', (e) => {
+                removeReminder(parseInt(e.currentTarget.dataset.id));
+            });
 
-    function setupEventListeners() {
-        // Navegación
-        if(prevDayBtn) prevDayBtn.addEventListener('click', () => navigateDay('prev'));
-        if(nextDayBtn) nextDayBtn.addEventListener('click', () => navigateDay('next'));
+            reminderList.appendChild(li);
+        });
+    }
+    
+    // --- Funciones de Import/Export (Mantenidas para completitud) ---
+    
+    if (exportStateBtn) {
+        exportStateBtn.addEventListener('click', () => {
+            const stateJson = JSON.stringify(state, null, 2);
+            const blob = new Blob([stateJson], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'german_a1_progress.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    }
 
-        // Jump Day (en el Header)
-        if (jumpDay) {
+    if (importStateBtn) {
+        importStateBtn.addEventListener('click', () => {
+            if (importFile) {
+                importFile.click();
+            }
+        });
+    }
+
+    if (importFile) {
+        importFile.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedState = JSON.parse(e.target.result);
+                    // Validación mínima de la estructura importada
+                    if (importedState.tasks && importedState.journal && importedState.vocabularyScores) {
+                        state = importedState;
+                        // Asegura la re-inicialización y compatibilidad del SRS
+                        initializeVocabularyScores(); 
+                        saveState();
+                        // Re-renderizar toda la aplicación
+                        renderDays(); 
+                        calculateProgress();
+                        renderReminders();
+                        alert('Progreso importado con éxito!');
+                    } else {
+                        alert('Error al importar: el archivo JSON no tiene la estructura de progreso esperada.');
+                    }
+                } catch (error) {
+                    alert('Error al importar: el archivo no es un JSON válido.');
+                    console.error('Import error:', error);
+                }
+            };
+            reader.readAsText(file);
+        });
+    }
+    
+    // Función para reiniciar el progreso
+    if (resetProgressBtn) {
+        resetProgressBtn.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que quieres REINICIAR TODO tu progreso, racha, tareas y diario? Esta acción es irreversible.')) {
+                localStorage.removeItem('germanAppProgress');
+                localStorage.removeItem('lastCompletionDate');
+                localStorage.removeItem('lastCompletionDateKey');
+                localStorage.removeItem('confettiShownToday');
+                window.location.reload();
+            }
+        });
+    }
+
+
+    // --- Funciones de Modal ---
+
+    function showModal(view, wordIndex, message = '') {
+        if (!modalBackdrop || !modalContainer) return;
+        
+        // Reiniciar las vistas
+        quizView.classList.add('hidden');
+        answerView.classList.add('hidden');
+        greetingView.classList.add('hidden');
+        reminderView.classList.add('hidden');
+        
+        modalMessage.textContent = message;
+
+        if (view === 'quiz') {
+            modalTitle.textContent = 'Palabra del Día (SRS)';
+            quizView.classList.remove('hidden');
+            // ... (Lógica de Quiz aquí si se implementa un modal)
+        } else if (view === 'answer') {
+            modalTitle.textContent = 'Respuesta';
+            answerView.classList.remove('hidden');
+        } else if (view === 'greeting') {
+            modalTitle.textContent = '¡Bienvenido/a!';
+            greetingView.classList.remove('hidden');
+        } else if (view === 'reminder') {
+            modalTitle.textContent = 'Recordatorios';
+            reminderView.classList.remove('hidden');
+            renderReminders();
+        }
+
+        // Mostrar el modal
+        modalBackdrop.classList.remove('hidden');
+        modalBackdrop.style.display = 'flex';
+        modalContainer.classList.remove('scale-0');
+        modalContainer.classList.add('scale-100');
+    }
+
+    // --- Inicialización ---
+
+    function init() {
+        getElements();
+        loadState();
+        renderDays(); // Renderiza los días y selecciona el día actual
+        calculateProgress();
+        renderWordOfTheDay(); // Llama a la lógica SRS
+        initializeSrsListeners();
+
+        // Eventos de Navegación
+        if (prevDayBtn) prevDayBtn.addEventListener('click', prevDay);
+        if (nextDayBtn) nextDayBtn.addEventListener('click', nextDay);
+        if (goDay) goDay.addEventListener('click', () => {
+            const day = parseInt(jumpDay.value);
+            if (!isNaN(day)) goToDay(day);
+        });
+        
+        // Eventos de Diario
+        if (journalDaySelector) {
             PLAN_DIARIO.forEach(day => {
                 const option = document.createElement('option');
                 option.value = day.day;
-                option.textContent = `Día ${day.day}`;
-                jumpDay.appendChild(option);
+                option.textContent = `Día ${day.day}: ${day.title}`;
+                journalDaySelector.appendChild(option);
             });
-            jumpDay.addEventListener('change', (e) => {
-                currentlyDisplayedDay = parseInt(e.target.value);
-                renderDays();
-                updateUIStats();
-                saveState();
+            journalDaySelector.addEventListener('change', (e) => {
+                saveJournalEntry(); // Guarda la entrada anterior
+                selectJournalDay(parseInt(e.target.value));
             });
+            // Auto-guardar mientras se escribe
+            journalTextarea.addEventListener('input', saveJournalEntry);
         }
-
-        // Quiz (SRS)
-        if(openWordOfDayCard) openWordOfDayCard.addEventListener('click', () => showModal('quiz'));
-        if(quizInput) quizInput.addEventListener('keypress', (e) => { 
-            if (e.key === 'Enter') { 
-                checkAnswer(); 
-            } 
-        });
-        if(checkAnswerBtn) checkAnswerBtn.addEventListener('click', checkAnswer);
-        if(revealAnswerBtn) revealAnswerBtn.addEventListener('click', revealAnswer);
-
-        // Botones de Voz (TTS Mock)
-        if (listenWordBtn) listenWordBtn.addEventListener('click', () => {
-            if (currentWordData) speak(currentWordData.word);
-        });
-        if (listenExampleBtn) listenExampleBtn.addEventListener('click', () => {
-            if (currentWordData) speak(currentWordData.exampleSentence);
-        });
-
-
-        // Diario / IA
-        if (checkGrammarBtn) checkGrammarBtn.addEventListener('click', MockAIGrammarCheck);
-        if (saveJournalBtn) saveJournalBtn.addEventListener('click', saveJournal);
-
-        // SRS Score Buttons 
-        if (srsEasyBtn) srsEasyBtn.addEventListener('click', () => {
-            updateSRS(currentWordId, 'easy');
-            if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
-        });
-        if (srsHardBtn) srsHardBtn.addEventListener('click', () => {
-            updateSRS(currentWordId, 'hard');
-            if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
-        });
-
-        // Cierre de Modales
-        document.querySelectorAll('.close-modal-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
-            });
-        });
-        if(modalBackdrop) modalBackdrop.addEventListener('click', (e) => { 
+        
+        // Eventos de Recordatorios
+        if (openReminderModalBtn) openReminderModalBtn.addEventListener('click', () => { showModal('reminder', currentlyDisplayedDay - 1); });
+        if (addReminderBtn) addReminderBtn.addEventListener('click', addReminder);
+        if (reminderInput) reminderInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { addReminder(); } });
+        if (closeReminderModal) closeReminderModal.addEventListener('click', () => { if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; } });
+        
+        // Cierre de Modal
+        if (closeModalBtn) closeModalBtn.addEventListener('click', () => { if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; } });
+        if (closeGreetingBtn) closeGreetingBtn.addEventListener('click', () => { if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; } });
+        if (modalBackdrop) modalBackdrop.addEventListener('click', (e) => { 
             if (e.target === modalBackdrop) { 
                 modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; 
             } 
         });
-        if(closeGreetingBtn) closeGreetingBtn.addEventListener('click', () => { 
-            if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; }
-        });
 
-
-        // Otros listeners
-        if(resetProgressBtn) resetProgressBtn.addEventListener('click', () => {
-             if(confirm('¿Estás seguro de que quieres reiniciar todo el progreso?')) {
-                localStorage.removeItem('germanPlanState');
-                window.location.reload();
-            }
-        });
-        
+        // Guardar estado al cerrar/recargar
         window.addEventListener('beforeunload', saveState);
     }
 
-    function init() {
-        loadState();
-        initDOMReferences(); 
-        
-        // Verificación de fallback, aunque loadState ya debería hacerlo.
-        if (Object.keys(state.vocabularyScores).length === 0) {
-            initializeVocabularyScores();
-            saveState();
-        }
-
-        renderWordOfTheDay(); 
-        renderDays();
-        updateUIStats(); 
-        setupEventListeners();
-        
-        // Muestra el modal de bienvenida solo si es la primera vez
-        if (localStorage.getItem('germanPlanState') === null) {
-            showModal('greeting');
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
-
+    // --- Iniciar la Aplicación ---
+    init();
 })();
