@@ -73,7 +73,7 @@ const PLAN_DIARIO = [
 ];
 
 // --- VOCABULARIO EXTENDIDO PARA SRS ---
-// Esta línea, que es la que se reporta con error, ahora usa un PLAN_DIARIO que es sintácticamente más simple en su definición.
+// Usado por app.js para inicializar las puntuaciones del SRS
 const VOCABULARIO_SRS = PLAN_DIARIO.map((day, index) => ({
     id: `wod-${index + 1}`,
     word: day.word,
