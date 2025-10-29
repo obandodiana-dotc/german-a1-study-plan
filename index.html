@@ -1,4 +1,50 @@
-<div class="max-w-4xl mx-auto p-6"> 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Plan de 1 Mes para Aprender Alemán (A1) ✨ - Día a Día</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen">
+
+  <header class="bg-gradient-to-r from-[var(--grad-from)] to-[var(--grad-to)] text-white p-6 shadow-lg">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex justify-between items-center mb-6">
+        <div class="text-center flex-1">
+          <h1 class="text-4xl md:text-5xl font-display">Tu Plan de Alemán</h1>
+          <p class="text-lg opacity-90">(Nivel A1)</p>
+        </div>
+        <button id="openReminderModalBtn" class="p-2 rounded-full hover:bg-white/20 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="stat-card rounded-xl p-4 flex items-center gap-4">
+          <div class="p-2 bg-white/30 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg></div>
+          <div><span class="text-xs opacity-80">Día del Plan</span><div id="headerDayDisplay" class="text-xl font-bold">Día 1 / 30</div></div>
+        </div>
+        <div class="stat-card rounded-xl p-4 flex items-center gap-4">
+          <div class="p-2 bg-white/30 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" /></svg></div>
+          <div><span class="text-xs opacity-80">Racha Actual</span><div id="streak" class="text-xl font-bold">0 Días 🔥</div></div>
+        </div>
+        <div class="stat-card rounded-xl p-4">
+          <div class="flex justify-between items-center mb-2"><span class="text-xs opacity-80">Progreso Total</span><span id="progressPercent" class="text-xl font-bold">0%</span></div>
+          <div class="w-full bg-white/30 rounded-full h-2"><div id="progressBar" class="bg-white h-2 rounded-full transition-all duration-300" style="width: 0%"></div></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-4xl mx-auto p-6"> 
     
     <section id="openWordOfDayCard" class="bg-white rounded-xl p-5 shadow-sm mb-6 cursor-pointer hover:shadow-lg transition">
         <h2 id="wodTitle" class="font-semibold text-gray-700 mb-3 text-sm">Palabra para Repasar (SRS)</h2>
@@ -13,802 +59,129 @@
             <button id="srs-easy-btn" data-score="3" class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 hover:bg-green-200 transition">Fácil</button>
         </div>
     </section>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+       <div class="flex items-center gap-3">
+         <select id="jumpDay" class="rounded-md px-3 py-2 bg-white shadow-sm text-sm border border-gray-200"><option value="">Ir a día...</option></select>
+         <button id="goDay" class="px-3 py-2 rounded-md bg-pink-100 text-pink-700 text-sm">Ir</button>
+       </div>
+       <button id="resetProgress" class="px-3 py-2 rounded-md bg-white shadow-sm text-sm text-red-600 border border-gray-200">Reset progreso</button>
+    </div>
 
-    <div id="daysContainer" class="space-y-6">
+    <div class="flex justify-between items-center mb-4 p-3 bg-white rounded-lg shadow-sm border border-gray-200">
+      <button id="prevDayBtn" class="nav-btn px-4 py-2 rounded-md bg-gray-100 hover:bg-gray-200 text-sm">&lt; Día Anterior</button>
+      <div id="currentDayDisplay" class="text-lg font-semibold text-pink-600 text-center">Día X / 30</div>
+      <button id="nextDayBtn" class="nav-btn px-4 py-2 rounded-md bg-gray-100 hover:bg-gray-200 text-sm">Día Siguiente &gt;</button>
+    </div>
+
+    <main id="daysContainer" class="mb-8"></main> 
+    
+    <section class="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-semibold text-lg text-pink-600">📝 Diario (Día <span id="journalCurrentDay">1</span>)</h2>
+        <div class="flex items-center gap-2"><label for="journalDay" class="text-sm text-gray-600">Seleccionar día:</label><select id="journalDay" class="rounded-md px-2 py-1 bg-gray-50 border border-gray-200"></select></div>
+      </div>
+      <textarea id="journalText" rows="6" class="journal-textarea w-full p-3 rounded-md border border-gray-200 bg-white" placeholder="Escribe tus frases..."></textarea>
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mt-3">
+        <p id="autosaveNotice" class="text-xs text-gray-500">Guardado automático activo.</p>
+        <div class="flex gap-2 justify-end w-full sm:w-auto">
+          <button id="saveJournal" class="px-3 py-2 rounded-md bg-pink-600 text-white text-sm">Guardar</button>
+          <button id="exportState" class="px-3 py-2 rounded-md bg-white text-sm shadow-sm border border-gray-200">Exportar</button>
+          <button id="importStateBtn" class="px-3 py-2 rounded-md bg-white text-sm shadow-sm border border-gray-200">Importar</button>
+          <input id="importFile" type="file" accept="application/json" class="hidden">
         </div>
-    
-    ```
-
----
-
-## 3. Código Final: `app.js`
-
-Este código incluye la corrección del estado (`vocabularyScores`), las referencias del DOM y toda la lógica para inicializar, renderizar, obtener la siguiente palabra y actualizar el *score* del sistema SRS, lo cual era la parte que fallaba.
-
-Reemplace **todo** el contenido de `app.js` con el siguiente código:
-
-```javascript
-// js/app.js
-(function() {
-    'use strict';
-
-    // Se asume que PLAN_DIARIO y VOCABULARIO_SRS se cargan desde plan.js
-
-    // --- Variables de Estado ---
-    let state = {
-        tasks: {},
-        journal: {},
-        streak: 0,
-        lastCompletionDate: null,
-        reminders: [],
-        vocabularyScores: {} // AÑADIDO: Estado para el SRS
-    };
-    let currentlyDisplayedDay = 1;
-    let currentWordIndex = 0; // Para el Quiz de Palabra del Día (ya no se usa, pero se mantiene si se necesita)
-
-    // --- Referencias del DOM (Elementos HTML) ---
-    let daysContainer, dayTemplate, taskTemplate, progressPercentEl, progressBar, streakEl, currentDayDisplay, headerDayDisplay;
-    let jumpDay, goDay, resetProgressBtn, prevDayBtn, nextDayBtn;
-    // Referencias corregidas/añadidas para el SRS:
-    let wodWordEl, wodTranslationEl, openWordOfDayCard; 
-    let srsHardBtn, srsMediumBtn, srsEasyBtn;
-    let wodTitleEl; 
-
-    let modalBackdrop, modalContainer, modalTitle, closeModalBtn;
-    let quizView, answerView, greetingView, reminderView;
-    let quizWordTrans, quizInput, quizFeedback, checkAnswerBtn, revealAnswerBtn;
-    let modalMessage, modalExampleSentence, modalExampleTranslation, listenWordBtn, listenExampleBtn, prevWordBtn, nextWordBtn, closeGreetingBtn;
-    let journalDaySelector, journalCurrentDay, journalTextarea, saveJournalBtn, exportStateBtn, importStateBtn, importFile, autosaveNotice;
-    let openReminderModalBtn, reminderInput, addReminderBtn, reminderList, closeReminderModal;
-
-    function getElements() {
-        // Contenedores y Plantillas
-        daysContainer = document.getElementById('daysContainer');
-        dayTemplate = document.getElementById('day-template');
-        taskTemplate = document.getElementById('task-template');
-        
-        // Stats y Navegación
-        progressPercentEl = document.getElementById('progressPercent');
-        progressBar = document.getElementById('progressBar');
-        streakEl = document.getElementById('streak');
-        headerDayDisplay = document.getElementById('headerDayDisplay');
-        currentDayDisplay = document.getElementById('currentDayDisplay');
-        jumpDay = document.getElementById('jumpDay');
-        goDay = document.getElementById('goDay');
-        resetProgressBtn = document.getElementById('resetProgress');
-        prevDayBtn = document.getElementById('prevDayBtn');
-        nextDayBtn = document.getElementById('nextDayBtn');
-
-        // Palabra del Día (SRS) - IDs Corregidos
-        wodTitleEl = document.getElementById('wodTitle');
-        wodWordEl = document.getElementById('wod-word-el'); 
-        wodTranslationEl = document.getElementById('wod-translation-el');
-        openWordOfDayCard = document.getElementById('openWordOfDayCard');
-        srsHardBtn = document.getElementById('srs-hard-btn');
-        srsMediumBtn = document.getElementById('srs-medium-btn');
-        srsEasyBtn = document.getElementById('srs-easy-btn');
-        
-        // Modal (General)
-        modalBackdrop = document.getElementById('modalBackdrop');
-        modalContainer = document.getElementById('modal');
-        modalTitle = document.getElementById('modalTitle');
-        closeModalBtn = document.getElementById('closeModal');
-        closeGreetingBtn = document.getElementById('closeGreetingBtn');
-        
-        // Modal (Views)
-        quizView = document.getElementById('quizView');
-        answerView = document.getElementById('answerView');
-        greetingView = document.getElementById('greetingView');
-        reminderView = document.getElementById('reminderView');
-        
-        // Modal (Quiz/Answer)
-        quizWordTrans = document.getElementById('quizWordTrans');
-        quizInput = document.getElementById('quizInput');
-        quizFeedback = document.getElementById('quizFeedback');
-        checkAnswerBtn = document.getElementById('checkAnswerBtn');
-        revealAnswerBtn = document.getElementById('revealAnswerBtn');
-        modalMessage = document.getElementById('modalMessage');
-        modalExampleSentence = document.getElementById('modalExampleSentence');
-        modalExampleTranslation = document.getElementById('modalExampleTranslation');
-        listenWordBtn = document.getElementById('listenWordBtn');
-        listenExampleBtn = document.getElementById('listenExampleBtn');
-        prevWordBtn = document.getElementById('prevWord');
-        nextWordBtn = document.getElementById('nextWord');
-
-        // Diario
-        journalDaySelector = document.getElementById('journalDay');
-        journalCurrentDay = document.getElementById('journalCurrentDay');
-        journalTextarea = document.getElementById('journalText');
-        saveJournalBtn = document.getElementById('saveJournal');
-        exportStateBtn = document.getElementById('exportState');
-        importStateBtn = document.getElementById('importStateBtn');
-        importFile = document.getElementById('importFile');
-        autosaveNotice = document.getElementById('autosaveNotice');
-        
-        // Recordatorios
-        openReminderModalBtn = document.getElementById('openReminderModalBtn');
-        reminderInput = document.getElementById('reminderInput');
-        addReminderBtn = document.getElementById('addReminderBtn');
-        reminderList = document.getElementById('reminderList');
-        closeReminderModal = document.getElementById('closeReminderModal');
-    }
-
-    // --- Funciones de Utilidad ---
-
-    function getTodayKey() {
-        const d = new Date();
-        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-    }
-
-    function calculateStreak() {
-        if (!state.lastCompletionDate) {
-            return 0;
-        }
-
-        let currentStreak = state.streak;
-        const lastDate = new Date(state.lastCompletionDate);
-        const today = new Date();
-        const yesterday = new Date();
-        yesterday.setDate(today.getDate() - 1);
-
-        // Función para limpiar la hora
-        const normalizeDate = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        const normalizedToday = normalizeDate(today);
-        const normalizedYesterday = normalizeDate(yesterday);
-        const normalizedLastDate = normalizeDate(lastDate);
-
-        // Si la última fecha es hoy, no cambia la racha.
-        if (normalizedLastDate.getTime() === normalizedToday.getTime()) {
-            return currentStreak;
-        }
-
-        // Si la última fecha fue ayer, incrementa la racha.
-        if (normalizedLastDate.getTime() === normalizedYesterday.getTime()) {
-            return currentStreak + 1;
-        }
-
-        // Si la última fecha fue anterior a ayer, la racha se rompe.
-        return 0;
-    }
-
-    function updateStreakDisplay() {
-        const streakValue = calculateStreak();
-        streakEl.textContent = `${streakValue} Días 🔥`;
-        state.streak = streakValue; // Actualiza el estado
-    }
-
-    function calculateProgress() {
-        let totalTasks = 0;
-        let completedTasks = 0;
-        
-        PLAN_DIARIO.forEach(day => {
-            day.tasks.forEach(task => {
-                totalTasks++;
-                if (state.tasks[task.id]) {
-                    completedTasks++;
-                }
-            });
-        });
-
-        const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-        progressPercentEl.textContent = `${percentage}%`;
-        progressBar.style.width = `${percentage}%`;
-
-        // Si completó el 100% y aún no ha visto el mensaje de felicitación hoy.
-        if (percentage === 100 && !localStorage.getItem('confettiShownToday')) {
-            showModal('greeting', 0, '🎉 ¡Felicidades! Completaste el Nivel A1. ¡Ahora a por el A2!');
-            // Marca que ya se mostró hoy para evitar spam
-            localStorage.setItem('confettiShownToday', getTodayKey());
-            
-            // Llama a confetti
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 150,
-                    spread: 60
-                });
-            }
-        }
-    }
-
-    function saveState() {
-        // Auto-guardar el diario actual antes de guardar todo el estado.
-        saveJournalEntry(); 
-        
-        // Guardar el estado
-        localStorage.setItem('germanAppProgress', JSON.stringify(state));
-        
-        // Guardar la fecha del día actual para la racha, solo si hoy completó tareas.
-        if (Object.keys(state.tasks).some(id => state.tasks[id])) {
-             localStorage.setItem('lastCompletionDate', new Date().toISOString());
-        }
-    }
-
-    function loadState() {
-        // Cargar estado principal
-        const savedProgress = localStorage.getItem('germanAppProgress');
-        if (savedProgress) {
-            state = JSON.parse(savedProgress);
-            
-            // Corrección y compatibilidad de estado
-            if (state.lastCompletionDate) {
-                state.lastCompletionDate = new Date(state.lastCompletionDate).toISOString();
-            }
-
-            if (!state.reminders) {
-                 state.reminders = [];
-            }
-            
-            if (!state.vocabularyScores) { // COMPATIBILIDAD CON ESTADO ANTIGUO
-                 state.vocabularyScores = {};
-            }
-        }
-
-        // Cargar la última fecha de finalización (si se guardó separadamente)
-        const savedLastDate = localStorage.getItem('lastCompletionDate');
-        if (savedLastDate) {
-            state.lastCompletionDate = savedLastDate;
-        }
-
-        // Mostrar mensaje de bienvenida si es la primera vez
-        if (!savedProgress) {
-            showModal('greeting', 0, '¡Bienvenido/a a tu Plan de Alemán A1! Sigue los días para avanzar.');
-        }
-
-        // Inicializar scores de vocabulario si es la primera vez
-        initializeVocabularyScores();
-
-        // Recalcular racha al inicio
-        updateStreakDisplay();
-    }
-
-    // Función para sanear HTML para inyección (CSRF/XSS)
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-    
-    // --- Funciones de Lógica SRS (Palabra del Día) ---
-
-    function initializeVocabularyScores() {
-        if (typeof VOCABULARIO_SRS === 'undefined') {
-            console.error("VOCABULARIO_SRS no está definido. Asegúrate de que js.plan.js se cargue correctamente.");
-            return;
-        }
-
-        VOCABULARIO_SRS.forEach(wordData => {
-            if (!state.vocabularyScores[wordData.id]) {
-                // score: 0 (nuevo), nextReview: hoy, interval: 1 (días)
-                state.vocabularyScores[wordData.id] = {
-                    score: 0, 
-                    nextReview: getTodayKey(), 
-                    interval: 1 
-                };
-            }
-        });
-        saveState();
-    }
-
-    function getWordForSrs() {
-        if (typeof VOCABULARIO_SRS === 'undefined') return null;
-
-        const todayKey = getTodayKey();
-        const wordsToReview = VOCABULARIO_SRS.filter(wordData => {
-            const scoreData = state.vocabularyScores[wordData.id];
-            if (!scoreData) return false;
-
-            // Las palabras cuyo nextReview es hoy o anterior deben ser revisadas
-            return scoreData.nextReview <= todayKey;
-        });
-
-        // Simplemente toma la primera palabra que necesita ser revisada.
-        // Se podría implementar una lógica de priorización más compleja aquí.
-        if (wordsToReview.length > 0) {
-            return wordsToReview[0];
-        }
-
-        // Si no hay palabras para hoy, muestra la palabra del último día completado o el día 1
-        const lastCompletedDay = PLAN_DIARIO.slice().reverse().find(day => day.tasks.every(task => state.tasks[task.id]));
-        const lastWord = lastCompletedDay ? lastCompletedDay.word : PLAN_DIARIO[0].word;
-        const lastWordTrans = lastCompletedDay ? lastCompletedDay.wordTrans : PLAN_DIARIO[0].wordTrans;
-        
-        return {
-            id: 'no-review', 
-            word: lastWord, 
-            wordTrans: lastWordTrans
-        };
-    }
-
-    function updateScore(wordId, score) {
-        if (wordId === 'no-review') {
-            // No actualizar el score si no es una palabra de revisión
-            console.log("No hay palabra para actualizar el score hoy.");
-            renderWordOfTheDay(); // Re-renderiza para que muestre la próxima palabra disponible
-            return;
-        }
-
-        let scoreData = state.vocabularyScores[wordId];
-        if (!scoreData) return;
-
-        let newScore = scoreData.score;
-        let newInterval = scoreData.interval;
-
-        // Lógica simple de SRS:
-        // 1 (Difícil): Intervalo = 1 día. Score = 0.
-        // 2 (Medio): Intervalo = Intervalo anterior + 1. Score++.
-        // 3 (Fácil): Intervalo = Intervalo anterior * 2. Score++.
-
-        if (score === 1) { // Difícil
-            newInterval = 1;
-            newScore = 0;
-        } else if (score === 2) { // Medio
-            newInterval = newInterval + 1;
-            newScore = newScore + 1;
-        } else if (score === 3) { // Fácil
-            newInterval = newInterval * 2;
-            newScore = newScore + 1;
-        }
-
-        // Calcular la fecha de próxima revisión
-        const nextReviewDate = new Date();
-        nextReviewDate.setDate(nextReviewDate.getDate() + newInterval);
-        
-        // Actualizar el estado
-        state.vocabularyScores[wordId] = {
-            score: newScore,
-            nextReview: `${nextReviewDate.getFullYear()}-${nextReviewDate.getMonth() + 1}-${nextReviewDate.getDate()}`,
-            interval: newInterval
-        };
-
-        saveState();
-        renderWordOfTheDay(); // Cargar la siguiente palabra
-    }
-    
-    function renderWordOfTheDay() {
-        const wordData = getWordForSrs();
-
-        if (!wodWordEl || !wodTranslationEl || !wodTitleEl) return;
-        
-        if (wordData && wordData.id !== 'no-review') {
-            wodTitleEl.textContent = `Palabra para Repasar (SRS)`;
-            wodTranslationEl.textContent = escapeHtml(wordData.wordTrans);
-            wodWordEl.textContent = escapeHtml(wordData.word);
-            openWordOfDayCard.classList.remove('no-review');
-        } else {
-            // No hay palabras para repasar hoy
-            wodTitleEl.textContent = `¡Revisión Completada!`;
-            wodTranslationEl.textContent = escapeHtml(wordData.wordTrans || 'Ninguna');
-            wodWordEl.textContent = escapeHtml(wordData.word || 'Palabra');
-            openWordOfDayCard.classList.add('no-review');
-        }
-    }
-
-    function initializeSrsListeners() {
-        // Asigna un listener a cada botón SRS
-        if (srsHardBtn) srsHardBtn.addEventListener('click', (e) => {
-            const currentWord = getWordForSrs();
-            if (currentWord) updateScore(currentWord.id, parseInt(e.target.dataset.score));
-        });
-        if (srsMediumBtn) srsMediumBtn.addEventListener('click', (e) => {
-            const currentWord = getWordForSrs();
-            if (currentWord) updateScore(currentWord.id, parseInt(e.target.dataset.score));
-        });
-        if (srsEasyBtn) srsEasyBtn.addEventListener('click', (e) => {
-            const currentWord = getWordForSrs();
-            if (currentWord) updateScore(currentWord.id, parseInt(e.target.dataset.score));
-        });
-        
-        // Esto podría abrir un modal de quiz más tarde, por ahora solo muestra/oculta.
-        if (openWordOfDayCard) openWordOfDayCard.addEventListener('click', () => {
-             // Lógica futura para un modal de quiz más completo
-        });
-    }
-
-    // --- Funciones de Renderizado ---
-
-    function renderDays() {
-        if (!daysContainer || !dayTemplate) return;
-        daysContainer.innerHTML = '';
-        
-        PLAN_DIARIO.forEach(dayData => {
-            const dayEl = renderSingleDay(dayData);
-            daysContainer.appendChild(dayEl);
-        });
-        
-        // Resaltar el día actual o el más avanzado sin completar
-        const firstIncompleteDay = PLAN_DIARIO.find(day => day.tasks.some(task => !state.tasks[task.id]));
-        const targetDay = firstIncompleteDay ? firstIncompleteDay.day : PLAN_DIARIO.length;
-        
-        currentlyDisplayedDay = targetDay;
-        
-        // Mostrar solo el día actual, ocultar los demás inicialmente
-        document.querySelectorAll('.day-article').forEach(el => el.classList.add('hidden'));
-        const activeDayEl = document.querySelector(`.day-article[data-day="${currentlyDisplayedDay}"]`);
-        if (activeDayEl) {
-            activeDayEl.classList.remove('hidden');
-        }
-
-        updateNavigationButtons();
-        updateDayDisplay();
-    }
-
-    function renderSingleDay(dayData) {
-        const clone = dayTemplate.content.cloneNode(true);
-        const article = clone.querySelector('article');
-        
-        article.classList.add('day-article');
-        article.setAttribute('data-day', dayData.day);
-
-        const titleEl = clone.querySelector('.day-title');
-        titleEl.textContent = `📅 Día ${dayData.day}: ${dayData.title}`;
-        
-        const wordEl = clone.querySelector('.day-word strong');
-        wordEl.textContent = dayData.word;
-        
-        // Lesson Content
-        const lessonContentEl = clone.querySelector('.lesson-content');
-        lessonContentEl.innerHTML = dayData.lessonContent || 'Contenido de la lección no disponible.'; // Sanear si es necesario
-        
-        // Task List
-        const taskList = clone.querySelector('.task-list');
-        dayData.tasks.forEach(task => {
-            const taskEl = renderSingleTask(task, dayData.day);
-            taskList.appendChild(taskEl);
-        });
-
-        // Day Status
-        const dayStatusEl = clone.querySelector('.day-status');
-        const totalTasks = dayData.tasks.length;
-        const completedTasks = dayData.tasks.filter(task => state.tasks[task.id]).length;
-        dayStatusEl.textContent = `${completedTasks} / ${totalTasks} tareas`;
-
-        if (completedTasks === totalTasks) {
-             dayStatusEl.classList.add('text-pink-600', 'font-bold');
-        } else {
-             dayStatusEl.classList.remove('text-pink-600', 'font-bold');
-        }
-
-        // Eventos de Pestañas
-        const tabButtons = clone.querySelectorAll('.tab-button');
-        tabButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const targetTab = e.target.getAttribute('data-tab');
-                const tabsContainer = e.target.closest('article');
-                
-                // Activar el botón
-                tabsContainer.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                
-                // Mostrar el contenido
-                tabsContainer.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-                tabsContainer.querySelector(`.${targetTab}-tab`).classList.remove('hidden');
-            });
-        });
-
-        // Evento de Botón del Diario
-        const journalFocusBtn = clone.querySelector('.journal-focus-btn');
-        journalFocusBtn.addEventListener('click', () => {
-            selectJournalDay(dayData.day);
-            // Hacer scroll suave hacia el área del diario
-            journalTextarea.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            journalTextarea.focus();
-        });
-
-        return article;
-    }
-
-    function renderSingleTask(task, day) {
-        const clone = taskTemplate.content.cloneNode(true);
-        const li = clone.querySelector('.task-item');
-        li.setAttribute('data-task-id', task.id);
-        li.setAttribute('data-day', day);
-        
-        const checkbox = clone.querySelector('.task-checkbox');
-        checkbox.id = task.id; // Asignar ID al checkbox
-        checkbox.checked = !!state.tasks[task.id];
-        
-        const label = clone.querySelector('.task-label');
-        label.setAttribute('for', task.id); // Asignar for al label
-        
-        const descEl = clone.querySelector('.task-desc');
-        descEl.textContent = task.desc;
-        
-        const iconEl = clone.querySelector('.task-icon');
-        iconEl.textContent = task.icon;
-        
-        const timeEl = clone.querySelector('.task-time');
-        timeEl.textContent = task.time;
-
-        // Estilo de tarea completada
-        if (checkbox.checked) {
-            label.classList.add('task-done');
-        } else {
-            label.classList.remove('task-done');
-        }
-
-        // Listener
-        checkbox.addEventListener('change', (e) => {
-            state.tasks[task.id] = e.target.checked;
-
-            // Actualizar estilo
-            if (e.target.checked) {
-                label.classList.add('task-done');
-            } else {
-                label.classList.remove('task-done');
-            }
-
-            // Re-renderizar el estado del día y las estadísticas
-            updateDayStatus(day);
-            calculateProgress();
-            
-            // Lógica de Racha
-            if (e.target.checked) {
-                const currentDayTasks = PLAN_DIARIO.find(d => d.day == day).tasks;
-                const allCompleted = currentDayTasks.every(t => state.tasks[t.id]);
-
-                // Solo actualiza la racha si el día está 100% completado.
-                if (allCompleted) {
-                    const todayKey = getTodayKey();
-                    const lastCompletionKey = localStorage.getItem('lastCompletionDateKey');
-
-                    // Si la última finalización fue ayer o hoy (y no hay una marca de hoy), actualiza la fecha.
-                    if (!lastCompletionKey || lastCompletionKey !== todayKey) {
-                        // Aquí se actualiza la fecha de finalización. La racha se recalcula en `updateStreakDisplay`.
-                        state.lastCompletionDate = new Date().toISOString();
-                        localStorage.setItem('lastCompletionDateKey', todayKey); // Marca la racha de HOY
-                    }
-                }
-            }
-            updateStreakDisplay();
-            saveState();
-        });
-        
-        return clone;
-    }
-
-    function updateDayStatus(day) {
-        const dayData = PLAN_DIARIO.find(d => d.day == day);
-        if (!dayData) return;
-        
-        const totalTasks = dayData.tasks.length;
-        const completedTasks = dayData.tasks.filter(task => state.tasks[task.id]).length;
-        
-        const article = document.querySelector(`.day-article[data-day="${day}"]`);
-        if (article) {
-            const dayStatusEl = article.querySelector('.day-status');
-            dayStatusEl.textContent = `${completedTasks} / ${totalTasks} tareas`;
-
-            if (completedTasks === totalTasks) {
-                dayStatusEl.classList.add('text-pink-600', 'font-bold');
-            } else {
-                dayStatusEl.classList.remove('text-pink-600', 'font-bold');
-            }
-        }
-    }
-
-    // --- Funciones de Navegación ---
-
-    function updateDayDisplay() {
-        headerDayDisplay.textContent = `Día ${currentlyDisplayedDay} / ${PLAN_DIARIO.length}`;
-        currentDayDisplay.textContent = `Día ${currentlyDisplayedDay} / ${PLAN_DIARIO.length}`;
-        updateNavigationButtons();
-
-        // Actualizar el diario al cambiar de día
-        selectJournalDay(currentlyDisplayedDay);
-
-        // Muestra el día actual y oculta los demás
-        document.querySelectorAll('.day-article').forEach(el => el.classList.add('hidden'));
-        const activeDayEl = document.querySelector(`.day-article[data-day="${currentlyDisplayedDay}"]`);
-        if (activeDayEl) {
-            activeDayEl.classList.remove('hidden');
-            activeDayEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
-
-    function updateNavigationButtons() {
-        prevDayBtn.disabled = currentlyDisplayedDay <= 1;
-        nextDayBtn.disabled = currentlyDisplayedDay >= PLAN_DIARIO.length;
-    }
-
-    function goToDay(day) {
-        if (day >= 1 && day <= PLAN_DIARIO.length) {
-            currentlyDisplayedDay = day;
-            updateDayDisplay();
-        }
-    }
-
-    function prevDay() {
-        goToDay(currentlyDisplayedDay - 1);
-    }
-
-    function nextDay() {
-        goToDay(currentlyDisplayedDay + 1);
-    }
-    
-    // --- Funciones de Diario ---
-
-    function selectJournalDay(day) {
-        if (journalDaySelector) {
-            journalDaySelector.value = day;
-            journalCurrentDay.textContent = `Día ${day}`;
-            journalTextarea.value = state.journal[day] || '';
-            journalTextarea.focus();
-        }
-    }
-
-    function saveJournalEntry() {
-        if (journalDaySelector) {
-            const day = journalDaySelector.value;
-            const text = journalTextarea.value;
-            state.journal[day] = text;
-            saveState();
-            showAutosaveNotice();
-        }
-    }
-
-    function showAutosaveNotice() {
-        if (autosaveNotice) {
-            autosaveNotice.classList.remove('opacity-0');
-            autosaveNotice.classList.add('opacity-100');
-            setTimeout(() => {
-                autosaveNotice.classList.remove('opacity-100');
-                autosaveNotice.classList.add('opacity-0');
-            }, 2000);
-        }
-    }
-
-    // --- Funciones de Recordatorios ---
-
-    function addReminder() {
-        if (!reminderInput || !addReminderBtn) return;
-
-        const text = reminderInput.value.trim();
-        if (text) {
-            state.reminders.push({ id: Date.now(), text, completed: false });
-            reminderInput.value = '';
-            renderReminders();
-            saveState();
-        }
-    }
-
-    function toggleReminder(id) {
-        const reminder = state.reminders.find(r => r.id === id);
-        if (reminder) {
-            reminder.completed = !reminder.completed;
-            renderReminders();
-            saveState();
-        }
-    }
-
-    function removeReminder(id) {
-        state.reminders = state.reminders.filter(r => r.id !== id);
-        renderReminders();
-        saveState();
-    }
-
-    function renderReminders() {
-        if (!reminderList) return;
-
-        reminderList.innerHTML = '';
-        state.reminders.forEach(reminder => {
-            const li = document.createElement('li');
-            li.className = 'flex justify-between items-center p-2 rounded-md transition hover:bg-gray-50';
-            li.innerHTML = `
-                <label class="checkbox-wrap w-full cursor-pointer">
-                    <input type="checkbox" class="task-checkbox" ${reminder.completed ? 'checked' : ''} data-id="${reminder.id}">
-                    <span class="checkbox-box mr-3"><span class="tick">✓</span></span>
-                    <span class="ml-4 ${reminder.completed ? 'line-through text-gray-500' : 'text-gray-800'}">${escapeHtml(reminder.text)}</span>
-                </label>
-                <button data-id="${reminder.id}" class="remove-reminder-btn text-gray-400 hover:text-red-500 transition ml-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-            `;
-            
-            li.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
-                toggleReminder(parseInt(e.target.dataset.id));
-            });
-            
-            li.querySelector('.remove-reminder-btn').addEventListener('click', (e) => {
-                removeReminder(parseInt(e.currentTarget.dataset.id));
-            });
-
-            reminderList.appendChild(li);
-        });
-    }
-
-    // --- Funciones de Modal ---
-
-    function showModal(view, wordIndex, message = '') {
-        if (!modalBackdrop || !modalContainer) return;
-        
-        // Reiniciar las vistas
-        quizView.classList.add('hidden');
-        answerView.classList.add('hidden');
-        greetingView.classList.add('hidden');
-        reminderView.classList.add('hidden');
-        
-        modalMessage.textContent = message;
-
-        if (view === 'quiz') {
-            modalTitle.textContent = 'Palabra del Día (SRS)';
-            quizView.classList.remove('hidden');
-            // ... (Lógica de Quiz aquí si se implementa un modal)
-        } else if (view === 'answer') {
-            modalTitle.textContent = 'Respuesta';
-            answerView.classList.remove('hidden');
-        } else if (view === 'greeting') {
-            modalTitle.textContent = '¡Bienvenido/a!';
-            greetingView.classList.remove('hidden');
-        } else if (view === 'reminder') {
-            modalTitle.textContent = 'Recordatorios';
-            reminderView.classList.remove('hidden');
-            renderReminders();
-        }
-
-        // Mostrar el modal
-        modalBackdrop.classList.remove('hidden');
-        modalBackdrop.style.display = 'flex';
-        modalContainer.classList.remove('scale-0');
-        modalContainer.classList.add('scale-100');
-    }
-
-    // --- Inicialización ---
-
-    function init() {
-        getElements();
-        loadState();
-        renderDays(); // Renderiza los días y selecciona el día actual
-        calculateProgress();
-        renderWordOfTheDay(); // Llama a la lógica SRS
-        initializeSrsListeners();
-
-        // Eventos de Navegación
-        if (prevDayBtn) prevDayBtn.addEventListener('click', prevDay);
-        if (nextDayBtn) nextDayBtn.addEventListener('click', nextDay);
-        if (goDay) goDay.addEventListener('click', () => {
-            const day = parseInt(jumpDay.value);
-            if (!isNaN(day)) goToDay(day);
-        });
-        
-        // Eventos de Diario
-        if (journalDaySelector) {
-            PLAN_DIARIO.forEach(day => {
-                const option = document.createElement('option');
-                option.value = day.day;
-                option.textContent = `Día ${day.day}: ${day.title}`;
-                journalDaySelector.appendChild(option);
-            });
-            journalDaySelector.addEventListener('change', (e) => {
-                saveJournalEntry(); // Guarda la entrada anterior
-                selectJournalDay(parseInt(e.target.value));
-            });
-            // Auto-guardar mientras se escribe
-            journalTextarea.addEventListener('input', saveJournalEntry);
-        }
-        
-        // Eventos de Recordatorios
-        if (openReminderModalBtn) openReminderModalBtn.addEventListener('click', () => { showModal('reminder', currentlyDisplayedDay - 1); });
-        if (addReminderBtn) addReminderBtn.addEventListener('click', addReminder);
-        if (reminderInput) reminderInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { addReminder(); } });
-        if (closeReminderModal) closeReminderModal.addEventListener('click', () => { if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; } });
-        
-        // Cierre de Modal
-        if (closeModalBtn) closeModalBtn.addEventListener('click', () => { if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; } });
-        if (closeGreetingBtn) closeGreetingBtn.addEventListener('click', () => { if (modalBackdrop) { modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; } });
-        if (modalBackdrop) modalBackdrop.addEventListener('click', (e) => { 
-            if (e.target === modalBackdrop) { 
-                modalBackdrop.classList.add('hidden'); modalBackdrop.style.display = 'none'; 
-            } 
-        });
-
-        // Guardar estado al cerrar/recargar
-        window.addEventListener('beforeunload', saveState);
-    }
-
-    // --- Iniciar la Aplicación ---
-    init();
-})();
+      </div>
+    </section>
+  </div>
+
+  <div id="modalBackdrop" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-40">
+    <div id="modal" class="modal bg-white rounded-2xl p-6 max-w-lg w-full shadow-lg transform">
+      <h3 id="modalTitle" class="text-xl font-semibold text-pink-600 mb-2"></h3>
+      
+      <div id="quizView" class="hidden">
+        <p id="quizQuestion" class="text-gray-700 mb-4 text-lg">¿Cómo se dice...? <strong id="quizWordTrans"></strong></p>
+        <input id="quizInput" type="text" class="w-full p-2 border border-gray-300 rounded-md mb-3" placeholder="Escribe en alemán...">
+        <div id="quizFeedback" class="text-sm text-red-500 mb-3 h-4"></div>
+        <div class="flex justify-between"><button id="revealAnswerBtn" class="px-3 py-2 rounded-md bg-gray-100 text-sm">Revelar</button><button id="checkAnswerBtn" class="px-4 py-2 rounded-md bg-pink-600 text-white">Comprobar</button></div>
+      </div>
+      
+      <div id="answerView" class="hidden">
+        <p id="modalMessage" class="text-gray-700 mb-4"></p>
+        <div class="mb-4 p-3 bg-gray-50 rounded-md border border-gray-200"><p class="text-sm text-gray-600 font-medium">Ejemplo:</p><p id="modalExampleSentence" class="text-sm text-gray-800 italic"></p><p id="modalExampleTranslation" class="text-xs text-gray-500 italic mt-1"></p></div>
+        <div id="modalExample" class="text-sm text-gray-500 mb-4"></div> 
+        <div class="flex justify-between items-center flex-wrap gap-2">
+          <div class="flex gap-2"><button id="listenWordBtn" class="px-3 py-2 rounded-md bg-blue-100 text-blue-700 text-sm">🗣️ Palabra</button><button id="listenExampleBtn" class="px-3 py-2 rounded-md bg-blue-100 text-blue-700 text-sm">🗣️ Ejemplo</button></div>
+          <div class="flex gap-2 flex-wrap"><button id="prevWord" class="px-3 py-2 rounded-md bg-gray-100 text-sm">Anterior</button><button id="nextWord" class="px-3 py-2 rounded-md bg-gray-100 text-sm">Siguiente</button><button id="closeModal" class="px-4 py-2 rounded-md bg-pink-600 text-white text-sm">Cerrar</button></div>
+        </div>
+      </div>
+      
+      <div id="greetingView" class="hidden">
+         <p id="greetingMessage" class="text-gray-700 mb-4 text-lg"></p><button id="closeGreetingBtn" class="w-full px-4 py-2 rounded-md bg-pink-600 text-white">¡Vamos!</button>
+      </div>
+
+      <div id="reminderView" class="hidden">
+        <p class="text-gray-700 mb-4 text-sm">Crea una nota rápida o un recordatorio (solo local):</p>
+        <textarea id="reminderInput" rows="3" class="w-full p-2 border border-gray-300 rounded-md mb-3" placeholder="Ej: Repasar los artículos del DÍA 9 mañana"></textarea>
+        <button id="addReminderBtn" class="px-3 py-2 rounded-md bg-pink-600 text-white text-sm mb-4 w-full font-medium hover:bg-pink-700 transition">Añadir Nota</button>
+        <h4 class="font-semibold text-gray-700 mb-2 border-t pt-3">Mis Notas:</h4>
+        <ul id="reminderList" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+          <li class="text-gray-500 italic text-sm">No hay notas guardadas.</li>
+        </ul>
+        <button id="closeReminderModal" class="mt-4 w-full px-4 py-2 rounded-md bg-gray-200 text-gray-700 text-sm hover:bg-gray-300 transition">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <template id="day-template">
+    <article class="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+      <header class="flex flex-col md:flex-row items-start md:items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-pink-600 day-title">📅 Día X: Título</h3>
+          <p class="text-xs text-gray-500 day-word">Palabra clave: <strong>palabra</strong></p>
+        </div>
+        <div class="flex items-center gap-2 mt-2 md:mt-0">
+          <div class="text-sm text-gray-600 mr-2 day-status"></div>
+        </div>
+      </header>
+      
+      <div class="mt-3 border-b border-gray-200">
+        <div class="flex">
+            <button data-tab="lesson" class="tab-button px-4 py-2 text-sm text-gray-600 rounded-t-lg border border-b-0 border-gray-200 -mb-px active">
+                Clase del Día 📖
+            </button>
+            <button data-tab="tasks" class="tab-button px-4 py-2 text-sm text-gray-600 rounded-t-lg border border-b-0 border-gray-200 -mb-px ml-1">
+                Práctica y Tareas ✅
+            </button>
+        </div>
+      </div>
+
+      <div class="tab-content lesson-tab pt-4 lesson-content">
+          </div>
+      
+      <div class="tab-content tasks-tab pt-4 hidden">
+        <div class="day-content open">
+            <ul class="space-y-2 task-list"></ul>
+            <button class="mt-3 px-3 py-2 bg-pink-100 text-pink-700 rounded-md text-sm journal-focus-btn">Escribir en el diario de este día</button>
+        </div>
+      </div>
+
+    </article>
+  </template>
+  <template id="task-template">
+    <li class="flex items-start gap-3 p-3 rounded-lg task-item">
+      <label class="checkbox-wrap w-full">
+        <input type="checkbox" class="task-checkbox">
+        <span class="checkbox-box"><span class="tick">✓</span></span>
+        <span class="ml-3 text-sm task-label">
+          <span class="task-icon">🧠</span>
+          <span class="task-desc">Descripción de la tarea</span>
+          <span class="text-xs text-gray-500 task-time">(20 min)</span>
+        </span>
+      </label>
+    </li>
+  </template>
+
+  <script src="js/plan.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
