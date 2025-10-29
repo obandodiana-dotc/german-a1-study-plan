@@ -11,7 +11,7 @@
         streak: 0,
         lastCompletionDate: null,
         reminders: [],
-        vocabularyScores: {}
+        vocabularyScores: {} // Inicialización clave para evitar errores
     };
     let currentlyDisplayedDay = 1;
     let currentWordId = null; 
@@ -23,8 +23,8 @@
     let jumpDay, resetProgressBtn, prevDayBtn, nextDayBtn;
     
     // Variables de Sidebar (SRS)
-    let wodTranslationEl, openWordOfDayCard, wodWordDisplay; 
-
+    let wodTranslationEl, openWordOfDayCard, wodWordEl; // Referencia corregida
+    
     // Variables de Modales y Quiz
     let modalBackdrop, modalTitle;
     let quizView, answerView, greetingView;
@@ -57,7 +57,7 @@
         // [Referencias DOM de Word of the Day (WOD/SRS - Sidebar)]
         wodTranslationEl = document.getElementById('wod-translation-el');
         openWordOfDayCard = document.getElementById('open-word-of-day-card');
-        wodWordDisplay = document.getElementById('wod-word-display');
+        wodWordEl = document.getElementById('wod-word-el'); // APUNTA AL SPAN
         
         // [Referencias DOM de Modales y Quiz]
         modalBackdrop = document.getElementById('modal-backdrop');
@@ -90,6 +90,7 @@
         srsHardBtn = document.getElementById('srsHardBtn'); 
     }
 
+    // FIX: Asegura que el estado se inicialice si no hay datos guardados
     function loadState() {
         const storedState = localStorage.getItem('germanPlanState');
         if (storedState) {
@@ -97,6 +98,7 @@
         } else {
             currentlyDisplayedDay = 1;
         }
+        // CRÍTICO: Si no hay puntuaciones guardadas (primera carga), inicializa.
         if (!state.vocabularyScores || Object.keys(state.vocabularyScores).length === 0) {
             initializeVocabularyScores();
         }
@@ -106,6 +108,7 @@
         state.vocabularyScores = {};
         if (typeof VOCABULARIO_SRS !== 'undefined') {
              VOCABULARIO_SRS.forEach(word => {
+                // Score 0: listo para la primera revisión
                 state.vocabularyScores[word.id] = { score: 0, lastReview: 0 }; 
             });
         }
@@ -114,6 +117,8 @@
     function saveState() {
         localStorage.setItem('germanPlanState', JSON.stringify(state));
     }
+    
+    // ... [showModal, saveJournal, updateUIStats permanecen iguales] ...
     
     function showModal(view, dayIndex = null) {
         [quizView, answerView, greetingView, journalModal].forEach(el => {
@@ -152,6 +157,7 @@
 
     function updateUIStats() {
         const totalDays = PLAN_DIARIO.length;
+        // Asumiendo que el día actual es el progreso
         const progress = currentlyDisplayedDay; 
         const percent = Math.floor((progress / totalDays) * 100);
         
@@ -159,6 +165,7 @@
         if(progressBar) progressBar.style.width = `${percent}%`;
         if(streakEl) streakEl.textContent = state.streak;
     }
+
 
     function checkAnswer() {
         const userAnswer = quizInput.value.trim().toLowerCase();
@@ -183,24 +190,29 @@
         showModal('answer');
     }
 
+    // Lógica para el Spaced Repetition System (SRS)
     function getWordForSRS() {
         let wordToReviewId = null;
         let lowestScore = Infinity;
         let oldestReview = Infinity;
 
+        // Itera sobre todas las palabras para encontrar la menos revisada (lowestScore)
         for (const id in state.vocabularyScores) {
             const scoreData = state.vocabularyScores[id];
             
+            // Prioridad 1: La palabra con la puntuación más baja
             if (scoreData.score < lowestScore) {
                 lowestScore = scoreData.score;
                 wordToReviewId = id;
             } 
+            // Prioridad 2: Si las puntuaciones son iguales, elige la que se revisó hace más tiempo
             else if (scoreData.score === lowestScore && scoreData.lastReview < oldestReview) {
                 oldestReview = scoreData.lastReview;
                 wordToReviewId = id;
             }
         }
         
+        // Retorna la palabra con la puntuación más baja (o la primera si todas son iguales/infinito)
         return wordToReviewId || 'wod-1'; 
     }
 
@@ -210,8 +222,10 @@
         let currentScore = state.vocabularyScores[wordId].score;
 
         if (difficulty === 'easy') {
+            // Aumenta la dificultad (máximo 5)
             state.vocabularyScores[wordId].score = Math.min(5, currentScore + 1); 
         } else if (difficulty === 'hard') {
+            // Disminuye la dificultad (mínimo 0)
             state.vocabularyScores[wordId].score = Math.max(0, currentScore - 1); 
         }
         
@@ -222,26 +236,33 @@
 
     function renderWordOfTheDay() {
         currentWordId = getWordForSRS();
+        // El ID de la palabra es 'wod-X', el índice es X-1
         const wordIndex = parseInt(currentWordId.split('-')[1]) - 1;
-        currentWordData = PLAN_DIARIO[wordIndex];
+        // La data de la palabra está en PLAN_DIARIO, ya que cada día tiene una palabra clave
+        currentWordData = PLAN_DIARIO[wordIndex]; 
 
+        // RENDERIZADO DEL SIDEBAR
         if (wodTranslationEl) wodTranslationEl.textContent = currentWordData.wordTrans;
         
-        if (wodWordDisplay) {
+        // FIX: Usar el wodWordEl (el span) para inyectar solo el texto
+        if (wodWordEl) {
             const plural = currentWordData.plural && currentWordData.plural !== currentWordData.word ? ` (${currentWordData.plural})` : '';
-            wodWordDisplay.innerHTML = `Palabra: <span class="font-bold">${currentWordData.word}${plural}</span>`;
+            wodWordEl.textContent = `${currentWordData.word}${plural}`;
         }
         
+        // RENDERIZADO DEL MODAL DE QUIZ
         if (quizWordTrans) quizWordTrans.textContent = `¿Cómo se dice "${currentWordData.wordTrans}"?`;
         if (quizInput) quizInput.value = '';
         if (quizFeedback) quizFeedback.textContent = '';
         
+        // RENDERIZADO DEL MODAL DE RESPUESTA
         if (modalExampleSentence) modalExampleSentence.textContent = currentWordData.exampleSentence;
         if (modalExampleTranslation) modalExampleTranslation.textContent = currentWordData.exampleTranslation;
     }
 
 
     function MockAIGrammarCheck() {
+        // ... (Esta función permanece sin cambios, es una simulación de IA) ...
         const text = journalTextarea.value.trim();
         if (!text) {
             if (aiFeedbackContainer) {
@@ -285,7 +306,13 @@
     }
 
     function speak(text) {
+        // Implementación Mock de Texto a Voz
         console.log(`TTS Mock: Reproduciendo "${text}"`);
+        // Se puede reemplazar con la API de Web Speech Synthesis
+        // const synth = window.speechSynthesis;
+        // const utterance = new SpeechSynthesisUtterance(text);
+        // utterance.lang = 'de-DE'; 
+        // synth.speak(utterance);
         alert(`¡Simulación de voz! Reproduciendo: "${text}"`);
     }
 
@@ -356,7 +383,6 @@
             });
         });
     }
-
 
     function renderTask(task, dayId) {
         const taskClone = taskTemplate.content.cloneNode(true);
@@ -530,6 +556,7 @@
         loadState();
         initDOMReferences(); 
         
+        // Verificación de fallback, aunque loadState ya debería hacerlo.
         if (Object.keys(state.vocabularyScores).length === 0) {
             initializeVocabularyScores();
             saveState();
@@ -540,6 +567,7 @@
         updateUIStats(); 
         setupEventListeners();
         
+        // Muestra el modal de bienvenida solo si es la primera vez
         if (localStorage.getItem('germanPlanState') === null) {
             showModal('greeting');
         }
