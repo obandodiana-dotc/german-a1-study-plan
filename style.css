@@ -1,0 +1,48 @@
+:root {
+  --pink-500: #ec4899;
+  --pink-200: #fbcfe8;
+  --pink-50: #fdf2f8;
+  --grad-from: #f472b6; 
+  --grad-to: #a855f7; 
+}
+body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+.font-display { font-family: 'Dancing Script', cursive; }
+.stat-card {
+  background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.checkbox-wrap { position: relative; padding-left: 2.1rem; display: inline-flex; align-items: center; cursor: pointer; }
+.checkbox-wrap input[type="checkbox"] { position: absolute; left: 0; top: 0.12rem; width: 1.25rem; height: 1.25rem; opacity: 0; }
+.checkbox-box {
+  position: absolute; left: 0; top: 0.12rem; width: 1.25rem; height: 1.25rem;
+  border: 2px solid var(--pink-200); border-radius: .25rem; display: inline-flex; align-items:center; justify-content:center;
+  transition: all .18s; background: white;
+}
+.checkbox-box .tick { font-size: 1rem; color: white; opacity: 0; transition: opacity .15s; line-height: 1; }
+input[type="checkbox"]:checked + .checkbox-box { background: var(--pink-500); border-color: var(--pink-500); }
+input[type="checkbox"]:checked + .checkbox-box .tick { opacity: 1; }
+.task-done { text-decoration: line-through; color: #6b7280; }
+.modal { transition: opacity .25s, transform .25s; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }
+}
+.shake-anim { animation: shake 0.3s ease-in-out; }
+.nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Estilo para las pestañas de la lección */
+.tab-button.active {
+    background-color: white;
+    color: var(--pink-500);
+    font-weight: 600;
+    border-bottom-color: white;
+}
+.tab-button {
+    background-color: #f3f4f6; /* gray-100 */
+    border-color: #e5e7eb; /* gray-200 */
+    transition: background-color 0.15s;
+    border-bottom: 2px solid var(--pink-500);
+}
+/* Estilo para el contenido de la lección */
+.lesson-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: #a855f7; /* purple-500 */ }
+.lesson-content p { margin-bottom: 0.75rem; line-height: 1.5; }
+.lesson-content strong { font-weight: 700; color: #ec4899; }
