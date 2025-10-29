@@ -105,29 +105,286 @@ const PLAN_DIARIO = [
     `, tasks: [ { id:'d6-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende los números de 0 a 20.', time:'20 min' }, { id:'d6-t2', icon:'🎧', color:'bg-pink-50', desc:'Escucha una canción del alfabeto alemán y cántala.', time:'15 min' }, { id:'d6-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica decir tu número de teléfono y edad.', time:'15 min' } ] },
     
     { day: 7, word: 'Repaso', wordTrans: 'Revisión', title: 'Repaso Semana 1', journalPrompt: 'Escribe un párrafo presentándote.', exampleSentence: 'Heute machen wir einen Repaso.', exampleTranslation: 'Hoy hacemos un repaso.', learningGoals: ["Consolidar saludos, presentaciones.", "Repasar conjugaciones de 'sein' y 'haben'.", "Practicar W-Fragen y números básicos."], lessonContent: `<p>Esta semana se centró en las bases de la comunicación: presentarse, preguntar y responder información personal, y los dos verbos más importantes: <strong>sein</strong> (ser/estar) y <strong>haben</strong> (tener).</p><h3>Autoevaluación Rápida</h3><p>Intenta conjugar 'sein' y 'haben' para 'Ich', 'Du', 'Er/Sie/Es' de memoria. Si lo logras, estás listo para la siguiente semana.</p>`, tasks: [ { id:'d7-t1', icon:'📖', color:'bg-yellow-50', desc:'Lee un diálogo corto (A1) e identifica saludos, "sein", "haben".', time:'20 min' }, { id:'d7-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe un párrafo corto (3-5 frases) presentándote.', time:'20 min' }, { id:'d7-t3', icon:'🧠', color:'bg-purple-50', desc:'Repasa vocabulario días 1-6 con flashcards.', time:'15 min' } ] },
-    // --- RESTO DE DÍAS (Sin contenido de lección detallado, solo placeholders) ---
-    // DEBES añadir el contenido de la lección para cada día (lessonContent)
-    { day: 8, word: 'die Familie', wordTrans: 'la Familia', plural: 'die Familien', title: 'La Familia', journalPrompt: 'Describe a tu familia.', exampleSentence: 'Meine Familie wohnt in Spanien.', exampleTranslation: 'Mi familia vive en España.', learningGoals: ["Nombrar a los miembros básicos de la familia.", "Describir relaciones familiares simples."], lessonContent: `<h3>¡Bienvenido al día 8!</h3><p>Aquí aprenderás el vocabulario de la familia. Recuerda siempre aprender el sustantivo junto a su artículo (der/die/das).</p>`, tasks: [ { id:'d8-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende los miembros de la familia.', time:'20 min' }, { id:'d8-t2', icon:'✍️', color:'bg-yellow-50', desc:'Dibuja tu árbol genealógico y etiqueta en alemán.', time:'20 min' }, { id:'d8-t3', icon:'🗣️', color:'bg-orange-50', desc:'Describe a tu familia en frases simples.', time:'15 min' } ] },
-    { day: 9, word: 'der', wordTrans: 'el (masc.)', title: 'Artículos: Nominativo', journalPrompt: 'Escribe 10 sustantivos con su artículo.', exampleSentence: 'Der Stuhl ist alt.', exampleTranslation: 'La silla es vieja.', learningGoals: ["Identificar los 3 géneros gramaticales.", "Usar los artículos definidos (der, die, das) en nominativo."], lessonContent: `<h3>Gramática del día: El Nominativo y los Artículos</h3><p>El nominativo es el caso del sujeto de la oración. ¡Recuerda que todos los sustantivos alemanes llevan mayúscula inicial!</p><p>Masculino: <strong>Der</strong> Mann | Femenino: <strong>Die</strong> Frau | Neutro: <strong>Das</strong> Kind</p>`, tasks: [ { id:'d9-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende los 3 géneros y artículos.', time:'20 min' }, { id:'d9-t2', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 sustantivos CON su artículo.', time:'15 min' }, { id:'d9-t3', icon:'✍️', color:'bg-yellow-50', desc:'Haz una lista de 5 objetos y busca su género/artículo.', time:'20 min' } ] },
-    { day: 10, word: 'den', wordTrans: 'el (masc. acus.)', title: 'Artículos: Akkusativ', journalPrompt: 'Escribe 5 frases en Acusativo.', exampleSentence: 'Ich sehe den Mann.', exampleTranslation: 'Veo al hombre.', learningGoals: ["Comprender el caso acusativo.", "Aplicar el cambio der -> den."], lessonContent: `<h3>El Acusativo (Objeto Directo)</h3><p>El acusativo se usa para el objeto directo de la acción. Solo el artículo masculino cambia: <strong>der</strong> se convierte en <strong>den</strong>.</p><p>Ejemplo: Ich habe <strong>einen</strong> Hund (masc. indefinito) | Ich sehe <strong>den</strong> Tisch (masc. definido).</p>`, tasks: [ { id:'d10-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Entiende el Akkusativ (objeto directo). "der" -> "den".', time:'20 min' }, { id:'d10-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con "haben" + objeto directo.', time:'20 min' }, { id:'d10-t3', icon:'📖', color:'bg-yellow-50', desc:'Completa 10 ejercicios online de Nom vs Akk.', time:'15 min' } ] },
-    { day: 11, word: 'ein', wordTrans: 'un', title: 'Artículos Indefinidos', journalPrompt: 'Escribe 3 frases Nom. y 3 Akk.', exampleSentence: 'Das ist ein Tisch.', exampleTranslation: 'Esto es una mesa.', learningGoals: ["Usar artículos indefinidos Nom/Akk.", "Reconocer los cambios en el acusativo."], lessonContent: `<h3>Artículos Indefinidos: ein/eine</h3><p>En Nominativo son: ein (masc.), eine (fem.), ein (neutro). En Acusativo: **einen** (masc.), eine (fem.), ein (neutro).</p>`, tasks: [ { id:'d11-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende \'ein\' (Nom) y \'einen\' (Akk).', time:'20 min' }, { id:'d11-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe frases: "Das ist ein..." vs. "Ich habe einen...".', time:'20 min' }, { id:'d11-t3', icon:'🗣️', color:'bg-orange-50', desc:'Señala objetos y di "Das ist ein/eine...".', time:'10 min' } ] },
-    { day: 12, word: 'mein', wordTrans: 'mi', title: 'Posesivos (mein, dein)', journalPrompt: 'Escribe 5 frases con posesivos.', exampleSentence: 'Mein Bruder heißt Peter.', exampleTranslation: 'Mi hermano se llama Peter.', learningGoals: ["Usar posesivos 'mein' y 'dein'.", "Declinar posesivos."], lessonContent: `<h3>Posesivos: mein y dein</h3><p>Los posesivos se declinan como los artículos indefinidos. Si el sustantivo es femenino o plural, añaden '-e': mein/meine, dein/deine.</p>`, tasks: [ { id:'d12-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende "mein/meine" y "dein/deine" en Nominativo.', time:'20 min' }, { id:'d12-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases sobre tu familia y cosas.', time:'20 min' }, { id:'d12-t3', icon:'🗣️', color:'bg-orange-50', desc:'Describe a tu familia usando posesivos.', time:'15 min' } ] },
-    { day: 13, word: 'rot', wordTrans: 'rojo', title: 'Colores y Adjetivos Básicos', journalPrompt: 'Describe 5 objetos.', exampleSentence: 'Das Auto ist rot.', exampleTranslation: 'El coche es rojo.', learningGoals: ["Nombrar colores.", "Usar adjetivos básicos."], lessonContent: `<h3>Describiendo el mundo: Colores</h3><p>Los colores se usan como en español, pero van sin declinación cuando actúan como predicado (después del verbo sein): Das Auto ist <strong>rot</strong>.</p>`, tasks: [ { id:'d1Next-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 colores y 5 adjetivos.', time:'20 min' }, { id:'d13-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases describiendo objetos.', time:'20 min' }, { id:'d13-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha "Nicos Weg" (A1) e identifica adjetivos.', time:'15 min' } ] },
-    { day: 14, word: 'das Zimmer', wordTrans: 'la Habitación', plural: 'die Zimmer', title: 'Repaso Semana 2', journalPrompt: 'Describe tu habitación.', exampleSentence: 'Mein Zimmer ist klein.', exampleTranslation: 'Mi habitación es pequeña.', learningGoals: ["Consolidar artículos Nom/Akk.", "Practicar vocabulario y posesivos."], lessonContent: `<h3>Repaso de Artículos y Casos</h3><p>Este día es para asegurar que las declinaciones de los artículos definidos e indefinidos en Nominativo y Acusativo son claras. Céntrate en identificar el objeto directo.</p>`, tasks: [ { id:'d14-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Haz un mapa mental de Nom vs Akk.', time:'15 min' }, { id:'d14-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe un párrafo describiendo tu habitación.', time:'25 min' }, { id:'d14-t3', icon:'📖', color:'bg-yellow-50', desc:'Lee un texto A1 sobre una familia.', time:'15 min' } ] },
-    { day: 15, word: 'lernen', wordTrans: 'aprender', title: 'Verbos Regulares', journalPrompt: 'Conjuga "lernen".', exampleSentence: 'Ich lerne Deutsch.', exampleTranslation: 'Aprendo alemán.', learningGoals: ["Conjugar verbos regulares.", "Usar la terminación correcta según el pronombre."], lessonContent: `<h3>La Regla de la Terminación -en</h3><p>La mayoría de verbos terminan en -en. Para conjugar, quita '-en' y añade las terminaciones: -e, -st, -t, -en, -t, -en.</p>`, tasks: [ { id:'d15-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende la conjugación regular.', time:'20 min' }, { id:'d15-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con verbos regulares (Ej: Ich lerne).', time:'20 min' }, { id:'d15-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica la conjugación de 3 verbos comunes.', time:'15 min' } ] },
-    { day: 16, word: 'sprechen', wordTrans: 'hablar', title: 'Verbos Irregulares (con cambio)', journalPrompt: 'Conjuga "sprechen".', exampleSentence: 'Ich spreche Spanisch.', exampleTranslation: 'Hablo español.', learningGoals: ["Identificar verbos irregulares con cambio de vocal (e->i).", "Conjugar 'sprechen' y 'essen'."], lessonContent: `<h3>Verbos con cambio de Vocal</h3><p>Algunos verbos como 'sprechen' cambian la vocal de la raíz en la 2ª y 3ª persona del singular: du sprichst, er/sie/es spricht.</p>`, tasks: [ { id:'d16-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende la conjugación de \'sprechen\' y \'essen\'.', time:'20 min' }, { id:'d16-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 4 frases con estos verbos.', time:'20 min' }, { id:'d16-t3', icon:'📖', color:'bg-yellow-50', desc:'Busca 3 verbos más con cambio e->i.', time:'15 min' } ] },
-    { day: 17, word: 'können', wordTrans: 'poder', title: 'Verbos Modales (Parte 1)', journalPrompt: 'Escribe 3 cosas que puedes hacer.', exampleSentence: 'Ich kann gut singen.', exampleTranslation: 'Puedo cantar bien.', learningGoals: ["Conjugar el modal 'können' (poder).", "Usar la estructura modal: Modal en pos. 2 + Infinitivo al final."], lessonContent: `<h3>Verbos Modales (Modalverben)</h3><p>Los modales son irregulares en el singular y envían el verbo principal al final de la oración en infinitivo: Ich kann Deutsch <strong>sprechen</strong>.</p>`, tasks: [ { id:'d17-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Conjuga \'können\' (poder).', time:'20 min' }, { id:'d17-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con \'können\'.', time:'20 min' }, { id:'d17-t3', icon:'🗣️', color:'bg-orange-50', desc:'Pregunta a alguien (imaginario) "¿Puedes...?" 5 veces.', time:'15 min' } ] },
-    { day: 18, word: 'müssen', wordTrans: 'deber (oblig.)', title: 'Verbos Modales (Parte 2)', journalPrompt: 'Escribe 3 cosas que debes hacer.', exampleSentence: 'Ich muss arbeiten.', exampleTranslation: 'Debo trabajar.', learningGoals: ["Conjugar 'müssen' (obligación) y 'dürfen' (permiso).", "Practicar la estructura modal."], lessonContent: `<h3>Verbos Modales: müssen y dürfen</h3><p><strong>müssen</strong>: Necesidad fuerte o obligación (Ich muss lernen = Debo estudiar).</p><p><strong>dürfen</strong>: Permiso (Hier dürfen Sie nicht rauchen = Aquí no está permitido fumar).</p>`, tasks: [ { id:'d18-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Conjuga \'müssen\' y \'dürfen\'.', time:'20 min' }, { id:'d18-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con \'müssen\' y \'dürfen\'.', time:'20 min' }, { id:'d18-t3', icon:'📖', color:'bg-yellow-50', desc:'Identifica modales en un texto A1.', time:'15 min' } ] },
-    { day: 19, word: 'die Uhr', wordTrans: 'el reloj', plural: 'die Uhren', title: 'La Hora (Formal e Informal)', journalPrompt: 'Escribe tu horario del día.', exampleSentence: 'Es ist vierzehn Uhr.', exampleTranslation: 'Son las catorce (dos de la tarde).', learningGoals: ["Decir la hora de forma formal (oficial).", "Decir la hora de forma informal."], lessonContent: `<h3>Cómo decir la hora</h3><p>Formal: Se usa el formato de 24 horas (Es ist vierzehn Uhr).</p><p>Informal: Se usan palabras como 'halb' (y media), 'viertel' (y cuarto/menos cuarto). ¡Ojo! 'halb' significa 'media hora antes de la siguiente': halb drei = 2:30.</p>`, tasks: [ { id:'d19-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende los números de 0 a 60.', time:'20 min' }, { id:'d19-t2', icon:'✍️', color:'bg-yellow-50', desc:'Practica decir 10 horas distintas (formal/informal).', time:'20 min' }, { id:'d19-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha y repite diálogos sobre pedir la hora.', time:'15 min' } ] },
-    { day: 20, word: 'das Hobby', wordTrans: 'el Hobby', plural: 'die Hobbys', title: 'Actividades y Hobbies', journalPrompt: 'Escribe 5 hobbies que tienes.', exampleSentence: 'Mein Hobby ist Lesen.', exampleTranslation: 'Mi hobby es leer.', learningGoals: ["Nombrar actividades de tiempo libre y hobbies.", "Preguntar sobre hobbies."], lessonContent: `<h3>¿Qué te gusta hacer?</h3><p>La forma más sencilla de preguntar es: Was machen Sie/machst du gern in der Freizeit?</p><p>Respuesta: Ich lese gern (Me gusta leer).</p>`, tasks: [ { id:'d20-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 hobbies y verbos de actividad.', time:'20 min' }, { id:'d20-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases sobre lo que haces en tu tiempo libre.', time:'20 min' }, { id:'d20-t3', icon:'🗣️', color:'bg-orange-50', desc:'Describe tu día (con horas y actividades).', time:'15 min' } ] },
-    { day: 21, word: 'Repaso', wordTrans: 'Revisión', title: 'Repaso Semana 3', journalPrompt: 'Escribe una carta a un amigo invitándolo a una actividad.', exampleSentence: 'Wir wiederholen die Verben.', exampleTranslation: 'Repasamos los verbos.', learningGoals: ["Consolidar verbos regulares/irregulares y modales.", "Repasar la hora."], lessonContent: `<h3>Enfoque en Verbos y Estructura</h3><p>Asegúrate de que la posición del verbo y la conjugación de los modales y verbos irregulares son automáticas.</p>`, tasks: [ { id:'d21-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Conjuga todos los verbos aprendidos de memoria.', time:'20 min' }, { id:'d21-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe una carta corta (A1) a un amigo.', time:'25 min' }, { id:'d21-t3', icon:'📖', color:'bg-yellow-50', desc:'Revisa ejercicios de modales y la hora.', time:'15 min' } ] },
-    { day: 22, word: 'der Bahnhof', wordTrans: 'la estación de tren', plural: 'die Bahnhöfe', title: 'Preposiciones Locales (Wo?)', journalPrompt: 'Escribe 5 frases con preposiciones.', exampleSentence: 'Der Bahnhof ist in der Nähe.', exampleTranslation: 'La estación de tren está cerca.', learningGoals: ["Usar preposiciones que rigen Dativo (Wo?).", "Preguntar y responder por ubicación."], lessonContent: `<h3>Preposiciones Fijas (Dativo)</h3><p>Las preposiciones como in, an, auf, unter, hinter, neben, über, vor, zwischen pueden regir Dativo cuando indican una posición fija (¿Dónde está? = Wo?).</p>`, tasks: [ { id:'d22-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 5 preposiciones de lugar (in, auf, unter, neben, vor).', time:'20 min' }, { id:'d22-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases de ubicación usando Dativo (Der Tisch ist auf **dem** Stuhl).', time:'20 min' }, { id:'d22-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica describir un mapa.', time:'15 min' } ] },
-    { day: 23, word: 'in die Stadt', wordTrans: 'a la ciudad', title: 'Preposiciones Locales (Wohin?)', journalPrompt: 'Escribe 3 frases de movimiento.', exampleSentence: 'Ich gehe in die Stadt.', exampleTranslation: 'Voy a la ciudad.', learningGoals: ["Usar preposiciones que rigen Acusativo (Wohin?).", "Preguntar y responder por movimiento/destino."], lessonContent: `<h3>Preposiciones de Movimiento (Acusativo)</h3><p>Las mismas preposiciones (in, an, auf...) rigen Acusativo cuando indican una dirección o movimiento (¿Hacia dónde vas? = Wohin?).</p>`, tasks: [ { id:'d23-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende el cambio de Acusativo en preposiciones (Wo vs Wohin).', time:'20 min' }, { id:'d23-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases de movimiento (Ej: Ich gehe in **den** Park).', time:'20 min' }, { id:'d23-t3', icon:'📖', color:'bg-yellow-50', desc:'Lee textos de orientación en la ciudad.', time:'15 min' } ] },
-    { day: 24, word: 'der Kaffee', wordTrans: 'el café', title: 'Comida y Bebida', journalPrompt: 'Escribe tu pedido ideal en un café.', exampleSentence: 'Ich trinke einen Kaffee.', exampleTranslation: 'Bebo un café.', learningGoals: ["Nombrar comidas y bebidas básicas.", "Hacer pedidos en restaurantes/cafés."], lessonContent: `<h3>¡A la mesa! (Am Tisch)</h3><p>Vocabulario esencial: der Kaffee, das Brot, die Butter, die Milch, das Wasser.</p><p>Para pedir: Ich möchte... / Ich hätte gern... (Quisiera... / Me gustaría...)</p>`, tasks: [ { id:'d24-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 palabras de comida y 5 de bebida.', time:'20 min' }, { id:'d24-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases sobre lo que comes/bebes.', time:'20 min' }, { id:'d24-t3', icon:'🗣️', color:'bg-orange-50', desc:'Simula un diálogo en un café.', time:'15 min' } ] },
-    { day: 25, word: 'die Kleidung', wordTrans: 'la ropa', plural: 'die Kleidungen', title: 'Ropa y Precios', journalPrompt: 'Describe tu atuendo favorito.', exampleSentence: 'Die Kleidung ist schön.', exampleTranslation: 'La ropa es bonita.', learningGoals: ["Nombrar prendas de vestir básicas.", "Preguntar y decir precios.", "Usar números del 21 al 100."], lessonContent: `<h3>De Compras (Einkaufen)</h3><p>Frases clave: Was kostet...? (¿Cuánto cuesta...?)</p><p>Números grandes: se lee la unidad, luego 'und' (y), luego la decena: einundzwanzig (21).</p>`, tasks: [ { id:'d25-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 prendas de vestir.', time:'20 min' }, { id:'d25-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases describiendo ropa.', time:'20 min' }, { id:'d25-t3', icon:'🧠', color:'bg-purple-50', desc:'Repasa y practica números hasta 100.', time:'15 min' } ] },
-    { day: 26, word: 'die E-Mail', wordTrans: 'el correo electrónico', plural: 'die E-Mails', title: 'Escribir E-mails y Cartas', journalPrompt: 'Escribe un e-mail a un amigo invitándolo a cenar.', exampleSentence: 'Ich schreibe eine E-Mail.', exampleTranslation: 'Escribo un correo electrónico.', learningGoals: ["Escribir saludos y despedidas de e-mails/cartas.", "Estructura de una invitación simple."], lessonContent: `<h3>Comunicación Escrita (Schriftliche Kommunikation)</h3><p>Saludos: Liebe/Lieber [Nombre] (para amigos); Sehr geehrte Damen und Herren (formal).</p><p>Cierre: Mit freundlichen Grüßen (formal); Viele Grüße (informal).</p>`, tasks: [ { id:'d26-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende los marcadores de una carta/e-mail.', time:'20 min' }, { id:'d26-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe un e-mail de 5 frases para invitar a alguien.', time:'20 min' }, { id:'d26-t3', icon:'📖', color:'bg-yellow-50', desc:'Lee y analiza 3 e-mails A1.', time:'15 min' } ] },
-    { day: 27, word: 'das Wetter', wordTrans: 'el clima', title: 'El Clima y las Estaciones', journalPrompt: 'Describe el clima de hoy.', exampleSentence: 'Das Wetter ist kalt.', exampleTranslation: 'El clima es frío.', learningGoals: ["Nombrar estaciones y condiciones climáticas básicas.", "Describir el clima."], lessonContent: `<h3>Hablando del Clima (Das Wetter)</h3><p>Frases clave: Wie ist das Wetter heute? (¿Cómo está el clima hoy?)</p><p>Respuesta: Es ist sonnig/regnerisch/kalt/warm (Está soleado/lluvioso/frío/cálido).</p>`, tasks: [ { id:'d27-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 palabras de clima y las 4 estaciones.', time:'20 min' }, { id:'d27-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases sobre el clima de tu región.', time:'20 min' }, { id:'d27-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica frases de clima en voz alta.', time:'15 min' } ] },
-    { day: 28, word: 'Repaso', wordTrans: 'Revisión', title: 'Repaso Semana 4', journalPrompt: 'Escribe un diálogo de 10 líneas sobre ir de compras.', exampleSentence: 'Wir üben die Dialoge.', exampleTranslation: 'Practicamos los diálogos.', learningGoals: ["Consolidar preposiciones Nom/Akk.", "Repasar vocabulario de comida/ropa.", "Practicar diálogos de la vida diaria."], lessonContent: `<h3>Cierre de Contenido A1</h3><p>Esta semana se centró en la aplicación del idioma en situaciones cotidianas: localización, movimiento, compras y clima. ¡Repasa lo que te resultó más difícil!</p>`, tasks: [ { id:'d28-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Repaso rápido de las reglas de Dativo vs Acusativo.', time:'20 min' }, { id:'d28-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe el diálogo de compras.', time:'25 min' }, { id:'d28-t3', icon:'📖', color:'bg-yellow-50', desc:'Lee los textos de las 4 semanas.', time:'15 min' } ] },
-    { day: 29, word: 'alles', wordTrans: 'todo', title: 'Simulación de Examen (A1)', journalPrompt: 'Escribe 3 frases de las partes que fallaste.', exampleSentence: 'Ich habe fast alles verstanden.', exampleTranslation: 'Casi lo he entendido todo.', learningGoals: ["Medir el nivel A1 en comprensión lectora, auditiva y oral."], lessonContent: `<h3>Prepárate para el Examen</h3><p>Hoy es un día de simulación. Intenta hacer un examen modelo A1 online para identificar tus puntos débiles.</p>`, tasks: [ { id:'d29-t1', icon:'🧠', color:'bg-purple-50', desc:'Simulación: Haz un examen modelo de lectura (Lesen).', time:'30 min' }, { id:'d29-t2', icon:'🎧', color:'bg-pink-50', desc:'Simulación: Haz un examen modelo auditivo (Hören).', time:'30 min' }, { id:'d29-t3', icon:'🗣️', color:'bg-orange-50', desc:'Simulación: Practica la sección oral (Sprechen).', time:'30 min' } ] },
-    { day: 30, word: 'das Zertifikat', wordTrans: 'el certificado', plural: 'die Zertifikate', title: '¡Felicidades! Logro A1', journalPrompt: 'Escribe tu reflexión del mes y tus metas futuras.', exampleSentence: 'Das Zertifikat ist wichtig.', exampleTranslation: 'El certificado es importante.', learningGoals: ["Reflexionar sobre el aprendizaje.", "Establecer metas para el Nivel A2."], lessonContent: `<h3>¡Lo lograste!</h3><p>El primer mes es el más difícil. Tómate el tiempo de celebrar tu logro y planear tu próximo paso.</p>`, tasks: [ { id:'d30-t1', icon:'🧠', color:'bg-purple-50', desc:'Revisa todas las tareas pendientes.', time:'30 min' }, { id:'d30-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe la reflexión del mes en el diario.', time:'30 min' }, { id:'d30-t3', icon:'🗣️', color:'bg-orange-50', desc:'Di en voz alta 10 frases que no sabías hace un mes.', time:'30 min' } ] }
+    
+    { day: 8, word: 'die Familie', wordTrans: 'la Familia', plural: 'die Familien', title: 'La Familia y Posesivos', journalPrompt: 'Describe a tu familia (nombre y relación).', exampleSentence: 'Meine Familie wohnt in Spanien.', exampleTranslation: 'Mi familia vive en España.', learningGoals: ["Nombrar a los miembros básicos de la familia.", "Usar los posesivos 'mein' y 'dein'."], lessonContent: `
+        <h3>Vocabulario Familiar (Familienmitglieder)</h3>
+        <p>Recuerda el género es vital:</p>
+        <ul>
+            <li>Masculino (der): <strong>der Vater, der Bruder, der Sohn.</strong></li>
+            <li>Femenino (die): <strong>die Mutter, die Schwester, die Tochter.</strong></li>
+            <li>Neutro (das): <strong>das Kind.</strong></li>
+        </ul>
+        <h3>Posesivos Básicos (Nominativo)</h3>
+        <p>Los posesivos se comportan como el artículo indefinido "ein".</p>
+        <ul>
+            <li>Para Masculino y Neutro: <strong>mein</strong> (mi), <strong>dein</strong> (tu). (Ej: mein Vater, mein Kind)</li>
+            <li>Para Femenino y Plural: Añaden '-e': <strong>meine</strong> (mi), <strong>deine</strong> (tu). (Ej: meine Mutter, meine Eltern)</li>
+        </ul>
+    `, tasks: [ { id:'d8-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende los miembros de la familia con su artículo (der/die).', time:'20 min' }, { id:'d8-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases usando posesivos (Ej: Meine Schwester heißt Anna).', time:'20 min' }, { id:'d8-t3', icon:'🗣️', color:'bg-orange-50', desc:'Describe a tu familia en frases simples.', time:'15 min' } ] },
+    
+    { day: 9, word: 'der', wordTrans: 'el (masc.)', title: 'Artículos: Nominativo (Sujeto)', journalPrompt: 'Escribe 10 sustantivos con su artículo (der, die, das).', exampleSentence: 'Der Stuhl ist alt.', exampleTranslation: 'La silla es vieja.', learningGoals: ["Identificar los 3 géneros gramaticales.", "Usar los artículos definidos (der, die, das) en el caso Nominativo."], lessonContent: `
+        <h3>Gramática del Día: El Nominativo y los Artículos</h3>
+        <p>El **Nominativo** es el caso del sujeto de la oración, es decir, quien realiza la acción (o quien "es" algo). ¡Recuerda que todos los sustantivos alemanes llevan mayúscula inicial!</p>
+        <p>Los artículos definidos en Nominativo son:</p>
+        <div class="p-3 bg-red-50 rounded-md font-mono text-sm">
+            <p>Masculino: <strong>Der</strong> Mann</p>
+            <p>Femenino: <strong>Die</strong> Frau</p>
+            <p>Neutro: <strong>Das</strong> Kind</p>
+            <p>Plural: <strong>Die</strong> Kinder</p>
+        </div>
+        <p>Aprende siempre el sustantivo con su artículo, ¡nunca solo! (Ej: Der Tisch, Die Lampe, Das Haus).</p>
+    `, tasks: [ { id:'d9-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende los 4 artículos del Nominativo (der, die, das, die).', time:'20 min' }, { id:'d9-t2', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 sustantivos comunes CON su artículo.', time:'15 min' }, { id:'d9-t3', icon:'✍️', color:'bg-yellow-50', desc:'Crea 5 frases simples en Nominativo (Ej: Die Wohnung ist groß).', time:'20 min' } ] },
+    
+    { day: 10, word: 'den', wordTrans: 'el (masc. acus.)', title: 'El Caso Akkusativ (Objeto Directo)', journalPrompt: 'Escribe 5 frases donde el objeto sea Masculino (Ej: Ich sehe den Mann).', exampleSentence: 'Ich sehe den Mann.', exampleTranslation: 'Veo al hombre.', learningGoals: ["Comprender el caso Acusativo (objeto directo).", "Aplicar el cambio der → den."], lessonContent: `
+        <h3>El Akkusativ (Acusativo)</h3>
+        <p>El Akkusativ se usa para el **objeto directo** de la acción (aquello sobre lo que recae el verbo). El único artículo que cambia en Acusativo es el **masculino**:</p>
+        <div class="p-3 bg-red-50 rounded-md font-mono text-sm">
+            <p>Masculino: <strong>Der</strong> → <strong>Den</strong></p>
+            <p>Femenino: <strong>Die</strong> → <strong>Die</strong> (No cambia)</p>
+            <p>Neutro: <strong>Das</strong> → <strong>Das</strong> (No cambia)</p>
+            <p>Plural: <strong>Die</strong> → <strong>Die</strong> (No cambia)</p>
+        </div>
+        <p>Esto aplica también a verbos que siempre rigen acusativo, como **haben** (tener) y **sehen** (ver).</p>
+        <p>Ejemplo: "Yo tengo **la** mesa" (Tisch es masc.). → Ich habe **den** Tisch.</p>
+    `, tasks: [ { id:'d10-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Memoriza la regla del Akkusativ: SOLO el artículo masculino cambia (der -> den).', time:'20 min' }, { id:'d10-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con el verbo "haben" + objeto directo.', time:'20 min' }, { id:'d10-t3', icon:'📖', color:'bg-yellow-50', desc:'Completa 10 ejercicios online de Nominativo vs Acusativo.', time:'15 min' } ] },
+    
+    { day: 11, word: 'ein', wordTrans: 'un', title: 'Artículos Indefinidos (Nominativo y Acusativo)', journalPrompt: 'Escribe 3 frases Nom. y 3 Akk. usando artículos indefinidos.', exampleSentence: 'Das ist ein Tisch.', exampleTranslation: 'Esto es una mesa.', learningGoals: ["Usar artículos indefinidos (ein, eine) en Nominativo y Acusativo.", "Aplicar el cambio en el Acusativo."], lessonContent: `
+        <h3>Artículos Indefinidos: ein/eine</h3>
+        <p>Los artículos indefinidos ('un', 'una') no existen en plural en alemán. Se comportan exactamente igual que los artículos definidos en cuanto a las terminaciones de caso:</p>
+        <div class="p-3 bg-red-50 rounded-md font-mono text-sm">
+            <p><strong>Nominativo:</strong> ein (Masc/Neutro), eine (Femenino)</p>
+            <p><strong>Acusativo:</strong> **einen** (Masc.), eine (Fem.), ein (Neutro)</p>
+        </div>
+        <p>Ejemplo: "Ich habe **einen** Hund." (Tengo un perro. Hund es masculino, por lo tanto **einen** en Acusativo).</p>
+    `, tasks: [ { id:'d11-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende \'ein/eine\' (Nom) y \'einen/eine\' (Akk).', time:'20 min' }, { id:'d11-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe frases: "Das ist ein..." vs. "Ich habe einen/eine...".', time:'20 min' }, { id:'d11-t3', icon:'🗣️', color:'bg-orange-50', desc:'Señala objetos a tu alrededor y di "Ich habe ein(en/e)...".', time:'10 min' } ] },
+    
+    { day: 12, word: 'nein', wordTrans: 'no', title: 'Negación (nicht, kein)', journalPrompt: 'Escribe 5 frases negando cosas que no tienes o no eres.', exampleSentence: 'Ich bin nicht müde.', exampleTranslation: 'No estoy cansado/a.', learningGoals: ["Usar 'nicht' para negar verbos y adjetivos.", "Usar 'kein' para negar sustantivos."], lessonContent: `
+        <h3>Negación con 'Nicht'</h3>
+        <p><strong>Nicht</strong> se usa para negar:</p>
+        <ul>
+            <li>Verbos (acciones): Ich **kaufe** **nicht**.</li>
+            <li>Adjetivos (cualidades): Das Haus ist **nicht** groß.</li>
+            <li>Sustantivos precedidos de artículo definido: Der Tisch ist **nicht** **der** Tisch von Peter.</li>
+        </ul>
+        <h3>Negación con 'Kein'</h3>
+        <p><strong>Kein</strong> (ningún, ninguna) se usa para negar un sustantivo que iría con un artículo indefinido (ein/eine) o sin artículo.</p>
+        <p><strong>Importante:</strong> 'Kein' se declina exactamente igual que 'ein/eine' (Ej: Ich habe **keinen** Hund - Acusativo Masculino).</p>
+    `, tasks: [ { id:'d12-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Entiende la diferencia entre "nicht" y "kein".', time:'20 min' }, { id:'d12-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con "kein/keine" en Nom y Akk.', time:'20 min' }, { id:'d12-t3', icon:'🗣️', color:'bg-orange-50', desc:'Niega 10 frases simples que te digas a ti mismo/a.', time:'15 min' } ] },
+    
+    { day: 13, word: 'rot', wordTrans: 'rojo', title: 'Colores y Adjetivos Básicos', journalPrompt: 'Describe 5 objetos a tu alrededor (color y tamaño).', exampleSentence: 'Das Auto ist rot.', exampleTranslation: 'El coche es rojo.', learningGoals: ["Nombrar colores y adjetivos de descripción básicos.", "Usar el adjetivo en el predicado (después de 'sein')."], lessonContent: `
+        <h3>Describiendo el mundo: Colores y Adjetivos</h3>
+        <p>Los adjetivos en alemán son sencillos cuando están en el **predicado** (es decir, después de un verbo como *sein* o *werden*), ya que no se declinan.</p>
+        <ul>
+            <li><strong>Colores:</strong> rot (rojo), blau (azul), grün (verde), schwarz (negro), weiß (blanco), gelb (amarillo).</li>
+            <li><strong>Cualidades:</strong> groß (grande), klein (pequeño), schön (bonito), alt (viejo), neu (nuevo).</li>
+        </ul>
+        <p>Estructura: **[Sujeto] + [sein] + [Adjetivo]**</p>
+        <p>Ejemplo: Die Lampe **ist** **schön**.</p>
+    `, tasks: [ { id:'d13-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 colores y 5 adjetivos comunes.', time:'20 min' }, { id:'d13-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases describiendo objetos (Ej: Die Hose ist blau).', time:'20 min' }, { id:'d13-t3', icon:'🎧', color:'bg-pink-50', desc:'Busca y escucha una canción sencilla sobre los colores en alemán.', time:'15 min' } ] },
+    
+    { day: 14, word: 'die Wohnung', wordTrans: 'el Apartamento', plural: 'die Wohnungen', title: 'Repaso Semana 2 y La Casa', journalPrompt: 'Describe tu habitación o apartamento usando Nom/Akk y adjetivos.', exampleSentence: 'Meine Wohnung ist klein.', exampleTranslation: 'Mi apartamento es pequeño.', learningGoals: ["Consolidar Nominativo, Acusativo y Negación.", "Practicar vocabulario de la casa."], lessonContent: `
+        <h3>Repaso de Artículos y Casos</h3>
+        <p>Este día es para asegurar que las declinaciones de los artículos (Nom/Akk) y el uso de la negación (**nicht** vs **kein**) son claros. Céntrate en identificar el sujeto (Nominativo) y el objeto directo (Acusativo).</p>
+        <ul>
+            <li>**Nominativo (Sujeto):** Der, Die, Das, Die / Ein, Eine, Ein</li>
+            <li>**Acusativo (Objeto Directo):** Den, Die, Das, Die / Einen, Eine, Ein</li>
+        </ul>
+        <h3>Vocabulario: Die Wohnung</h3>
+        <p>Aprende las partes principales de la casa (Ej: das Zimmer, die Küche, das Bad).</p>
+    `, tasks: [ { id:'d14-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Repasa las tablas de Nominativo y Acusativo.', time:'15 min' }, { id:'d14-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe un párrafo describiendo tu vivienda.', time:'25 min' }, { id:'d14-t3', icon:'📖', color:'bg-yellow-50', desc:'Lee un texto A1 sobre la búsqueda de un piso.', time:'15 min' } ] },
+    
+    { day: 15, word: 'lernen', wordTrans: 'aprender', title: 'Verbos Regulares (Konjugation)', journalPrompt: 'Conjuga "lernen" y "kaufen" con todos los pronombres.', exampleSentence: 'Ich lerne Deutsch.', exampleTranslation: 'Aprendo alemán.', learningGoals: ["Conjugar verbos regulares en presente.", "Identificar y usar las terminaciones correctas."], lessonContent: `
+        <h3>La Regla de la Terminación -en</h3>
+        <p>La mayoría de verbos en alemán son **regulares** (o débiles). Para conjugarlos, quita la terminación de infinitivo '-en' y añade las terminaciones personales al tallo (raíz):</p>
+        <div class="p-3 bg-red-50 rounded-md font-mono text-sm">
+            <p>Ich <strong>lernen</strong> → Ich <strong>lern**e**</strong></p>
+            <p>Du <strong>lernst</strong></p>
+            <p>Er/Sie/Es <strong>lernt</strong></p>
+            <p>Wir <strong>lernen</strong></p>
+            <p>Ihr <strong>lernt</strong></p>
+            <p>Sie/sie <strong>lernen</strong></p>
+        </div>
+        <p>Verbos de práctica: **kaufen** (comprar), **machen** (hacer), **wohnen** (vivir/residir).</p>
+    `, tasks: [ { id:'d15-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Memoriza las terminaciones del presente (-e, -st, -t, -en, -t, -en).', time:'20 min' }, { id:'d15-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con verbos regulares (Ej: Wir machen Pizza).', time:'20 min' }, { id:'d15-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica la conjugación de 3 verbos comunes en voz alta.', time:'15 min' } ] },
+    
+    { day: 16, word: 'sprechen', wordTrans: 'hablar', title: 'Verbos Irregulares (con cambio de vocal)', journalPrompt: 'Conjuga "sprechen" y "essen".', exampleSentence: 'Ich spreche Spanisch.', exampleTranslation: 'Hablo español.', learningGoals: ["Identificar verbos irregulares con cambio de vocal (e → i).", "Conjugar verbos como 'sprechen' y 'essen'."], lessonContent: `
+        <h3>Verbos con Cambio de Vocal (Starke Verben)</h3>
+        <p>Algunos verbos fuertes (irregulares) cambian la vocal de la raíz, pero **solo en la 2ª y 3ª persona del singular** (du, er/sie/es). El resto de la conjugación sigue la regla regular.</p>
+        <p>Ejemplo: **Sprechen** (hablar) e → i</p>
+        <ul>
+            <li>Ich **spreche**</li>
+            <li>Du **sprichst** (¡Cambio de vocal!)</li>
+            <li>Er/Sie/Es **spricht** (¡Cambio de vocal!)</li>
+            <li>Wir **sprechen**</li>
+        </ul>
+        <p>Otro ejemplo común es **essen** (comer), que también cambia a **isst**.</p>
+    `, tasks: [ { id:'d16-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende la conjugación de \'sprechen\' y \'essen\'.', time:'20 min' }, { id:'d16-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 4 frases con estos verbos, usando "du" y "er/sie".', time:'20 min' }, { id:'d16-t3', icon:'📖', color:'bg-yellow-50', desc:'Busca 3 verbos más con cambio e → i (Ej: sehen, geben).', time:'15 min' } ] },
+    
+    { day: 17, word: 'können', wordTrans: 'poder', title: 'Verbos Modales (Parte 1: können, wollen)', journalPrompt: 'Escribe 3 cosas que puedes hacer y 3 que quieres hacer.', exampleSentence: 'Ich kann gut singen.', exampleTranslation: 'Puedo cantar bien.', learningGoals: ["Conjugar los modales 'können' (poder) y 'wollen' (querer).", "Usar la estructura: Modal en pos. 2 + Infinitivo al final."], lessonContent: `
+        <h3>Estructura Clave de los Modales</h3>
+        <p>Los verbos **modales** son irregulares en el singular y tienen una regla de sintaxis especial: El modal se conjuga en la posición 2, y el verbo principal va en **infinitivo al final** de la oración.</p>
+        <p>Fórmula: **[Sujeto] + [Modal conjugado] + [Complementos] + [Verbo Principal en Infinitivo]**</p>
+        <p>Ejemplo: Ich **kann** Deutsch **sprechen**.</p>
+        <h3>Können y Wollen</h3>
+        <ul>
+            <li>**können** (poder/ser capaz de): Ich kann, Du kannst, Er/Sie/Es kann.</li>
+            <li>**wollen** (querer, con firmeza): Ich will, Du willst, Er/Sie/Es will.</li>
+        </ul>
+    `, tasks: [ { id:'d17-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Conjuga \'können\' y \'wollen\'.', time:'20 min' }, { id:'d17-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con la estructura modal (Ej: Ich will Pizza essen).', time:'20 min' }, { id:'d17-t3', icon:'🗣️', color:'bg-orange-50', desc:'Di 5 frases con modales sobre tus habilidades o deseos.', time:'15 min' } ] },
+    
+    { day: 18, word: 'müssen', wordTrans: 'deber (oblig.)', title: 'Verbos Modales (Parte 2: müssen, dürfen)', journalPrompt: 'Escribe 3 cosas que debes hacer y 2 que tienes permitido.', exampleSentence: 'Ich muss arbeiten.', exampleTranslation: 'Debo trabajar.', learningGoals: ["Conjugar 'müssen' (obligación) y 'dürfen' (permiso).", "Reforzar la estructura modal."], lessonContent: `
+        <h3>Müssen y Dürfen</h3>
+        <ul>
+            <li>**müssen** (deber, obligación fuerte): Ich muss, Du musst, Er/Sie/Es muss. (Ej: Ich muss **lernen** = Debo estudiar).</li>
+            <li>**dürfen** (tener permiso): Ich darf, Du darfst, Er/Sie/Es darf. (Ej: Hier darf man **rauchen** = Aquí está permitido fumar).</li>
+        </ul>
+        <h3>Verbos Modales sin Umlaut (Vocal con diéresis)</h3>
+        <p>Observa que, al igual que *können* y *wollen*, *müssen* y *dürfen* pierden la diéresis (Umlaut) en las conjugaciones singulares (Ich, Du, Er/Sie/Es).</p>
+    `, tasks: [ { id:'d18-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Conjuga \'müssen\' y \'dürfen\'.', time:'20 min' }, { id:'d18-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con \'müssen\' y \'dürfen\'.', time:'20 min' }, { id:'d18-t3', icon:'📖', color:'bg-yellow-50', desc:'Identifica modales en un texto A1 y sus infinitivos.', time:'15 min' } ] },
+    
+    { day: 19, word: 'die Uhr', wordTrans: 'el reloj', plural: 'die Uhren', title: 'La Hora (Formal e Informal)', journalPrompt: 'Escribe tu horario de hoy usando la hora formal.', exampleSentence: 'Es ist vierzehn Uhr.', exampleTranslation: 'Son las catorce (dos de la tarde).', learningGoals: ["Decir la hora de forma formal (oficial, 24h).", "Decir la hora de forma informal (con 'halb' y 'viertel')."], lessonContent: `
+        <h3>Hora Formal (Oficial - 24 horas)</h3>
+        <p>Se usa para horarios de trenes, tiendas, citas. Es simple: **[Es ist] + [Hora] + Uhr + [Minutos]**</p>
+        <ul>
+            <li>14:15: Es ist vierzehn Uhr fünfzehn.</li>
+        </ul>
+        <h3>Hora Informal (Conversacional)</h3>
+        <p>Se usa el formato de 12 horas con vocabulario especial:</p>
+        <ul>
+            <li><strong>halb:</strong> significa "la mitad de la hora que viene". (Ej: **halb drei** = 2:30).</li>
+            <li><strong>viertel:</strong> significa "cuarto". (Ej: Viertel nach zwei = 2:15, Viertel vor drei = 2:45).</li>
+            <li><strong>nach:</strong> después (minutos después de la hora).</li>
+            <li><strong>vor:</strong> antes (minutos antes de la hora).</li>
+        </ul>
+    `, tasks: [ { id:'d19-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Aprende el concepto de "halb" (media hora antes de la siguiente).', time:'20 min' }, { id:'d19-t2', icon:'✍️', color:'bg-yellow-50', desc:'Practica decir 10 horas distintas (5 formales, 5 informales).', time:'20 min' }, { id:'d19-t3', icon:'🎧', color:'bg-pink-50', desc:'Escucha y repite diálogos sobre pedir la hora.', time:'15 min' } ] },
+    
+    { day: 20, word: 'das Hobby', wordTrans: 'el Hobby', plural: 'die Hobbys', title: 'Actividades y Hobbies', journalPrompt: 'Escribe 5 hobbies que tienes y 5 actividades que haces semanalmente.', exampleSentence: 'Mein Hobby ist Lesen.', exampleTranslation: 'Mi hobby es leer.', learningGoals: ["Nombrar actividades de tiempo libre y hobbies.", "Preguntar y responder sobre hobbies.", "Usar el adverbio 'gern' (con gusto)."], lessonContent: `
+        <h3>¿Qué te gusta hacer?</h3>
+        <p>La forma más común de expresar que algo te gusta hacer es usando el adverbio **gern** (con gusto), el cual se coloca después del verbo.</p>
+        <p>Fórmula: **[Sujeto] + [Verbo] + gern + [Complementos]**</p>
+        <ul>
+            <li>Ich **spiele** **gern** Fußball. (Me gusta jugar fútbol)</li>
+            <li>Er **kocht** **gern**. (A él le gusta cocinar)</li>
+        </ul>
+        <h3>Vocabulario de Hobbies</h3>
+        <p>Aprende las frases verbales clave: **Sport machen** (hacer deporte), **lesen** (leer), **Musik hören** (escuchar música), **reisen** (viajar).</p>
+    `, tasks: [ { id:'d20-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 hobbies y verbos de actividad.', time:'20 min' }, { id:'d20-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases sobre lo que haces en tu tiempo libre usando "gern".', time:'20 min' }, { id:'d20-t3', icon:'🗣️', color:'bg-orange-50', desc:'Describe tu día (con horas y actividades) en voz alta.', time:'15 min' } ] },
+    
+    { day: 21, word: 'Repaso', wordTrans: 'Revisión', title: 'Repaso Semana 3', journalPrompt: 'Escribe una carta a un amigo sobre tus planes del fin de semana (usando modales y la hora).', exampleSentence: 'Wir wiederholen die Verben.', exampleTranslation: 'Repasamos los verbos.', learningGoals: ["Consolidar conjugaciones (regulares, irregulares, modales).", "Repasar la hora (formal e informal).", "Practicar hobbies con 'gern'."], lessonContent: `
+        <h3>Enfoque en Verbos y Estructura</h3>
+        <p>El desafío de la semana 3 fue la conjugación y la sintaxis: la posición del verbo en las frases simples (Pos. 2) y el envío del infinitivo al final en las frases con modales.</p>
+        <p>Asegúrate de que puedes conjugar los modales *können, wollen, müssen, dürfen* sin pensarlo.</p>
+    `, tasks: [ { id:'d21-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Conjuga todos los verbos aprendidos (sein, haben, modales, regulares).', time:'20 min' }, { id:'d21-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe una carta corta (A1) con tus planes (3-5 frases).', time:'25 min' }, { id:'d21-t3', icon:'📖', color:'bg-yellow-50', desc:'Revisa ejercicios de modales y la hora.', time:'15 min' } ] },
+    
+    { day: 22, word: 'der Bahnhof', wordTrans: 'la estación de tren', plural: 'die Bahnhöfe', title: 'Preposiciones Locales (Wo? - Dativo)', journalPrompt: 'Escribe 5 frases de ubicación sobre objetos en tu escritorio.', exampleSentence: 'Der Bahnhof ist in der Nähe.', exampleTranslation: 'La estación de tren está cerca.', learningGoals: ["Usar preposiciones locales que rigen Dativo (Wo?).", "Preguntar y responder por la posición fija."], lessonContent: `
+        <h3>Preposiciones Fijas (Dativo)</h3>
+        <p>Cuando preguntas **Wo?** (¿Dónde?), estás indicando una posición fija (no hay movimiento). Las preposiciones que responden a Wo? rigen el caso **Dativo**.</p>
+        <p>Ejemplo de preposiciones: **in** (en, dentro), **auf** (sobre, encima), **unter** (debajo), **neben** (al lado de), **hinter** (detrás de).</p>
+        <h3>El Dativo (Cambio de Artículo)</h3>
+        <p>En el Dativo, todos los artículos cambian:</p>
+        <div class="p-3 bg-red-50 rounded-md font-mono text-sm">
+            <p>Masc: **Der** → **Dem**</p>
+            <p>Fem: **Die** → **Der**</p>
+            <p>Neut: **Das** → **Dem**</p>
+            <p>Plural: **Die** → **Den** (+ **n** al sustantivo, ej: den Autos)</p>
+        </div>
+        <p>Ejemplo: Wo ist die Lampe? → Die Lampe ist **auf dem Tisch** (Tisch es masc., se usa **dem**).</p>
+    `, tasks: [ { id:'d22-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 5 preposiciones de lugar (in, auf, unter, neben, vor).', time:'20 min' }, { id:'d22-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases de ubicación usando Dativo (Ej: Die Katze ist unter dem Tisch).', time:'20 min' }, { id:'d22-t3', icon:'🗣️', color:'bg-orange-50', desc:'Describe un mapa o una imagen usando el Dativo.', time:'15 min' } ] },
+    
+    { day: 23, word: 'in die Stadt', wordTrans: 'a la ciudad', title: 'Preposiciones Locales (Wohin? - Acusativo)', journalPrompt: 'Escribe 3 frases de movimiento hacia 3 lugares distintos.', exampleSentence: 'Ich gehe in die Stadt.', exampleTranslation: 'Voy a la ciudad.', learningGoals: ["Usar preposiciones locales que rigen Acusativo (Wohin?).", "Diferenciar entre Wo? (Dativo) y Wohin? (Acusativo)."], lessonContent: `
+        <h3>Preposiciones de Movimiento (Acusativo)</h3>
+        <p>Cuando preguntas **Wohin?** (¿Hacia dónde?), estás indicando una dirección o movimiento. Las preposiciones que responden a Wohin? rigen el caso **Acusativo**.</p>
+        <p>La buena noticia es que, de las preposiciones de lugar (an, auf, in, etc.), solo cambia el artículo masculino (**den**).</p>
+        <p>Ejemplo: Wohin gehst du? → Ich gehe **in den Park** (Park es masc., se usa **den** en Acusativo).</p>
+        <p>**En resumen:** Mismo lugar, distinto caso. **Wo? → Dativo (posición). Wohin? → Acusativo (movimiento).**</p>
+    `, tasks: [ { id:'d23-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Repasa la tabla de Acusativo (der->den) y Dativo (die->der, das->dem, der->dem).', time:'20 min' }, { id:'d23-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases de movimiento (Ej: Wir fahren in die Schweiz).', time:'20 min' }, { id:'d23-t3', icon:'📖', color:'bg-yellow-50', desc:'Lee textos de orientación en la ciudad e identifica el caso.', time:'15 min' } ] },
+    
+    { day: 24, word: 'der Kaffee', wordTrans: 'el café', title: 'Comida y Bebida (Bestellungen)', journalPrompt: 'Escribe tu pedido ideal en un restaurante.', exampleSentence: 'Ich trinke einen Kaffee.', exampleTranslation: 'Bebo un café.', learningGoals: ["Nombrar comidas y bebidas básicas.", "Hacer pedidos en restaurantes/cafés usando modales."], lessonContent: `
+        <h3>¡A la mesa! (Am Tisch)</h3>
+        <p>El vocabulario de comida es esencial, ¡aprende el artículo!</p>
+        <ul>
+            <li>der: **der** Kaffee, **der** Fisch, **der** Reis</li>
+            <li>die: **die** Milch, **die** Suppe, **die** Kartoffel</li>
+            <li>das: **das** Brot, **das** Wasser, **das** Gemüse</li>
+        </ul>
+        <h3>Hacer Pedidos (Bestellungen)</h3>
+        <p>Usamos verbos modales o frases educadas para ordenar:</p>
+        <ul>
+            <li>**Ich möchte** einen Kaffee. (Me gustaría un café)</li>
+            <li>**Ich hätte gern** eine Cola. (Me gustaría una Coca-Cola)</li>
+        </ul>
+        <p>Observa que la mayoría de los pedidos serán en **Acusativo** (el objeto que quieres). Ej: Ich möchte **einen** Salat (Salat es masc.).</p>
+    `, tasks: [ { id:'d24-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 palabras de comida y 5 de bebida con su artículo.', time:'20 min' }, { id:'d24-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases con pedidos usando "Ich möchte...".', time:'20 min' }, { id:'d24-t3', icon:'🗣️', color:'bg-orange-50', desc:'Simula un diálogo en un café, pidiendo 3 cosas.', time:'15 min' } ] },
+    
+    { day: 25, word: 'die Kleidung', wordTrans: 'la ropa', plural: 'die Kleidungen', title: 'Ropa, Compras y Precios', journalPrompt: 'Describe tu atuendo ideal para una fiesta de verano.', exampleSentence: 'Die Kleidung ist schön.', exampleTranslation: 'La ropa es bonita.', learningGoals: ["Nombrar prendas de vestir básicas.", "Preguntar y decir precios.", "Usar números del 21 al 100."], lessonContent: `
+        <h3>De Compras (Einkaufen)</h3>
+        <p>Frases clave para comprar y preguntar por precios:</p>
+        <ul>
+            <li>**Was kostet...?** / **Wie viel kostet...?** (¿Cuánto cuesta...?)</li>
+            <li>**Das kostet zehn Euro.** (Cuesta diez euros.)</li>
+            <li>**Kann ich das anprobieren?** (¿Puedo probármelo?)</li>
+        </ul>
+        <h3>Números 21 - 100</h3>
+        <p>A diferencia del español o el inglés, en alemán se dice la unidad, luego "und" (y), y luego la decena. Es crucial dominar esto.</p>
+        <ul>
+            <li>21: **einundzwanzig** (uno y veinte)</li>
+            <li>99: **neunundneunzig** (nueve y noventa)</li>
+        </ul>
+    `, tasks: [ { id:'d25-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 prendas de vestir y 5 frases de compra.', time:'20 min' }, { id:'d25-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases describiendo ropa (Ej: Ich kaufe eine rote Jacke).', time:'20 min' }, { id:'d25-t3', icon:'🧠', color:'bg-purple-50', desc:'Repasa y practica números hasta 100. Pide precios imaginarios.', time:'15 min' } ] },
+    
+    { day: 26, word: 'die E-Mail', wordTrans: 'el correo electrónico', plural: 'die E-Mails', title: 'Escribir E-mails y Cartas', journalPrompt: 'Escribe un e-mail a un amigo invitándolo a cenar la próxima semana.', exampleSentence: 'Ich schreibe eine E-Mail.', exampleTranslation: 'Escribo un correo electrónico.', learningGoals: ["Escribir saludos y despedidas de e-mails/cartas.", "Estructurar una invitación simple."], lessonContent: `
+        <h3>Comunicación Escrita (Schriftliche Kommunikation)</h3>
+        <p>Aprende las frases de cortesía que enmarcan una carta o e-mail (A1):</p>
+        <ul>
+            <li>**Saludo Informal:** Liebe [Nombre Femenino] / Lieber [Nombre Masculino]</li>
+            <li>**Saludo Formal:** Sehr geehrte Damen und Herren (Estimados Sres./Sras.)</li>
+        </ul>
+        <p>Cierre de la carta:</p>
+        <ul>
+            <li>**Cierre Informal:** Viele Grüße (Muchos saludos) / Dein/Deine [Tu Nombre]</li>
+            <li>**Cierre Formal:** Mit freundlichen Grüßen (Atentamente)</li>
+        </ul>
+        <p>Estructura: Saludo, Cuerpo (Pos. 2 del verbo), Despedida.</p>
+    `, tasks: [ { id:'d26-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Memoriza los saludos y cierres de cartas.', time:'20 min' }, { id:'d26-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe el e-mail de 5 frases para invitar a alguien.', time:'20 min' }, { id:'d26-t3', icon:'📖', color:'bg-yellow-50', desc:'Lee y analiza 3 e-mails A1, identificando sus partes.', time:'15 min' } ] },
+    
+    { day: 27, word: 'das Wetter', wordTrans: 'el clima', title: 'El Clima y las Estaciones', journalPrompt: 'Describe el clima de hoy y haz un pronóstico para mañana.', exampleSentence: 'Das Wetter ist kalt.', exampleTranslation: 'El clima es frío.', learningGoals: ["Nombrar estaciones y condiciones climáticas básicas.", "Describir el clima usando 'Es ist...' y 'Die Sonne scheint...'."], lessonContent: `
+        <h3>Hablando del Clima (Das Wetter)</h3>
+        <p>La forma más común de hablar del clima es usando la estructura **Es ist...** (Es/Está...)</p>
+        <ul>
+            <li>**Es ist sonnig** (Está soleado)</li>
+            <li>**Es ist kalt** (Está frío)</li>
+            <li>**Es regnet** (Está lloviendo - *regnet* es el verbo llover)</li>
+        </ul>
+        <h3>Las Estaciones (Jahreszeiten)</h3>
+        <p>Der Frühling (primavera), der Sommer (verano), der Herbst (otoño), der Winter (invierno). Todas son masculinas (**der**).</p>
+    `, tasks: [ { id:'d27-t1', icon:'🧠', color:'bg-purple-50', desc:'Vocabulario: Aprende 10 palabras de clima y las 4 estaciones.', time:'20 min' }, { id:'d27-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe 5 frases sobre el clima de tu región.', time:'20 min' }, { id:'d27-t3', icon:'🗣️', color:'bg-orange-50', desc:'Practica frases de clima en voz alta.', time:'15 min' } ] },
+    
+    { day: 28, word: 'Repaso', wordTrans: 'Revisión', title: 'Repaso Semana 4', journalPrompt: 'Escribe un diálogo de 10 líneas sobre ir de compras y preguntar por ubicación.', exampleSentence: 'Wir üben die Dialoge.', exampleTranslation: 'Practicamos los diálogos.', learningGoals: ["Consolidar preposiciones (Wo/Wohin).", "Repasar vocabulario de comida/ropa.", "Practicar diálogos de la vida diaria."], lessonContent: `
+        <h3>Cierre de Contenido A1</h3>
+        <p>La última semana consolidó la aplicación del idioma en el mundo real: orientación (**Dativo** vs **Acusativo**) y situaciones de compra/pedido.</p>
+        <p>Tu tarea hoy es asegurarte de que puedes diferenciar la gramática de la ubicación:</p>
+        <ul>
+            <li>**Wo?** → Dativo (posición fija)</li>
+            <li>**Wohin?** → Acusativo (movimiento/destino)</li>
+        </ul>
+    `, tasks: [ { id:'d28-t1', icon:'🧠', color:'bg-purple-50', desc:'Gramática: Haz un último repaso de las reglas de Dativo vs Acusativo con preposiciones.', time:'20 min' }, { id:'d28-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe el diálogo de compras y ubicación.', time:'25 min' }, { id:'d28-t3', icon:'📖', color:'bg-yellow-50', desc:'Revisa las entradas del diario de las 4 semanas.', time:'15 min' } ] },
+    
+    { day: 29, word: 'alles', wordTrans: 'todo', title: 'Simulación de Examen (A1)', journalPrompt: 'Escribe 3 frases de las partes que fallaste en la simulación (ej: Ich muss die Zahlen lernen).', exampleSentence: 'Ich habe fast alles verstanden.', exampleTranslation: 'Casi lo he entendido todo.', learningGoals: ["Medir el nivel A1 en comprensión lectora, auditiva y oral.", "Identificar puntos débiles antes de pasar al A2."], lessonContent: `
+        <h3>Prepárate para el Examen</h3>
+        <p>Hoy es un día de simulación. Tu objetivo es encontrar un examen modelo A1 online (Goethe-Institut, ÖSD o Telc) e intentar hacerlo bajo condiciones de tiempo (si es posible).</p>
+        <p>No te frustres si encuentras partes difíciles. Esto te dice exactamente qué debes repasar antes de empezar el A2.</p>
+        <p>Concéntrate en la estructura de los exámenes: Lesen (Lectura), Hören (Audio), Schreiben (Escritura), Sprechen (Oral).</p>
+    `, tasks: [ { id:'d29-t1', icon:'🧠', color:'bg-purple-50', desc:'Simulación: Haz un examen modelo de lectura (Lesen).', time:'30 min' }, { id:'d29-t2', icon:'🎧', color:'bg-pink-50', desc:'Simulación: Haz un examen modelo auditivo (Hören).', time:'30 min' }, { id:'d29-t3', icon:'🗣️', color:'bg-orange-50', desc:'Simulación: Practica la sección oral (Sprechen) grabándote o frente a un espejo.', time:'30 min' } ] },
+    
+    { day: 30, word: 'das Zertifikat', wordTrans: 'el certificado', plural: 'die Zertifikate', title: '¡Felicidades! Logro A1', journalPrompt: 'Escribe tu reflexión del mes, tus logros y tus metas para el Nivel A2 (Ej: Ich will fließend sprechen).', exampleSentence: 'Das Zertifikat ist wichtig.', exampleTranslation: 'El certificado es importante.', learningGoals: ["Reflexionar sobre el aprendizaje.", "Establecer metas para el Nivel A2 y planificar los próximos pasos."], lessonContent: `
+        <h3>¡Lo lograste!</h3>
+        <p>Has completado el Nivel A1 de alemán. Esto significa que ya puedes:</p>
+        <ul>
+            <li>Presentarte y saludar.</li>
+            <li>Preguntar y responder información personal básica.</li>
+            <li>Formular frases simples en presente.</li>
+            <li>Usar artículos y preposiciones de lugar básicos.</li>
+        </ul>
+        <p>El primer mes es el más difícil. Tómate el tiempo de celebrar tu logro y planear tu próximo paso, que probablemente será el Nivel A2, donde empezarás a usar el pasado (Perfecto) y estructuras de frases más complejas.</p>
+    `, tasks: [ { id:'d30-t1', icon:'🧠', color:'bg-purple-50', desc:'Revisa todas las tareas pendientes y márcalas como hechas.', time:'30 min' }, { id:'d30-t2', icon:'✍️', color:'bg-yellow-50', desc:'Escribe la reflexión del mes en el diario de este día.', time:'30 min' }, { id:'d30-t3', icon:'🗣️', color:'bg-orange-50', desc:'Di en voz alta 10 frases que no sabías decir hace un mes.', time:'30 min' } ] }
 ];
