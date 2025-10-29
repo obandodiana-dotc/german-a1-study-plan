@@ -30,7 +30,7 @@
     let quizView, answerView, greetingView;
     let quizWordTrans, quizInput, quizFeedback, checkAnswerBtn, revealAnswerBtn;
     let modalMessage, modalExampleSentence, modalExampleTranslation, closeGreetingBtn;
-    let listenWordBtn, listenExampleBtn; // Añadidos para referenciar los botones de TTS
+    let listenWordBtn, listenExampleBtn; 
     let journalModal, journalCurrentDay, journalTextarea, saveJournalBtn;
     let checkGrammarBtn, aiFeedbackContainer; 
     let srsEasyBtn, srsHardBtn; 
@@ -131,7 +131,6 @@
             journalModal.classList.remove('hidden');
             const dayData = PLAN_DIARIO[currentlyDisplayedDay - 1];
             if (journalCurrentDay) journalCurrentDay.textContent = currentlyDisplayedDay;
-            // Uso de un selector robusto para el prompt
             const promptEl = document.querySelector('.journal-prompt');
             if (promptEl) promptEl.textContent = dayData.journalPrompt;
             if (journalTextarea) journalTextarea.value = state.journal[currentlyDisplayedDay] || '';
@@ -285,15 +284,12 @@
         }, 2000); 
     }
 
-    // MOCK de Text-to-Speech para que los botones funcionen sin una librería compleja
     function speak(text) {
         console.log(`TTS Mock: Reproduciendo "${text}"`);
         alert(`¡Simulación de voz! Reproduciendo: "${text}"`);
     }
 
     function renderMiniExercises(dayIndex) {
-        // La lógica de renderizado de ejercicios interactivos permanece igual
-        // (omitida aquí por brevedad, pero en el archivo es la misma que la anterior)
         const dayData = PLAN_DIARIO[dayIndex];
         const container = document.querySelector('.mini-exercises-container');
         if (!container) return;
